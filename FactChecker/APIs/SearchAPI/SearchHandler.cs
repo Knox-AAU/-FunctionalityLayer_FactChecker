@@ -10,16 +10,10 @@ namespace FactChecker.APIs
     public static class SearchHandler
     {
 
-        //Search API
         public static string wordCountURL = "http://knox-node02.srv.aau.dk/wordcount/";
         public static string wordRatioURL = "http://localhost:5000/WordRatio";
 
-        //Lemmatizer
-        public static string lemmatizerURL = "http://knox-master01.srv.aau.dk/lemmatizer";
-
-
         static HttpClient client = new HttpClient();
-
 
         public static async Task<WordRatio[]> GetWordRatio (string term)
         {
