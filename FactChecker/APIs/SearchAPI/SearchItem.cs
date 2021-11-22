@@ -1,13 +1,7 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
-
-namespace FactChecker.APIs
+﻿namespace FactChecker.APIs
 {
 
-    public class WordRatio
+    public class SearchItem
     {
         public int articleId;
         public string word;

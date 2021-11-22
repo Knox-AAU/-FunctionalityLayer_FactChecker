@@ -15,15 +15,15 @@ namespace FactChecker.APIs
 
         static HttpClient client = new HttpClient();
 
-        public static async Task<WordRatio[]> GetWordRatio (string term)
+        public static async Task<SearchItem[]> GetSearchItem (string term)
         {
-            WordRatio[] articles = null;
+            SearchItem[] articles = null;
             try
             {
                 HttpResponseMessage response = await client.GetAsync(wordRatioURL + "?terms=" + term);
                 if (response.IsSuccessStatusCode)
                 {
-                    articles = await response.Content.ReadAsAsync<WordRatio[]>();
+                    articles = await response.Content.ReadAsAsync<SearchItem[]>();
                 }
             }
             catch
