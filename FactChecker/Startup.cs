@@ -19,6 +19,7 @@ namespace FactChecker
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            APIs.SearchHandler.GetWordRatio("esma");
         }
 
         public IConfiguration Configuration { get; }
