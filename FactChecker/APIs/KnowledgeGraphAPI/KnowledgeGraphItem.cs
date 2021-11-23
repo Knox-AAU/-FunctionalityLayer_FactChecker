@@ -7,7 +7,19 @@ namespace FactChecker.APIs.KnowledgeGraphAPI
 {
     public class KnowledgeGraphItem
     {
-        string a;
-        string b;
+        string s;
+        string r;
+        string t;
+        public KnowledgeGraphItem (string s, string r, string t)
+        {
+            this.s = s;
+            this.r = r;
+            this.t = t;
+        }
+
+        public override string ToString()
+        {
+            return s + " " + r + " " + t;
+        }
     }
 }

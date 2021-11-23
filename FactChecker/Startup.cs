@@ -19,6 +19,32 @@ namespace FactChecker
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            test();
+        }
+
+        async void test ()
+        {
+            TestData.TaylorSwiftEntities taylor = new TestData.TaylorSwiftEntities();
+            List<APIs.KnowledgeGraphAPI.KnowledgeGraphItem> relations = new List<APIs.KnowledgeGraphAPI.KnowledgeGraphItem>();
+            Console.WriteLine("begun");
+            for (int i = 0; i < taylor.entities.Count - 1; i++)
+            {
+                for (int j = 1; j < taylor.entities.Count; j++)
+                {
+                    List<APIs.KnowledgeGraphAPI.KnowledgeGraphItem> lol = await APIs.KnowledgeGraphAPI.KnowledgeGraphHandler.GetTriplesBySparQL(taylor.entities[i], taylor.entities[j], 10);
+                    foreach(APIs.KnowledgeGraphAPI.KnowledgeGraphItem item in lol)
+                    {
+                        relations.Add(item);
+                    }
+                }
+            }
+
+            foreach(APIs.KnowledgeGraphAPI.KnowledgeGraphItem item in relations)
+            {
+                Console.WriteLine(item.ToString());
+            }
+
+            Console.WriteLine("done");
         }
 
         public IConfiguration Configuration { get; }
