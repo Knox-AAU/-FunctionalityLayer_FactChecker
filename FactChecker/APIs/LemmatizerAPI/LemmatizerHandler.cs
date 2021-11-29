@@ -3,12 +3,12 @@ using System.Net.Http;
 using System.Threading.Tasks;
 namespace FactChecker.APIs.LemmatizerAPI
 {
-    public static class LemmatizerHandler
+    public class LemmatizerHandler
     {
-        public static string lemmatizerURL = "http://localhost:5000/";
-        static HttpClient client = new HttpClient();
+        public string lemmatizerURL = "http://localhost:5000/";
+        HttpClient client = new HttpClient();
 
-        public static async Task<LemmatizerItem> GetLemmatizedText(string text, string language)
+        public async Task<LemmatizerItem> GetLemmatizedText(string text, string language)
         {
             string data = "{\"string\":\"" + text + "\"," +
                            "\"language\":\"" + language + "\"}";
@@ -31,7 +31,7 @@ namespace FactChecker.APIs.LemmatizerAPI
             return lemmatizerItem;
         }
 
-        public static async Task<LemmatizerItem> GetLemmatizedText(string text)
+        public async Task<LemmatizerItem> GetLemmatizedText(string text)
         {
             string data = "{\"string\":\"" + text + "\"}";
             var content = new StringContent(data, System.Text.Encoding.UTF8, "application/json");
