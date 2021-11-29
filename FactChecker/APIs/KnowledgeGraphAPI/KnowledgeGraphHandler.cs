@@ -9,13 +9,13 @@ using System.Collections.Generic;
 
 namespace FactChecker.APIs.KnowledgeGraphAPI
 {
-    public static class KnowledgeGraphHandler
+    public class KnowledgeGraphHandler
     {
 
-        public static string knowledgeGraphURL = "https://query.wikidata.org/bigdata/namespace/wdq/sparql";
+        public string knowledgeGraphURL = "https://query.wikidata.org/bigdata/namespace/wdq/sparql";
         static HttpClient client = new HttpClient();
 
-        public static async Task<List<KnowledgeGraphItem>> GetTriplesBySparQL(string s, int limit)
+        public async Task<List<KnowledgeGraphItem>> GetTriplesBySparQL(string s, int limit)
         {
             client.DefaultRequestHeaders.Add("User-Agent", "FactChecker/0.0 (kontakt@magnusaxelsen.dk) generic-library/0.0");
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
