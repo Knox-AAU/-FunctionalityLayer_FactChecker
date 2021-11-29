@@ -11,20 +11,20 @@ namespace FactChecker.IO
         public void WriteFile(string path, string content)
         {
             using FileStream fs = File.OpenWrite(path);
-            using var sr = new StreamWriter(fs);
+            StreamWriter sr = new StreamWriter(fs);
             sr.WriteLine(content);
         }
 
         public void AppendToFile(string path, string content)
         {
-            using var sr = new StreamWriter(path, append:true);
+            StreamWriter sr = new StreamWriter(path, append:true);
             sr.WriteLine(content);
         }
 
         public List<string> ReadFile(string path)
         {
             using FileStream fs = File.OpenRead(path);
-            using var sr = new StreamReader(fs);
+            StreamReader sr = new StreamReader(fs);
 
             string line;
             List<string> output = new List<string>();
