@@ -13,7 +13,7 @@ namespace FactChecker.APIs.KnowledgeGraphAPI
     {
 
         public string knowledgeGraphURL = "https://query.wikidata.org/bigdata/namespace/wdq/sparql";
-        static HttpClient client = new HttpClient();
+        HttpClient client = new HttpClient();
 
         public async Task<List<KnowledgeGraphItem>> GetTriplesBySparQL(string s, int limit)
         {
@@ -29,15 +29,14 @@ namespace FactChecker.APIs.KnowledgeGraphAPI
                     XDocument xdoc = XDocument.Parse(response.Content.ReadAsStringAsync().Result);
                     StringReader sr = new StringReader(xdoc.ToString());
                     DataSet ds = new DataSet();
-
                     ds.ReadXml(sr);
 
                     foreach (DataTable table in ds.Tables)
                     {
-                        string rSplit = "";
-                        string tSplit = "";
                         foreach (DataRow row in table.Rows)
                         {
+                            string rSplit = "";
+                            string tSplit = "";
                             foreach (object item in row.ItemArray)
                             {
                                 if(item.ToString().Contains("http://"))

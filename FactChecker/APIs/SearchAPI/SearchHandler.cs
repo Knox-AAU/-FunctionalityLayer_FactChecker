@@ -7,15 +7,14 @@ using System.Threading.Tasks;
 
 namespace FactChecker.APIs
 {
-    public static class SearchHandler
+    public class SearchHandler
     {
 
-        public static string wordCountURL = "http://knox-node02.srv.aau.dk/wordcount/";
-        public static string wordRatioURL = "http://localhost:5000/WordRatio";
+        public string wordRatioURL = "http://knox-node02.srv.aau.dk/WordRatio";
 
         static HttpClient client = new HttpClient();
 
-        public static async Task<SearchItem[]> GetSearchItem (string term)
+        public async Task<SearchItem[]> GetSearchItem (string term)
         {
             SearchItem[] articles = null;
             try
