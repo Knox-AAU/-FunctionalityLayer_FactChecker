@@ -15,12 +15,19 @@ namespace FactChecker.Controllers
         
         public TripleController ()
         {
+            GetTriplesFromFile();
+        } 
+
+        private async void GetTriplesFromFile ()
+        {
+            Console.WriteLine("Im startistarti");
             IO.FileStreamHandler fileStreamHandler = new IO.FileStreamHandler();
-            foreach(string s in fileStreamHandler.ReadFile("../TestData/relations.txt"))
+            foreach (string s in await fileStreamHandler.ReadFile("./TestData/relations.txt"))
             {
                 triples.Add(s);
             }
-        } 
+            Console.WriteLine("im donidoni");
+        }
 
 
         [HttpGet]

@@ -11,8 +11,12 @@ namespace FactChecker.TestData
         
         public WikiDataEntities ()
         {
+        }
+
+        public async void GetEntitiesFromFile ()
+        {
             IO.FileStreamHandler fileStreamHandler = new IO.FileStreamHandler();
-            entities = fileStreamHandler.ReadFile("C:/P5/FunctionalityLayer_FactChecker/FactChecker/TestData/entities.txt");
+            entities = await fileStreamHandler.ReadFile("C:/P5/FunctionalityLayer_FactChecker/FactChecker/TestData/entities.txt");
         }
     }
 }
