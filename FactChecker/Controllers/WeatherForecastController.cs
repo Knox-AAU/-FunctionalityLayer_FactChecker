@@ -11,11 +11,22 @@ namespace FactChecker.Controllers
     [Route("[controller]")]
     public class TripleController : ControllerBase
     {
-       
-        [HttpGet]
-        public String Get()
+        public List<string> triples = new List<string>(); 
+        
+        public TripleController ()
         {
-            return "triples";
+            IO.FileStreamHandler fileStreamHandler = new IO.FileStreamHandler();
+            foreach(string s in fileStreamHandler.ReadFile("../TestData/relations.txt"))
+            {
+                triples.Add(s);
+            }
+        } 
+
+
+        [HttpGet]
+        public List<string> Get()
+        {
+            return triples;
         }
     }
 }

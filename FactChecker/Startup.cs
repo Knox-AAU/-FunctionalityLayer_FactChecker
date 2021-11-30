@@ -19,21 +19,26 @@ namespace FactChecker
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            lol();
+            
         }
 
         async void lol ()
         {
+
+            Console.Write("begin");
             TestData.WikiDataEntities wikiDataEntities = new TestData.WikiDataEntities();
             APIs.KnowledgeGraphAPI.KnowledgeGraphHandler handler = new APIs.KnowledgeGraphAPI.KnowledgeGraphHandler();
             IO.FileStreamHandler fileStreamHandler = new IO.FileStreamHandler();
             foreach (string s in wikiDataEntities.entities)
             {
-                foreach(APIs.KnowledgeGraphAPI.KnowledgeGraphItem item in await handler.GetTriplesBySparQL(s, 10))
+                List<APIs.KnowledgeGraphAPI.KnowledgeGraphItem> triples = await handler.GetTriplesBySparQL(s, 2);
+                foreach(APIs.KnowledgeGraphAPI.KnowledgeGraphItem item in triples)
                 {
-                    fileStreamHandler.AppendToFile("C:/P5/FunctionalityLayer_FactChecker/FactChecker/TestData/relations.txt", item.ToString());
+                    fileStreamHandler.AppendToFile("./TestData/relations.txt", item.ToString());
                 }
             }
+
+            Console.WriteLine("done");
 
         }
 
