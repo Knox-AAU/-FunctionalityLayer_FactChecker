@@ -25,5 +25,5 @@ jobs:
       working-directory: FactChecker
     - name: Test
       run: dotnet test --no-build --verbosity normal
-      working-directory: FactChecker
+      working-directory: XUnitTestProject
 
