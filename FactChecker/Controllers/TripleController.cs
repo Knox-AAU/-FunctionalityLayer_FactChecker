@@ -20,13 +20,11 @@ namespace FactChecker.Controllers
 
         private async void GetTriplesFromFile ()
         {
-            Console.WriteLine("Im startistarti");
             IO.FileStreamHandler fileStreamHandler = new IO.FileStreamHandler();
             foreach (string s in await fileStreamHandler.ReadFile("./TestData/relations.txt"))
             {
                 triples.Add(s);
             }
-            Console.WriteLine("im donidoni");
         }
 
 
