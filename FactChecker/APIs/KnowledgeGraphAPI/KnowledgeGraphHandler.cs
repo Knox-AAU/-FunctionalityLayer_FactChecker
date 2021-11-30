@@ -33,10 +33,10 @@ namespace FactChecker.APIs.KnowledgeGraphAPI
 
                     foreach (DataTable table in ds.Tables)
                     {
+                        string rSplit = "";
+                        string tSplit = "";
                         foreach (DataRow row in table.Rows)
                         {
-                            string rSplit = "";
-                            string tSplit = "";
                             foreach (object item in row.ItemArray)
                             {
                                 if(item.ToString().Contains("http://"))
