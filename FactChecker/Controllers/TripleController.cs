@@ -11,27 +11,12 @@ namespace FactChecker.Controllers
     [Route("[controller]")]
     public class TripleController : ControllerBase
     {
-        public List<string> triples = new List<string>(); 
-        
-        public TripleController ()
-        {
-            GetTriplesFromFile();
-        } 
-
-        private async void GetTriplesFromFile ()
-        {
-            IO.FileStreamHandler fileStreamHandler = new IO.FileStreamHandler();
-            foreach (string s in await fileStreamHandler.ReadFile("./TestData/relations.txt"))
-            {
-                triples.Add(s);
-            }
-        }
-
+        public static TestData.WikiDataTriples WikiDataTriples = new TestData.WikiDataTriples();
 
         [HttpGet]
         public List<string> Get()
         {
-            return triples;
+            return WikiDataTriples.triples;
         }
     }
 }
