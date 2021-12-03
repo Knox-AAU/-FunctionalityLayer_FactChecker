@@ -64,7 +64,6 @@ links = ["https://en.wikipedia.org/wiki/Eternals_(film)",
 
 for i, url in enumerate(links):
     article = articleStore(i, url)
-    print("article", i)
     for word in set(article):
         if word != "":
             cursor = db.cursor()
@@ -75,4 +74,3 @@ for i, url in enumerate(links):
             cursor.close()
 
 db.close()
-print("all gooooooooood man")
