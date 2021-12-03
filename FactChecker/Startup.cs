@@ -1,3 +1,4 @@
+using FactChecker.PassageRetrieval;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -19,6 +20,22 @@ namespace FactChecker
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            
+        }
+
+        async void lol ()
+        {
+            TestData.WikiDataEntities wikiDataEntities = new TestData.WikiDataEntities();
+            APIs.KnowledgeGraphAPI.KnowledgeGraphHandler handler = new APIs.KnowledgeGraphAPI.KnowledgeGraphHandler();
+            IO.FileStreamHandler fileStreamHandler = new IO.FileStreamHandler();
+            foreach (string s in wikiDataEntities.entities)
+            {
+                List<APIs.KnowledgeGraphAPI.KnowledgeGraphItem> triples = await handler.GetTriplesBySparQL(s, 2);
+                foreach(APIs.KnowledgeGraphAPI.KnowledgeGraphItem item in triples)
+                {
+                    fileStreamHandler.AppendToFile("./TestData/relations.txt", item.ToString());
+                }
+            }
         }
 
         public IConfiguration Configuration { get; }
@@ -26,7 +43,6 @@ namespace FactChecker
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
