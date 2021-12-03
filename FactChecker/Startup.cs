@@ -1,3 +1,4 @@
+using FactChecker.PassageRetrieval;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -24,8 +25,6 @@ namespace FactChecker
 
         async void lol ()
         {
-
-            Console.Write("begin");
             TestData.WikiDataEntities wikiDataEntities = new TestData.WikiDataEntities();
             APIs.KnowledgeGraphAPI.KnowledgeGraphHandler handler = new APIs.KnowledgeGraphAPI.KnowledgeGraphHandler();
             IO.FileStreamHandler fileStreamHandler = new IO.FileStreamHandler();
@@ -37,9 +36,6 @@ namespace FactChecker
                     fileStreamHandler.AppendToFile("./TestData/relations.txt", item.ToString());
                 }
             }
-
-            Console.WriteLine("done");
-
         }
 
         public IConfiguration Configuration { get; }
