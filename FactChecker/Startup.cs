@@ -19,19 +19,21 @@ namespace FactChecker
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            lol();
         }
 
-        async void lol ()
+        async void AppendRelationsToFile ()
         {
             TestData.WikiDataEntities wikiDataEntities = new TestData.WikiDataEntities();
             APIs.KnowledgeGraphAPI.KnowledgeGraphHandler handler = new APIs.KnowledgeGraphAPI.KnowledgeGraphHandler();
             IO.FileStreamHandler fileStreamHandler = new IO.FileStreamHandler();
             Console.WriteLine("begin");
-            List<APIs.KnowledgeGraphAPI.KnowledgeGraphItem> triples = await handler.GetTriplesBySparQL("Q26876", 2);
-            foreach(APIs.KnowledgeGraphAPI.KnowledgeGraphItem item in triples)
+            foreach(String s in wikiDataEntities.entities)
             {
-                Console.WriteLine(item.ToString());
+                List<APIs.KnowledgeGraphAPI.KnowledgeGraphItem> triples = await handler.GetTriplesBySparQL(s, 2);
+                foreach(APIs.KnowledgeGraphAPI.KnowledgeGraphItem triple in triples)
+                {
+                    fileStreamHandler.AppendToFile("./TestData/relations.txt", triple.ToString());
+                }
             }
             Console.WriteLine("done");
             

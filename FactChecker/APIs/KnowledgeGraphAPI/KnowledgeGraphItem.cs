@@ -19,7 +19,7 @@ namespace FactChecker.APIs.KnowledgeGraphAPI
 
         public override string ToString()
         {
-            return s + " " + r + " " + t;
+            return "<" + s + ">" + " <"+r + "> <" + t+">";
         }
     }
 }

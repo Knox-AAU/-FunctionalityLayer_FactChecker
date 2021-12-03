@@ -11,6 +11,7 @@ namespace FactChecker.TestData
         
         public WikiDataEntities ()
         {
+            GetEntitiesFromFile();
         }
 
         public async void GetEntitiesFromFile ()
