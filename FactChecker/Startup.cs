@@ -1,17 +1,12 @@
 using FactChecker.PassageRetrieval;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FactChecker
 {
@@ -20,6 +15,17 @@ namespace FactChecker
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            TFIDF.TFIDFHandler tFIDFHandler = new TFIDF.TFIDFHandler();
+            List<string> search = new List<string>();
+            search.Add("Joe");
+            search.Add("Biden");
+            List<TFIDF.TFIDFItem> tFIDFItems = tFIDFHandler.CalculateTFIDF(search);
+            
+            foreach(TFIDF.TFIDFItem items in tFIDFItems)
+            {
+                Console.WriteLine(items.score + " - " + items.articleId);
+            }
+            
         }
 
         async void AppendRelationsToFile ()
