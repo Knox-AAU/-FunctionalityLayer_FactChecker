@@ -15,16 +15,6 @@ namespace FactChecker
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            TFIDF.TFIDFHandler tFIDFHandler = new TFIDF.TFIDFHandler();
-            List<string> search = new List<string>();
-            search.Add("Joe");
-            search.Add("Biden");
-            List<TFIDF.TFIDFItem> tFIDFItems = tFIDFHandler.CalculateTFIDF(search);
-            
-            foreach(TFIDF.TFIDFItem items in tFIDFItems)
-            {
-                Console.WriteLine(items.score + " - " + items.articleId);
-            }
             
         }
 

@@ -9,7 +9,7 @@ namespace FactChecker.TFIDF
     {
         
         int numberOfArticles = 15;
-        int maxArticles = 5;
+        public int maxArticles = 5;
         public List<TFIDFItem> CalculateTFIDF (List<string> search)
         {
             WordcountDB.WordCount wordCount = new WordcountDB.WordCount();
@@ -43,12 +43,12 @@ namespace FactChecker.TFIDF
 
         public float CalculateTermFrequency (int f_td)
         {
-            return (float)(1 + Math.Log(f_td));
+            return (float)(1 + Math.Log(f_td,10));
         }
 
         public float CalculateInverseDocumentFrequency (int numberOfDocuments, int numberOfDocumentsWithTerm)
         {
-            return (float)Math.Log(numberOfDocuments / numberOfDocumentsWithTerm);
+            return (float)Math.Log(numberOfDocuments / numberOfDocumentsWithTerm,10);
         }
     }
 }
