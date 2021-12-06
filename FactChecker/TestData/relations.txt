@@ -1,106 +1,120 @@
-Q1535153 P31 Q201658
-Q1535153 P279 Q2973181
-Q65 P17 Q30
-Q65 P30 Q49
-Q4638888 P31 Q1414729
-Q4638888 P127 Q5012261
-Q26156709 P31 Q26001214
-Q26156709 P31 Q26001252
-Q6279 P27 Q30
-Q6279 P31 Q5
-Q16878899 P460 Q3829939
-Q16878899 P31 Q4167410
-Q1059047 P17 Q142
-Q1059047 P31 Q1144991
-Q13605596 P27 Q30
-Q13605596 P31 Q5
-Q216364 P17 Q30
-Q216364 P159 Q65
-Q15935 P27 Q30
-Q55934491 P291 Q30
-Q55934491 P495 Q30
-Q65768589 P495 Q30
-Q65768589 P840 Q62
-Q2262357 P27 Q148
-Q2262357 P463 Q108190777
-Q24004849 P27 Q16
-Q24004849 P551 Q172
-Q3421381 P9071 Q6498903
-Q3421381 P21 Q6581097
-Q1060165 P17 Q30
-Q1060165 P159 Q65
-Q90 P17 Q142
-Q90 P1376 Q142
-Q6002306 P279 Q11795009
-Q6002306 P3095 Q28834867
-Q85518571 P495 Q30
-Q85518571 P725 Q104189100
-Q2023710 P27 Q21
-Q2023710 P31 Q5
-Q642878 P495 Q30
-Q189489 P27 Q30
-Q189489 P31 Q5
-Q23215 P27 Q145
-Q23215 P31 Q5
-Q1123947 P17 Q145
-Q1123947 P159 Q84
-Q170165 P31 Q105543609
-Q2902300 P17 Q30
-Q2902300 P749 Q16161254
-Q1764379 P495 Q30
-Q1764379 P264 Q1025106
-Q17544624 P495 Q30
-Q17544624 P31 Q134556
-Q4413456 P17 Q30
-Q4413456 P159 Q60
-Q193701 P17 Q30
-Q106868050 P17 Q30
-Q106868050 P31 Q167037
-Q13156052 P910 Q24069523
-Q13156052 P279 Q7590
-Q478214 P495 Q30
-Q478214 P17 Q30
-Q65359104 P17 Q30
-Q621364 P17 Q30
-Q621364 P452 Q1415395
-Q190192 P291 Q30
-Q190192 P495 Q30
-Q114819 P495 Q30
-Q114819 P915 Q96
-Q65 P17 Q30
-Q65 P30 Q49
-Q3404003 P495 Q30
-Q3404003 P1889 Q107395714
-Q27985819 P495 Q30
-Q27985819 P840 Q60
-Q642878 P495 Q30
-Q11696 P1001 Q30
-Q11696 P17 Q30
-Q29468 P17 Q30
-Q29468 P159 Q61
-Q18424 P17 Q30
-Q18424 P131 Q60
-Q54109 P17 Q30
-Q54109 P30 Q49
-Q253414 P37 Q150
-Q711 P530 Q142
-Q711 P530 Q145
-Q749394 P17 Q16
-Q749394 P31 Q163740
-Q108745 P495 Q30
-Q108745 P840 Q60
-Q2365168 P495 Q30
-Q2365168 P170 Q105221
-Q2031292 P27 Q30
-Q2031292 P31 Q5
-Q219602 P17 Q30
-Q219602 P159 Q60
-Q337377 P17 Q30
-Q337377 P1889 Q107222475
-Q29052 P17 Q30
-Q29052 P463 Q109259306
-Q846 P530 Q16
-Q2076915 P17 Q30
-Q2076915 P159 Q61
-Q912985 P641 Q1546270
-Q912985 P361 Q4839616
+<superhero film> <instance of> <film genre>
+<superhero film> <subclass of> <speculative fiction film>
+<Los Angeles> <country> <United States of America>
+<Los Angeles> <continent> <North America>
+<4DX> <instance of> <cinema film format>
+<4DX> <owned by> <CJ CGV>
+<Marvel Comics> <Wikidata property> <Marvel character ID>
+<Marvel Comics> <Wikidata property> <Marvel Comics creators ID>
+<Jump Kick> <instance of> <fighting-type Pokémon move>
+<Jump Kick> <instance of> <Physical move>
+<Joe Biden> <country of citizenship> <United States of America>
+<Joe Biden> <instance of> <human>
+<Self Defense> <said to be the same as> <Legittima difesa>
+<Self Defense> <instance of> <Wikimedia disambiguation page>
+<National Guard> <country> <France>
+<National Guard> <instance of> <military reserve force>
+<Travis Scott> <country of citizenship> <United States of America>
+<Travis Scott> <instance of> <human>
+<Epic Records> <country> <United States of America>
+<Epic Records> <headquarters location> <Los Angeles>
+<Kanye West> <country of citizenship> <United States of America>
+<Kanye West> <instance of> <human>
+<Astroworld> <place of publication> <United States of America>
+<Astroworld> <country of origin> <United States of America>
+<Shang-Chi and the Legend of the Ten Rings> <country of origin> <United States of America>
+<Shang-Chi and the Legend of the Ten Rings> <narrative location> <San Francisco>
+<Shang-Chi> <country of citizenship> <People's Republic of China>
+<Shang-Chi> <member of> <Five Weapons Society>
+<Simu Liu> <country of citizenship> <Canada>
+<Simu Liu> <residence> <Toronto>
+<Razor Fist> <character type> <supervillain>
+<Razor Fist> <sex or gender> <male>
+<Riot Games> <country> <United States of America>
+<Riot Games> <headquarters location> <Los Angeles>
+<Paris> <capital of> <France>
+<Paris> <country> <France>
+<computer-generated imagery> <subclass of> <image>
+<computer-generated imagery> <practiced by> <CG artist>
+<Arcane> <country of origin> <United States of America>
+<Arcane> <voice actor> <Mia Sinclair Jenness>
+<Marvel Comics> <Wikidata property> <Marvel character ID>
+<Marvel Comics> <Wikidata property> <Marvel Comics creators ID>
+<Tom Holland> <country of citizenship> <England>
+<Tom Holland> <instance of> <human>
+<Marvel Cinematic Universe> <country of origin> <United States of America>
+<Marvel Cinematic Universe> <fictional universe described in> <Marvel One-Shots>
+<Zendaya> <country of citizenship> <United States of America>
+<Zendaya> <instance of> <human>
+<Adele> <country of citizenship> <United Kingdom>
+<Adele> <instance of> <human>
+<XL Recordings> <country> <United Kingdom>
+<XL Recordings> <headquarters location> <London>
+<Grammy Award> <Wikidata property> <Grammy Awards artist ID>
+<Grammy Award> <country> <United States of America>
+<Rolling in the Deep> <instance of> <musical work/composition>
+<Rolling in the Deep> <significant event> <54th Annual Grammy Awards>
+<Big Machine Records> <country> <United States of America>
+<Big Machine Records> <parent organization> <Hybe Corporation>
+<Love Story> <country of origin> <United States of America>
+<Love Story> <record label> <Universal Republic Records>
+<Shake It Off> <country of origin> <United States of America>
+<Shake It Off> <instance of> <single>
+<Republic Records> <country> <United States of America>
+<Republic Records> <headquarters location> <New York City>
+<SpaceX> <country> <United States of America>
+<SpaceX> <investor> <Google>
+<Tesla Energy> <country> <United States of America>
+<Tesla Energy> <instance of> <corporation>
+<hyperloop> <topic's main category> <Category:Hyperloop>
+<hyperloop> <subclass of> <transport>
+<Tesla, Inc.> <country of origin> <United States of America>
+<Tesla, Inc.> <country> <United States of America>
+<HBO Max> <Wikidata property> <HBO Max ID>
+<HBO Max> <country> <United States of America>
+<Legendary Pictures> <country> <United States of America>
+<Legendary Pictures> <industry> <film industry>
+<Dune> <place of publication> <United States of America>
+<Dune> <country of origin> <United States of America>
+<Dune> <country of origin> <United States of America>
+<Dune> <filming location> <Mexico>
+<Los Angeles> <country> <United States of America>
+<Los Angeles> <continent> <North America>
+<Prisoners> <country of origin> <United States of America>
+<Prisoners> <different from> <Labyrint>
+<Spider-Man: Far from Home> <country of origin> <United States of America>
+<Spider-Man: Far from Home> <narrative location> <New York City>
+<Marvel Cinematic Universe> <country of origin> <United States of America>
+<Marvel Cinematic Universe> <fictional universe described in> <Marvel One-Shots>
+<President of the United States> <country> <United States of America>
+<President of the United States> <applies to jurisdiction> <United States of America>
+<Republican Party> <country> <United States of America>
+<Republican Party> <headquarters location> <Washington, D.C.>
+<Queens> <country> <United States of America>
+<Queens> <located in the administrative territorial entity> <New York City>
+<United States Capitol> <country> <United States of America>
+<United States Capitol> <continent> <North America>
+<FIFA> <Wikidata property> <FIFA player ID>
+<FIFA> <official language> <French>
+<Mongolia> <diplomatic relation> <France>
+<Mongolia> <diplomatic relation> <United Kingdom>
+<World Anti-Doping Agency> <country> <Canada>
+<World Anti-Doping Agency> <instance of> <nonprofit organization>
+<Ghostbusters> <country of origin> <United States of America>
+<Ghostbusters> <narrative location> <New York City>
+<Ghostbusters> <country of origin> <United States of America>
+<Ghostbusters> <creator> <Dan Aykroyd>
+<Paul Feig> <country of citizenship> <United States of America>
+<Paul Feig> <instance of> <human>
+<New York Jets> <country> <United States of America>
+<New York Jets> <headquarters location> <New York City>
+<Los Angeles Rams> <country> <United States of America>
+<Los Angeles Rams> <different from> <L.A. Rats>
+<Vanderbilt University> <country> <United States of America>
+<Vanderbilt University> <member of> <Orbital Reef University Advisory Council>
+<Qatar> <diplomatic relation> <Canada>
+<Qatar> <diplomatic relation> <Germany>
+<National Association of Theatre Owners> <country> <United States of America>
+<National Association of Theatre Owners> <headquarters location> <Washington, D.C.>
+<running back> <sport> <gridiron football>
+<running back> <part of> <backfield>

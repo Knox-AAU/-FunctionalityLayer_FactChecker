@@ -6,6 +6,8 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Collections.Generic;
+using System.Xml;
+using System.Linq;
 
 namespace FactChecker.APIs.KnowledgeGraphAPI
 {
@@ -14,54 +16,53 @@ namespace FactChecker.APIs.KnowledgeGraphAPI
 
         public string knowledgeGraphURL = "https://query.wikidata.org/bigdata/namespace/wdq/sparql";
         HttpClient client = new HttpClient();
-
+        public string xmlResultName = "{http://www.w3.org/2005/sparql-results#}result";
         public async Task<List<KnowledgeGraphItem>> GetTriplesBySparQL(string s, int limit)
         {
             client.DefaultRequestHeaders.Add("User-Agent", "FactChecker/0.0 (kontakt@magnusaxelsen.dk) generic-library/0.0");
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
-
             List<KnowledgeGraphItem> triples = new List<KnowledgeGraphItem>();
             try
             {
-                HttpResponseMessage response = await client.GetAsync(knowledgeGraphURL + "?query=SELECT ?r ?t WHERE {wd:" + s + " ?r ?t}ORDER BY ?t limit " + limit);           
+                HttpResponseMessage response = await client.GetAsync(knowledgeGraphURL + "?query=SELECT ?aLabel ?propLabel ?cLabel WHERE { BIND(wd:" + s +" AS ?a). ?a ?b ?c . SERVICE wikibase:label { bd:serviceParam wikibase:language \"en\" . } ?prop wikibase:directClaim ?b . }ORDER BY ?c limit " + limit);
                 if (response.IsSuccessStatusCode)
                 {
-                    XDocument xdoc = XDocument.Parse(response.Content.ReadAsStringAsync().Result);
-                    StringReader sr = new StringReader(xdoc.ToString());
-                    DataSet ds = new DataSet();
-                    ds.ReadXml(sr);
-
-                    foreach (DataTable table in ds.Tables)
+                    var xml = XDocument.Parse(response.Content.ReadAsStringAsync().Result);                  
+                    foreach (var element in xml.Descendants())
                     {
-                        string rSplit = "";
-                        string tSplit = "";
-                        foreach (DataRow row in table.Rows)
+                        if(element.Name == xmlResultName)
                         {
-                            foreach (object item in row.ItemArray)
+                            string aLabel = "";
+                            string propLabel = "";
+                            string cLabel = "";
+                            foreach(var children in element.Descendants())
                             {
-                                if(item.ToString().Contains("http://"))
+                                if(children.Attribute("name") != null)
                                 {
-                                    String[] splitted = item.ToString().Split('/');
-                                    if(splitted[splitted.Length - 1].Contains("P"))
+                                    if(children.Attribute("name").Value == "aLabel")
                                     {
-                                        rSplit = splitted[splitted.Length - 1];
-                                    }else if(splitted[splitted.Length -1].Contains("Q"))
+                                        aLabel = children.Value;
+                                    }else if(children.Attribute("name").Value == "propLabel")
                                     {
-                                        tSplit = splitted[splitted.Length - 1];
+                                        propLabel = children.Value; 
+                                    }else if(children.Attribute("name").Value == "cLabel")
+                                    {
+                                        cLabel = children.Value;
                                     }
-                                }
+                              }
                             }
-                            if(rSplit != "" && tSplit != "")
+                            if(aLabel != "" && propLabel != "" && cLabel != "")
                             {
-                                triples.Add(new KnowledgeGraphItem(s, rSplit, tSplit));
-                                rSplit = "";
-                                tSplit = "";
+                                triples.Add(new KnowledgeGraphItem(aLabel, propLabel, cLabel));
+                                aLabel = "";
+                                propLabel = "";
+                                cLabel = "";
                             }
                         }
                     }
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e);
             }
