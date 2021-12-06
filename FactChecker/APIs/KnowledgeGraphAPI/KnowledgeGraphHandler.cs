@@ -16,7 +16,7 @@ namespace FactChecker.APIs.KnowledgeGraphAPI
 
         public string knowledgeGraphURL = "https://query.wikidata.org/bigdata/namespace/wdq/sparql";
         HttpClient client = new HttpClient();
-
+        public string xmlResultName = "{http://www.w3.org/2005/sparql-results#}result";
         public async Task<List<KnowledgeGraphItem>> GetTriplesBySparQL(string s, int limit)
         {
             client.DefaultRequestHeaders.Add("User-Agent", "FactChecker/0.0 (kontakt@magnusaxelsen.dk) generic-library/0.0");
@@ -30,7 +30,7 @@ namespace FactChecker.APIs.KnowledgeGraphAPI
                     var xml = XDocument.Parse(response.Content.ReadAsStringAsync().Result);                  
                     foreach (var element in xml.Descendants())
                     {
-                        if(element.Name == "{http://www.w3.org/2005/sparql-results#}result")
+                        if(element.Name == xmlResultName)
                         {
                             string aLabel = "";
                             string propLabel = "";
