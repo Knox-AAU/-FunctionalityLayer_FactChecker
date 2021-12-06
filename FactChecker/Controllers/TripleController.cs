@@ -3,6 +3,8 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace FactChecker.Controllers
@@ -14,7 +16,7 @@ namespace FactChecker.Controllers
         public static TestData.WikiDataTriples WikiDataTriples = new TestData.WikiDataTriples();
 
         [HttpGet]
-        public List<string> Get()
+        public IEnumerable<APIs.KnowledgeGraphAPI.KnowledgeGraphItem> Get()
         {
             return WikiDataTriples.triples;
         }
