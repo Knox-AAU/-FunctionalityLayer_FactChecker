@@ -15,7 +15,7 @@ namespace FactChecker.WordcountDB
             using var connection = new SQLiteConnection(connection_string);
             connection.Open();
 
-            string statement = $"SELECT * FROM ARTICLE WHERE id = {id}";
+            string statement = $"SELECT * FROM ARTICLE WHERE ID = {id}";
 
             using var cmd = new SQLiteCommand(statement, connection);
             using SQLiteDataReader reader = cmd.ExecuteReader();
