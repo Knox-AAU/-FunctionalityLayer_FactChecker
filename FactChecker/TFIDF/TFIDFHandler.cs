@@ -5,24 +5,36 @@ using System.Threading.Tasks;
 
 namespace FactChecker.TFIDF
 {
+    /// <summary>
+    ///     Contains the method <c>CalculateTFIDF</c>
+    /// </summary>
     public class TFIDFHandler
     {
-        
         int numberOfArticles = 15;
         public int maxArticles = 5;
+
+        /// <summary>
+        ///     Takes a list of <typeparamref name="string"/> 
+        ///     and ranks articles using each <typeparamref name="string"/> in the list.
+        /// </summary>
+        /// <param name="search">query to execute</param>
+        /// <returns>
+        ///     A list containing the Top 5 articles which are most likely 
+        ///     to support the <typeparamref name="search"/> parameter.
+        /// </returns>
         public List<TFIDFItem> CalculateTFIDF (List<string> search)
         {
             WordcountDB.WordCount wordCount = new WordcountDB.WordCount();
             List<TFIDFItem> articles = new List<TFIDFItem>();
-            foreach(string s in search)
-            {
+            foreach(string s in search) //In this iteration of the project, search is a list of words from the chosen triple 
+            {                           
                 List<WordcountDB.WordCountItem> wordcountItems = wordCount.FetchDB(s);
                 foreach(WordcountDB.WordCountItem item in wordcountItems)
                 {
                     float tf = CalculateTermFrequency(item.Occurrence);
                     float idf = CalculateInverseDocumentFrequency(numberOfArticles, wordcountItems.Count);
                     bool foundArticle = false;
-                    foreach(TFIDFItem article in articles)
+                    foreach(TFIDFItem article in articles) //Add TF-IDF score to articles which contain s
                     {
                         if(article.articleId == item.ArticleID)
                         {
@@ -30,7 +42,7 @@ namespace FactChecker.TFIDF
                             foundArticle = true;
                         }
                     }
-                    if(!foundArticle)
+                    if(!foundArticle) //If an article containing s is found, a new TFIDFItem is added to a list
                     {
                         TFIDFItem article = new TFIDFItem(item.ArticleID, tf * idf);
                         articles.Add(article);
@@ -41,11 +53,27 @@ namespace FactChecker.TFIDF
             return articles.Take(maxArticles).ToList();
         }
 
+        /// <summary>
+        ///     Takes an <typeparamref name="int"/>.
+        /// </summary>
+        /// <param name="f_td"></param>
+        /// <returns>
+        ///     Term frequenzy of type <typeparamref name="float"/>
+        /// </returns>
         public float CalculateTermFrequency (int f_td)
         {
             return (float)(1 + Math.Log(f_td,10));
         }
 
+        /// <summary>
+        ///     Takes the total number of documents: type <typeparamref name="int"/>,
+        ///     and a unique number of documents containing a particular term: type <typeparamref name="int"/>.
+        /// </summary>
+        /// <param name="numberOfDocuments"></param>
+        /// <param name="numberOfDocumentsWithTerm"></param>
+        /// <returns>
+        ///     Inverse document frequenzy of type <typeparamref name="float"/>
+        /// </returns>
         public float CalculateInverseDocumentFrequency (int numberOfDocuments, int numberOfDocumentsWithTerm)
         {
             return (float)Math.Log(numberOfDocuments / numberOfDocumentsWithTerm,10);
