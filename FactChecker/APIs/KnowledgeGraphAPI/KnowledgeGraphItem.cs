@@ -11,6 +11,14 @@ namespace FactChecker.APIs.KnowledgeGraphAPI
         public string r { get; set; }
         public string t { get; set; }
         public string passage { get; set; }
+
+        /// <summary>
+        /// Contructor taking three arguments of type (<paramref name="string"/>, <paramref name="string"/>, <paramref name="string"/>).
+        /// Used to create relation triples from the knowledge graph. 
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="r"></param>
+        /// <param name="t"></param>
         public KnowledgeGraphItem (string s, string r, string t)
         {
             this.s = s;
@@ -18,6 +26,9 @@ namespace FactChecker.APIs.KnowledgeGraphAPI
             this.t = t;
         }
 
+        /// <summary>
+        /// Constructor taking no arguments. Used for working with knowledge graph data that does not come in triples. 
+        /// </summary>
         public KnowledgeGraphItem()
         {
 

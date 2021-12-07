@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace FactChecker.TFIDF
 {
     /// <summary>
-    ///     Contains the method <c>CalculateTFIDF</c>
+    /// Contains the method <c>CalculateTFIDF</c>
     /// </summary>
     public class TFIDFHandler
     {
@@ -14,13 +14,13 @@ namespace FactChecker.TFIDF
         public int maxArticles = 5;
 
         /// <summary>
-        ///     Takes a list of <typeparamref name="string"/> 
-        ///     and ranks articles using each <typeparamref name="string"/> in the list.
+        /// Takes a list of <typeparamref name="string"/> 
+        /// and ranks articles using each <typeparamref name="string"/> in the list.
         /// </summary>
-        /// <param name="search">query to execute</param>
+        /// <param name="search">List containing words from the relation triple</param>
         /// <returns>
-        ///     A list containing the Top 5 articles which are most likely 
-        ///     to support the <typeparamref name="search"/> parameter.
+        /// A list containing the Top 5 articles which are most likely 
+        /// to support the <typeparamref name="search"/> parameter.
         /// </returns>
         public List<TFIDFItem> CalculateTFIDF (List<string> search)
         {
@@ -34,7 +34,7 @@ namespace FactChecker.TFIDF
                     float tf = CalculateTermFrequency(item.Occurrence);
                     float idf = CalculateInverseDocumentFrequency(numberOfArticles, wordcountItems.Count);
                     bool foundArticle = false;
-                    foreach(TFIDFItem article in articles) //Add TF-IDF score to articles which contain s
+                    foreach(TFIDFItem article in articles) //Add TF-IDF score to specific article which contain s
                     {
                         if(article.articleId == item.ArticleID)
                         {
@@ -42,7 +42,7 @@ namespace FactChecker.TFIDF
                             foundArticle = true;
                         }
                     }
-                    if(!foundArticle) //If an article containing s is found, a new TFIDFItem is added to a list
+                    if(!foundArticle) //If an article containing s is not found, a new TFIDFItem is added to a list
                     {
                         TFIDFItem article = new TFIDFItem(item.ArticleID, tf * idf);
                         articles.Add(article);
@@ -54,11 +54,11 @@ namespace FactChecker.TFIDF
         }
 
         /// <summary>
-        ///     Takes an <typeparamref name="int"/>.
+        /// Takes the amount of times a specific word occurs in an article and calculates termfrequecy.
         /// </summary>
-        /// <param name="f_td"></param>
+        /// <param name="f_td">The amount of times a specific word occurs in an article</param>
         /// <returns>
-        ///     Term frequenzy of type <typeparamref name="float"/>
+        /// Term frequenzy of type <typeparamref name="float"/>
         /// </returns>
         public float CalculateTermFrequency (int f_td)
         {
@@ -66,13 +66,13 @@ namespace FactChecker.TFIDF
         }
 
         /// <summary>
-        ///     Takes the total number of documents: type <typeparamref name="int"/>,
-        ///     and a unique number of documents containing a particular term: type <typeparamref name="int"/>.
+        /// Takes the total number of documents: type <typeparamref name="numberOfDocuments"/>,
+        /// and a unique number of documents containing a particular term: type <typeparamref name="int"/>.
         /// </summary>
-        /// <param name="numberOfDocuments"></param>
-        /// <param name="numberOfDocumentsWithTerm"></param>
+        /// <param name="numberOfDocuments">Total number of documents</param>
+        /// <param name="numberOfDocumentsWithTerm">Number of unique documents containing a partcular term</param>
         /// <returns>
-        ///     Inverse document frequenzy of type <typeparamref name="float"/>
+        /// Inverse document frequenzy of type <typeparamref name="float"/>
         /// </returns>
         public float CalculateInverseDocumentFrequency (int numberOfDocuments, int numberOfDocumentsWithTerm)
         {

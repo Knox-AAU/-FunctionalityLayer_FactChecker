@@ -8,6 +8,9 @@ namespace FactChecker.WordcountDB
 {
     public class Article
     {
+        /// <summary>Takes parameter of type <paramref name="int"/> and fetches all matching articles</summary>
+        /// <param name="id"></param>
+        /// <returns>List of articles with ID's mathing the parameter <paramref name="id"/></returns>
         public ArticleItem FetchDB(int id)
         {
             List<ArticleItem> list = new List<ArticleItem>();
@@ -22,7 +25,6 @@ namespace FactChecker.WordcountDB
 
             while (reader.Read())
             {
-                //Console.WriteLine($"{rdr.GetInt32(0)} {rdr.GetString(1)} {rdr.GetInt32(2)} {rdr.GetInt32(3)}");
                 list.Add(new ArticleItem(reader.GetInt32(0), reader.GetString(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetString(4)));
             }
             connection.Close();

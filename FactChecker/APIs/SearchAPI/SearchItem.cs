@@ -1,6 +1,8 @@
 ﻿namespace FactChecker.APIs
 {
-
+    /// <summary>
+    /// A class containing fields for everything retrievable from Knox articles. 
+    /// </summary>
     public class SearchItem
     {
         public int articleId;
