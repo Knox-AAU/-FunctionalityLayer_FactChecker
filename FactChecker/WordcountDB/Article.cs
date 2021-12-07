@@ -8,9 +8,9 @@ namespace FactChecker.WordcountDB
 {
     public class Article
     {
-        /// <summary>Takes parameter of type <paramref name="int"/> and fetches all matching articles</summary>
+        /// <summary>Takes parameter of type <paramref name="int"/> and fetches the matching article</summary>
         /// <param name="id"></param>
-        /// <returns>List of articles with ID's mathing the parameter <paramref name="id"/></returns>
+        /// <returns>The articles that matches the input parameter</returns>
         public ArticleItem FetchDB(int id)
         {
             List<ArticleItem> list = new List<ArticleItem>();
