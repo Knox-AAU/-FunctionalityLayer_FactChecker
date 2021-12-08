@@ -28,6 +28,27 @@ namespace FactChecker.WordcountDB
             connection.Close();
             return list;
         }
+
+        public int FetchSumOfOccurences(string word)
+        {
+            string connection_string = "Data Source=wordcount.db";
+            using var connection = new SQLiteConnection(connection_string);
+            connection.Open();
+
+            string statement = $"SELECT SUM(OCCURRENCE) FROM WORDCOUNT WHERE WORD = '{word}'";
+
+            using var cmd = new SQLiteCommand(statement, connection);
+            using SQLiteDataReader reader = cmd.ExecuteReader();
+
+            Console.WriteLine("im called with" + word + "lol");
+            int sum = 0;
+            if(reader.Read())
+            {
+              sum = reader.GetInt32(0);
+            }
+            connection.Close();
+            return sum;
+        }
     }
 }
 

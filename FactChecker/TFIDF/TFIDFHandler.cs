@@ -8,7 +8,7 @@ namespace FactChecker.TFIDF
     public class TFIDFHandler
     {
         
-        int numberOfArticles = 15;
+        int numberOfArticles = 16;
         public int maxArticles = 5;
         public List<TFIDFItem> CalculateTFIDF (List<string> search)
         {

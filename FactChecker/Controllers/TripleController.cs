@@ -25,15 +25,20 @@ namespace FactChecker.Controllers
         public APIs.KnowledgeGraphAPI.KnowledgeGraphItem Post(APIs.KnowledgeGraphAPI.KnowledgeGraphItem item)
         {
             TFIDF.TFIDFHandler tFIDFHandler = new TFIDF.TFIDFHandler();
-            string search = item.s + item.r + item.t;
+            string search = item.s + " " + item.r + " " + item.t;
             List<string> searchList = new List<string>();
             foreach(string s in search.Split(' '))
             {
                 searchList.Add(s);
             }
             List<TFIDF.TFIDFItem> tFIDFItems = tFIDFHandler.CalculateTFIDF(searchList);
-            
-            item.passage = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";  
+            List<int> articles = new List<int>();
+            foreach(TFIDF.TFIDFItem article in tFIDFItems)
+            {
+                articles.Add(article.articleId);
+            }
+            TMWIIS.TMWIISHandler tMWIISHandler = new TMWIIS.TMWIISHandler(articles, item);
+            item.passage = tMWIISHandler.Evidence();
             return item;
         }
     }

@@ -22,7 +22,6 @@ namespace FactChecker.TMWIIS
         {
             List<TMWIISItem> rankedPassages = new List<TMWIISItem>();
             WordcountDB.Article articleHandler = new WordcountDB.Article();
-
             for(int j = 0; j < articleIDs.Count; j++)
             {
                 WordcountDB.ArticleItem article = articleHandler.FetchDB(articleIDs[j]);
@@ -33,17 +32,21 @@ namespace FactChecker.TMWIIS
 
                     int sourcePassageOccurence = WordOccurrence(knowledgeGraphItem.s, passages[i]);
                     int sourceDocumentOccurence = WordOccurrence(knowledgeGraphItem.s, article.Text);
+                    int sourceTotalOccurence = GetNumberOfOccurencesInAllDocuments(knowledgeGraphItem.s);
 
                     int relationPassageOccurence = WordOccurrence(knowledgeGraphItem.r, passages[i]);
                     int relationDocumentOccurence = WordOccurrence(knowledgeGraphItem.r, article.Text);
+                    int relationTotalOccurence = GetNumberOfOccurencesInAllDocuments(knowledgeGraphItem.r);
 
                     int targetPassageOccurence = WordOccurrence(knowledgeGraphItem.t, passages[i]);
                     int targetDocumentOccurence = WordOccurrence(knowledgeGraphItem.t, article.Text);
+                    int targetTotalOccurence = GetNumberOfOccurencesInAllDocuments(knowledgeGraphItem.t);
+                     
 
-                    double evidenceSource = EvidenceCalculator(passageLength, article.Lenght, article.UniqueLenght, sourcePassageOccurence, sourceDocumentOccurence);
-                    double evidenceRelation = EvidenceCalculator(passageLength, article.Lenght, article.UniqueLenght, relationPassageOccurence, relationDocumentOccurence);
-                    double evidenceTarget = EvidenceCalculator(passageLength, article.Lenght, article.UniqueLenght, targetPassageOccurence, targetDocumentOccurence);
-                    double passageScore = evidenceSource * evidenceRelation * evidenceTarget;
+                    float evidenceSource = EvidenceCalculator(passageLength, article.UniqueLenght, sourcePassageOccurence, sourceDocumentOccurence, sourceTotalOccurence);
+                    float evidenceRelation = EvidenceCalculator(passageLength, article.UniqueLenght, relationPassageOccurence, relationDocumentOccurence, relationTotalOccurence);
+                    float evidenceTarget = EvidenceCalculator(passageLength, article.UniqueLenght, targetPassageOccurence, targetDocumentOccurence, targetTotalOccurence);
+                    float passageScore = evidenceSource * evidenceRelation * evidenceTarget;
                     rankedPassages.Add(new TMWIISItem(passageScore, passages[i], article.Link));
                 }
             }
@@ -55,17 +58,30 @@ namespace FactChecker.TMWIIS
             PassageRetrievalHandler pr = new PassageRetrievalHandler(text);
             return pr.GetPassages();
         }
-        public double EvidenceCalculator(int passageLength, int articleLength, int uniqueLength, int passageOccurrence, int documentOccurrence)
+        public float EvidenceCalculator(int passageLength, int uniqueLength, int passageOccurrence, int documentOccurrence, int totalOccurrence)
         {
-            double passageSource, documentSource, collectionSource;
-            double lambda1 = 0.4, lambda2 = 0.4, lambda3 = 0.2;
+            float passageSource, documentSource, collectionSource;
+            float lambda1 = 0.4f, lambda2 = 0.4f, lambda3 = 0.2f;
 
-            passageSource = (passageOccurrence + 1) / (passageLength + uniqueLength);
-            documentSource = (documentOccurrence + 1) / (passageLength + uniqueLength);
-            collectionSource = documentOccurrence / uniqueLength;
+            passageSource = (passageOccurrence + 1) / ((float)passageLength + (float)uniqueLength);
+            documentSource = (documentOccurrence + 1) / ((float)passageLength + (float)uniqueLength);
+            collectionSource = (totalOccurrence) /(float) uniqueLength;
+            return lambda1 * passageSource * lambda2 * documentSource * lambda3 * collectionSource;
+        }
 
-            return lambda1 * passageSource * lambda2 * documentSource
-                * lambda3 * collectionSource;
+        public int GetNumberOfOccurencesInAllDocuments (string word)
+        {
+            List<string> splitted = word.Split(' ').ToList();           
+            WordcountDB.WordCount wordCount = new WordcountDB.WordCount();
+            int sum = 0;
+            int lol = wordCount.FetchSumOfOccurences("Joe");
+
+            foreach(string s in splitted)
+            {
+                sum += wordCount.FetchSumOfOccurences(s);
+            }
+     
+            return sum;
         }
         public int PassageLength(string passage)
         {
