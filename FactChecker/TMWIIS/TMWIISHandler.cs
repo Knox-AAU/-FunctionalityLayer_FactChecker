@@ -55,18 +55,18 @@ namespace FactChecker.TMWIIS
             PassageRetrievalHandler pr = new PassageRetrievalHandler(text);
             return pr.GetPassages();
         }
-        public double EvidenceCalculator(int passageLength, int ArticleLength, int UniqueLength, int passageOccurrence, int DocumentOccurrence)
+        public double EvidenceCalculator(int passageLength, int articleLength, int uniqueLength, int passageOccurrence, int documentOccurrence)
         {
             //calculates the evidence for the Source Entity
             double passageSource, documentSource, collectionSource;
             double lambda1 = 0.4, lambda2 = 0.4, lambda3 = 0.2;
 
             //passage
-            passageSource = (passageOccurrence + 1) / (passageLength + UniqueLength);
+            passageSource = (passageOccurrence + 1) / (passageLength + uniqueLength);
             //document
-            documentSource = (DocumentOccurrence + 1) / (passageLength + UniqueLength);
+            documentSource = (documentOccurrence + 1) / (passageLength + uniqueLength);
             //collection
-            collectionSource = DocumentOccurrence / UniqueLength;
+            collectionSource = documentOccurrence / uniqueLength;
             //probability
             return lambda1 * passageSource * lambda2 * documentSource
                 * lambda3 * collectionSource;
