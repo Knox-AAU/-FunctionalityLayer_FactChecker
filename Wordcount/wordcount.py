@@ -57,7 +57,7 @@ links = ["https://en.wikipedia.org/wiki/Eternals_(film)",
          "https://en.wikipedia.org/wiki/Elon_Musk",
          "https://en.wikipedia.org/wiki/Dune_(2021_film)",
          "https://en.wikipedia.org/wiki/Jake_Gyllenhaal",
-         "https://da.wikipedia.org/wiki/Donald_Trump",
+         "https://en.wikipedia.org/wiki/Donald_Trump",
          "https://en.wikipedia.org/wiki/2022_FIFA_World_Cup_qualification",
          "https://en.wikipedia.org/wiki/Ghostbusters:_Afterlife",
          "https://en.wikipedia.org/wiki/Zac_Stacy",
@@ -65,6 +65,7 @@ links = ["https://en.wikipedia.org/wiki/Eternals_(film)",
 
 for i, url in enumerate(links):
     article = articleStore(i, url)
+    print("article", i)
     for word in set(article):
         if word != "":
             cursor = db.cursor()
