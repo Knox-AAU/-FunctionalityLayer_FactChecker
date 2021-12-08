@@ -60,7 +60,8 @@ links = ["https://en.wikipedia.org/wiki/Eternals_(film)",
          "https://da.wikipedia.org/wiki/Donald_Trump",
          "https://en.wikipedia.org/wiki/2022_FIFA_World_Cup_qualification",
          "https://en.wikipedia.org/wiki/Ghostbusters:_Afterlife",
-         "https://en.wikipedia.org/wiki/Zac_Stacy"]
+         "https://en.wikipedia.org/wiki/Zac_Stacy",
+         "https://en.wikipedia.org/wiki/Joe_Biden"]
 
 for i, url in enumerate(links):
     article = articleStore(i, url)
