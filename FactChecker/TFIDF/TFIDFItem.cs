@@ -10,10 +10,6 @@ namespace FactChecker.TFIDF
         public int articleId;
         public float score;
 
-        public TFIDFItem()
-        {
-        }
-
         public TFIDFItem(int articleId, float score)
         {
             this.articleId = articleId;
