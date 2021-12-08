@@ -11,44 +11,44 @@ namespace FactChecker.TMWIIS
     public class TMWIISHandler
     {
         private int maxPassages = 5;
-        public List<int> ArticleID;
-        public KnowledgeGraphItem KGItem;
+        public List<int> articleIDs;
+        public KnowledgeGraphItem knowledgeGraphItem;
         public TMWIISHandler(List<int> articleID, KnowledgeGraphItem KGitem)
         {
-            ArticleID = articleID;
-            KGItem = KGitem;
+            articleIDs = articleID;
+            knowledgeGraphItem = KGitem;
         }
         public List<TMWIISItem> Evidence()
         {
-            List<TMWIISItem> RankedPassages = new List<TMWIISItem>();
-            WordcountDB.Article articleText = new WordcountDB.Article();
+            List<TMWIISItem> rankedPassages = new List<TMWIISItem>();
+            WordcountDB.Article articleHandler = new WordcountDB.Article();
 
-            for(int j = 0; j < ArticleID.Count; j++)
+            for(int j = 0; j < articleIDs.Count; j++)
             {
-                WordcountDB.ArticleItem Article = articleText.FetchDB(ArticleID[j]);
-                List<string> passages = GetPassages(Article.Text);
+                WordcountDB.ArticleItem article = articleHandler.FetchDB(articleIDs[j]);
+                List<string> passages = GetPassages(article.Text);
                 for (int i = 0; i < passages.Count; i++)
                 {
                     int passageLength = PassageLength(passages[i]);
 
-                    int SourcePassage = WordOccurrence(KGItem.s, passages[i]);
-                    int SourceDocument = WordOccurrence(KGItem.s, Article.Text);
+                    int sourcePassageOccurence = WordOccurrence(knowledgeGraphItem.s, passages[i]);
+                    int sourceDocumentOccurence = WordOccurrence(knowledgeGraphItem.s, article.Text);
 
-                    int RelationPassage = WordOccurrence(KGItem.r, passages[i]);
-                    int RelationDocument = WordOccurrence(KGItem.r, Article.Text);
+                    int relationPassageOccurence = WordOccurrence(knowledgeGraphItem.r, passages[i]);
+                    int relationDocumentOccurence = WordOccurrence(knowledgeGraphItem.r, article.Text);
 
-                    int TargetPassage = WordOccurrence(KGItem.t, passages[i]);
-                    int TargetDocument = WordOccurrence(KGItem.t, Article.Text);
+                    int targetPassageOccurence = WordOccurrence(knowledgeGraphItem.t, passages[i]);
+                    int targetDocumentOccurence = WordOccurrence(knowledgeGraphItem.t, article.Text);
 
-                    double EvidenceS = EvidenceCalculator(passageLength, Article.Lenght, Article.UniqueLenght, SourcePassage, SourceDocument);
-                    double EvidenceR = EvidenceCalculator(passageLength, Article.Lenght, Article.UniqueLenght, RelationPassage, RelationDocument);
-                    double EvidenceT = EvidenceCalculator(passageLength, Article.Lenght, Article.UniqueLenght, TargetPassage, TargetDocument);
-                    double PassageScore = EvidenceS * EvidenceR * EvidenceT;
-                    RankedPassages.Add(new TMWIISItem(PassageScore, passages[i], Article.Link));
+                    double evidenceSource = EvidenceCalculator(passageLength, article.Lenght, article.UniqueLenght, sourcePassageOccurence, sourceDocumentOccurence);
+                    double evidenceRelation = EvidenceCalculator(passageLength, article.Lenght, article.UniqueLenght, relationPassageOccurence, relationDocumentOccurence);
+                    double evidenceTarget = EvidenceCalculator(passageLength, article.Lenght, article.UniqueLenght, targetPassageOccurence, targetDocumentOccurence);
+                    double passageScore = evidenceSource * evidenceRelation * evidenceTarget;
+                    rankedPassages.Add(new TMWIISItem(passageScore, passages[i], article.Link));
                 }
             }
-            RankedPassages.Sort((p, q) => q.score.CompareTo(p.score));
-            return RankedPassages.Take(maxPassages).ToList();
+            rankedPassages.Sort((p, q) => q.score.CompareTo(p.score));
+            return rankedPassages.Take(maxPassages).ToList();
         }
         public List<string> GetPassages(string text)
         {
@@ -57,9 +57,6 @@ namespace FactChecker.TMWIIS
         }
         public double EvidenceCalculator(int passageLength, int ArticleLength, int UniqueLength, int passageOccurrence, int DocumentOccurrence)
         {
-            //WordcountDB.Article article = new WordcountDB.Article();
-            //WordcountDB.ArticleItem item = article.FetchDB(ArticleID);
-
             //calculates the evidence for the Source Entity
             double passageSource, documentSource, collectionSource;
             double lambda1 = 0.4, lambda2 = 0.4, lambda3 = 0.2;
@@ -82,14 +79,14 @@ namespace FactChecker.TMWIIS
         public int WordOccurrence(string Entity, string passage)
         {
             List<string> passageWords = passage.Split(" ").ToList();
-            List<string> EntityList = Entity.Split(" ").ToList();
+            List<string> entityList = Entity.Split(" ").ToList();
             int length = passageWords.Count;
             int occurrences = 0;
-            for(int j = 0; j < EntityList.Count; j++)
+            for(int j = 0; j < entityList.Count; j++)
             {
                 for (int i = 0; i < length; i++)
                 {
-                    if (passageWords[i] == EntityList[j])
+                    if (passageWords[i] == entityList[j])
                     {
                         occurrences++;
                     }
