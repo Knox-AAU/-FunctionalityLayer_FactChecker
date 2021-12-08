@@ -76,10 +76,10 @@ namespace FactChecker.TMWIIS
             int length = passage.Split(' ').ToList().Count;
             return length;
         }
-        public int WordOccurrence(string Entity, string passage)
+        public int WordOccurrence(string entity, string passage)
         {
             List<string> passageWords = passage.Split(" ").ToList();
-            List<string> entityList = Entity.Split(" ").ToList();
+            List<string> entityList = entity.Split(" ").ToList();
             int length = passageWords.Count;
             int occurrences = 0;
             for(int j = 0; j < entityList.Count; j++)
