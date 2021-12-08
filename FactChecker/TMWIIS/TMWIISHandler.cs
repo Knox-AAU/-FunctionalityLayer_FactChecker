@@ -10,6 +10,7 @@ namespace FactChecker.TMWIIS
 {
     public class TMWIISHandler
     {
+        private int maxPassages = 5;
         public List<int> ArticleID;
         public KnowledgeGraphItem KGItem;
         public TMWIISHandler(List<int> articleID, KnowledgeGraphItem KGitem)
@@ -17,7 +18,7 @@ namespace FactChecker.TMWIIS
             ArticleID = articleID;
             KGItem = KGitem;
         }
-        public double Evidence()
+        public List<TMWIISItem> Evidence()
         {
             List<TMWIISItem> RankedPassages = new List<TMWIISItem>();
             WordcountDB.Article articleText = new WordcountDB.Article();
@@ -28,7 +29,7 @@ namespace FactChecker.TMWIIS
                 List<string> passages = GetPassages(Article.Text);
                 for (int i = 0; i < passages.Count; i++)
                 {
-                    int passageLength = PassageLength(passages);
+                    int passageLength = PassageLength(passages[i]);
 
                     int SourcePassage = WordOccurrence(KGItem.s, passages[i]);
                     int SourceDocument = WordOccurrence(KGItem.s, Article.Text);
@@ -42,10 +43,12 @@ namespace FactChecker.TMWIIS
                     double EvidenceS = EvidenceCalculator(passageLength, Article.Lenght, Article.UniqueLenght, SourcePassage, SourceDocument);
                     double EvidenceR = EvidenceCalculator(passageLength, Article.Lenght, Article.UniqueLenght, RelationPassage, RelationDocument);
                     double EvidenceT = EvidenceCalculator(passageLength, Article.Lenght, Article.UniqueLenght, TargetPassage, TargetDocument);
-                    double RankedPassage = EvidenceS * EvidenceR * EvidenceT;
+                    double PassageScore = EvidenceS * EvidenceR * EvidenceT;
+                    RankedPassages.Add(new TMWIISItem(PassageScore, passages[i], Article.Link));
                 }
             }
-            return RankedPassages;
+            RankedPassages.Sort((p, q) => q.score.CompareTo(p.score));
+            return RankedPassages.Take(maxPassages).ToList();
         }
         public List<string> GetPassages(string text)
         {
@@ -71,10 +74,10 @@ namespace FactChecker.TMWIIS
             return lambda1 * passageSource * lambda2 * documentSource
                 * lambda3 * collectionSource;
         }
-        public int PassageLength(List<string> passages)
+        public int PassageLength(string passage)
         {
-            int length;
-            return length = passages.Count;
+            int length = passage.Split(' ').ToList().Count;
+            return length;
         }
         public int WordOccurrence(string Entity, string passage)
         {
