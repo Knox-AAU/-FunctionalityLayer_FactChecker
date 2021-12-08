@@ -57,17 +57,13 @@ namespace FactChecker.TMWIIS
         }
         public double EvidenceCalculator(int passageLength, int articleLength, int uniqueLength, int passageOccurrence, int documentOccurrence)
         {
-            //calculates the evidence for the Source Entity
             double passageSource, documentSource, collectionSource;
             double lambda1 = 0.4, lambda2 = 0.4, lambda3 = 0.2;
 
-            //passage
             passageSource = (passageOccurrence + 1) / (passageLength + uniqueLength);
-            //document
             documentSource = (documentOccurrence + 1) / (passageLength + uniqueLength);
-            //collection
             collectionSource = documentOccurrence / uniqueLength;
-            //probability
+
             return lambda1 * passageSource * lambda2 * documentSource
                 * lambda3 * collectionSource;
         }
