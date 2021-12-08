@@ -24,8 +24,8 @@ namespace FactChecker.APIs.KnowledgeGraphAPI
         /// A method taking two arguments of type (<paramref name="string"/>, <paramref name="int"/>). 
         /// Used to extract triples using SparQL from Wikidata.
         /// </summary>
-        /// <param name="s">Entity used to generate relations</param>
-        /// <param name="limit">Number of relations per entity you want returned</param>
+        /// <param name="s">Entity used to generate triples</param>
+        /// <param name="limit">Number of triples per entity you want returned</param>
         /// <returns>A list of type <paramref name="KnowledgeGraphItem"/> containing triples.</returns>
         public async Task<List<KnowledgeGraphItem>> GetTriplesBySparQL(string s, int limit)
         {
