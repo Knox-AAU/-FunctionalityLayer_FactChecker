@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using FactChecker.APIs.KnowledgeGraphAPI;
+using FactChecker.TMWIIS;
 
 namespace FactChecker
 {
@@ -15,6 +17,7 @@ namespace FactChecker
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
+
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
