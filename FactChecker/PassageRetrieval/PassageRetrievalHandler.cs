@@ -76,14 +76,7 @@ namespace FactChecker.PassageRetrieval
                 if (i == length - 1)
                 {
                     passage += " " + splittedText[i];
-                    if(passage.Split().Count() == 80)
-                    {
-                        passages.Add(passage);
-                    } else
-                    {
-                        i -= 80;
-                        passage = "";
-                    }
+                    passages.Add(passage);
                 }else if (count == PassageLength)
                 {
                     passage += " " + splittedText[i];
