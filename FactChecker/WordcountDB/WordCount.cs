@@ -35,12 +35,11 @@ namespace FactChecker.WordcountDB
             using var connection = new SQLiteConnection(connection_string);
             connection.Open();
 
-            string statement = $"SELECT SUM(OCCURRENCE) FROM WORDCOUNT WHERE WORD = '{word}'";
+            string statement = $"SELECT SUM(OCCURRENCE) FROM WORDCOUNT WHERE WORD = \"{word}\"";
 
             using var cmd = new SQLiteCommand(statement, connection);
             using SQLiteDataReader reader = cmd.ExecuteReader();
 
-            Console.WriteLine("im called with" + word + "lol");
             int sum = 0;
             if(reader.Read())
             {

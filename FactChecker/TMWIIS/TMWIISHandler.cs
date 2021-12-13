@@ -22,27 +22,27 @@ namespace FactChecker.TMWIIS
         {
             List<TMWIISItem> rankedPassages = new List<TMWIISItem>();
             WordcountDB.Article articleHandler = new WordcountDB.Article();
-            for(int j = 0; j < articleIDs.Count; j++)
+
+            int sourceTotalOccurence = GetNumberOfOccurencesInAllDocuments(knowledgeGraphItem.s);
+            int relationTotalOccurence = GetNumberOfOccurencesInAllDocuments(knowledgeGraphItem.r);
+            int targetTotalOccurence = GetNumberOfOccurencesInAllDocuments(knowledgeGraphItem.t);
+
+            for (int j = 0; j < articleIDs.Count; j++)
             {
                 WordcountDB.ArticleItem article = articleHandler.FetchDB(articleIDs[j]);
                 List<string> passages = GetPassages(article.Text);
+                int sourceDocumentOccurence = WordOccurrence(knowledgeGraphItem.s, article.Text);
+                int relationDocumentOccurence = WordOccurrence(knowledgeGraphItem.r, article.Text);
+                int targetDocumentOccurence = WordOccurrence(knowledgeGraphItem.t, article.Text);
                 for (int i = 0; i < passages.Count; i++)
                 {
                     int passageLength = PassageLength(passages[i]);
 
                     int sourcePassageOccurence = WordOccurrence(knowledgeGraphItem.s, passages[i]);
-                    int sourceDocumentOccurence = WordOccurrence(knowledgeGraphItem.s, article.Text);
-                    int sourceTotalOccurence = GetNumberOfOccurencesInAllDocuments(knowledgeGraphItem.s);
-
                     int relationPassageOccurence = WordOccurrence(knowledgeGraphItem.r, passages[i]);
-                    int relationDocumentOccurence = WordOccurrence(knowledgeGraphItem.r, article.Text);
-                    int relationTotalOccurence = GetNumberOfOccurencesInAllDocuments(knowledgeGraphItem.r);
-
                     int targetPassageOccurence = WordOccurrence(knowledgeGraphItem.t, passages[i]);
-                    int targetDocumentOccurence = WordOccurrence(knowledgeGraphItem.t, article.Text);
-                    int targetTotalOccurence = GetNumberOfOccurencesInAllDocuments(knowledgeGraphItem.t);
-                     
-
+                    
+                    
                     float evidenceSource = EvidenceCalculator(passageLength, article.UniqueLenght, sourcePassageOccurence, sourceDocumentOccurence, sourceTotalOccurence);
                     float evidenceRelation = EvidenceCalculator(passageLength, article.UniqueLenght, relationPassageOccurence, relationDocumentOccurence, relationTotalOccurence);
                     float evidenceTarget = EvidenceCalculator(passageLength, article.UniqueLenght, targetPassageOccurence, targetDocumentOccurence, targetTotalOccurence);
@@ -74,7 +74,6 @@ namespace FactChecker.TMWIIS
             List<string> splitted = word.Split(' ').ToList();           
             WordcountDB.WordCount wordCount = new WordcountDB.WordCount();
             int sum = 0;
-            int lol = wordCount.FetchSumOfOccurences("Joe");
 
             foreach(string s in splitted)
             {
