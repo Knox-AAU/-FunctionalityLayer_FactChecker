@@ -72,6 +72,7 @@ namespace FactChecker.PassageRetrieval
 
             for (int i = 0; i < length; i++)
             {
+          
                 if (i == length - 1)
                 {
                     passage += " " + splittedText[i];

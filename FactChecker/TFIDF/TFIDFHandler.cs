@@ -9,7 +9,7 @@ namespace FactChecker.TFIDF
     {
         
         int numberOfArticles = 16;
-        public int maxArticles = 5;
+        public int maxArticles = 16;
         public List<TFIDFItem> CalculateTFIDF (List<string> search)
         {
             WordcountDB.WordCount wordCount = new WordcountDB.WordCount();

@@ -13,6 +13,8 @@ namespace FactChecker.TMWIIS
         private int maxPassages = 5;
         public List<int> articleIDs;
         public KnowledgeGraphItem knowledgeGraphItem;
+        public Stopwords.Stopwords stopwords = new();
+        float lambda1 = 0.9f, lambda2 = 0.05f, lambda3 = 0.05f;
         public TMWIISHandler(List<int> articleID, KnowledgeGraphItem KGitem)
         {
             articleIDs = articleID;
@@ -46,7 +48,7 @@ namespace FactChecker.TMWIIS
                     float evidenceSource = EvidenceCalculator(passageLength, article.UniqueLenght, sourcePassageOccurence, sourceDocumentOccurence, sourceTotalOccurence);
                     float evidenceRelation = EvidenceCalculator(passageLength, article.UniqueLenght, relationPassageOccurence, relationDocumentOccurence, relationTotalOccurence);
                     float evidenceTarget = EvidenceCalculator(passageLength, article.UniqueLenght, targetPassageOccurence, targetDocumentOccurence, targetTotalOccurence);
-                    float passageScore = evidenceSource * evidenceRelation * evidenceTarget;
+                    float passageScore = lambda1 * evidenceSource + lambda2 * evidenceRelation + lambda3 * evidenceTarget;
                     rankedPassages.Add(new TMWIISItem(passageScore, passages[i], article.Link));
                 }
             }
@@ -60,13 +62,12 @@ namespace FactChecker.TMWIIS
         }
         public float EvidenceCalculator(int passageLength, int uniqueLength, int passageOccurrence, int documentOccurrence, int totalOccurrence)
         {
-            float passageSource, documentSource, collectionSource;
-            float lambda1 = 0.4f, lambda2 = 0.4f, lambda3 = 0.2f;
+            float passageSource, documentSource, collectionSource; 
 
             passageSource = (passageOccurrence + 1) / ((float)passageLength + (float)uniqueLength);
             documentSource = (documentOccurrence + 1) / ((float)passageLength + (float)uniqueLength);
             collectionSource = (totalOccurrence) /(float) uniqueLength;
-            return lambda1 * passageSource * lambda2 * documentSource * lambda3 * collectionSource;
+            return  passageSource  * documentSource * collectionSource;
         }
 
         public int GetNumberOfOccurencesInAllDocuments (string word)
@@ -97,7 +98,7 @@ namespace FactChecker.TMWIIS
             {
                 for (int i = 0; i < length; i++)
                 {
-                    if (passageWords[i] == entityList[j])
+                    if (passageWords[i] == entityList[j] && !stopwords.stopwords.ContainsKey(passageWords[i]))
                     {
                         occurrences++;
                     }
