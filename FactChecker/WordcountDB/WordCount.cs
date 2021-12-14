@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 
 namespace FactChecker.WordcountDB
@@ -38,12 +39,12 @@ namespace FactChecker.WordcountDB
             using SQLiteDataReader reader = cmd.ExecuteReader();
 
             int sum = 0;
-            if(reader.Read())
+            if(reader.Read() && reader.GetFieldType(0) == typeof(System.Int64))
             {
               sum = reader.GetInt32(0);
             }
             connection.Close();
-            return sum;
+            return sum; 
         }
     }
 }
