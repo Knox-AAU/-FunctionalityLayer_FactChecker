@@ -10,7 +10,7 @@ namespace FactChecker.APIs.KnowledgeGraphAPI
         public string s { get; set; }
         public string r { get; set; }
         public string t { get; set; }
-        public string passage { get; set; }
+        public List<TMWIIS.TMWIISItem> passage { get; set; }
         public KnowledgeGraphItem (string s, string r, string t)
         {
             this.s = s;

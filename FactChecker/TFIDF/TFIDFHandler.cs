@@ -8,8 +8,8 @@ namespace FactChecker.TFIDF
     public class TFIDFHandler
     {
         
-        int numberOfArticles = 15;
-        public int maxArticles = 5;
+        int numberOfArticles = 16;
+        public int maxArticles = 16;
         public List<TFIDFItem> CalculateTFIDF (List<string> search)
         {
             WordcountDB.WordCount wordCount = new WordcountDB.WordCount();
