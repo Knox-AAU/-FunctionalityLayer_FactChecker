@@ -35,14 +35,21 @@ def articleStore(article):
 if __name__ == '__main__':
     db = sqlite3.connect("wordcount.db")
 
-    """ db.execute('''CREATE TABLE WORDCOUNT
+    db.execute('''CREATE TABLE WORDCOUNT
             (ID INTEGER PRIMARY KEY    AUTOINCREMENT,
             WORD           TEXT    NOT NULL,
             ARTICLEID       INT    NOT NULL,
             OCCURRENCE      INT     NOT NULL,
-            FOREIGN KEY (ARTICLEID) REFERENCES ARTICLE (ID));''') """
-
-    links = ["https://en.wikipedia.org/wiki/Eternals_(film)",
+            FOREIGN KEY (ARTICLEID) REFERENCES ARTICLE (ID));''')
+    db.execute('''CREATE TABLE ARTICLE
+                    (ID INTEGER PRIMARY KEY    AUTOINCREMENT,
+                    LINK           TEXT    NOT NULL,
+                    LENGTH       INT    NOT NULL,
+                    UNIQUE_LENGTH      INT     NOT NULL,
+                    TEXT TEXT NOT NULL);''')
+    links = [
+             "https://en.wikipedia.org/wiki/Manufacturers_Association_of_Nigeria",
+             "https://en.wikipedia.org/wiki/Eternals_(film)",
              "https://en.wikipedia.org/wiki/Kenosha_unrest_shooting",
              "https://en.wikipedia.org/wiki/Travis_Scott",
              "https://en.wikipedia.org/wiki/Shang-Chi_and_the_Legend_of_the_Ten_Rings",
@@ -57,7 +64,9 @@ if __name__ == '__main__':
              "https://en.wikipedia.org/wiki/2022_FIFA_World_Cup_qualification",
              "https://en.wikipedia.org/wiki/Ghostbusters:_Afterlife",
              "https://en.wikipedia.org/wiki/Zac_Stacy",
-             "https://en.wikipedia.org/wiki/Joe_Biden"]
+             "https://en.wikipedia.org/wiki/Joe_Biden"
+
+             ]
 
     for i, url in enumerate(links):
         cursor = db.cursor()
