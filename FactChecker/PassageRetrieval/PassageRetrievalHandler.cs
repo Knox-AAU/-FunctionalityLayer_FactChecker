@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FactChecker.PassageRetrieval
 {
-    public class PassageItem
+    public class PassageRetrievalHandler
     {
         private int _passageLength = 80;
         private int _passageOverlap = 20;

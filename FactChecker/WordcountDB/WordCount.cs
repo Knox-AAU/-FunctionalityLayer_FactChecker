@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FactChecker.WordcountDB
 {
@@ -30,6 +28,26 @@ namespace FactChecker.WordcountDB
             }
             connection.Close();
             return list;
+        }
+
+        public int FetchSumOfOccurences(string word)
+        {
+            string connection_string = "Data Source=wordcount.db";
+            using var connection = new SQLiteConnection(connection_string);
+            connection.Open();
+
+            string statement = $"SELECT SUM(OCCURRENCE) FROM WORDCOUNT WHERE WORD = \"{word}\"";
+
+            using var cmd = new SQLiteCommand(statement, connection);
+            using SQLiteDataReader reader = cmd.ExecuteReader();
+
+            int sum = 0;
+            if(reader.Read() && reader.GetFieldType(0) == typeof(System.Int64))
+            {
+              sum = reader.GetInt32(0);
+            }
+            connection.Close();
+            return sum; 
         }
     }
 }

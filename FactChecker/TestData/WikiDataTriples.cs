@@ -21,18 +21,18 @@ namespace FactChecker.TestData
             IO.FileStreamHandler fileStreamHandler = new IO.FileStreamHandler();
             foreach (string s in await fileStreamHandler.ReadFile("./TestData/relations.txt"))
             {
-                List<string> splitted = s.Split("<").ToList();
-                APIs.KnowledgeGraphAPI.KnowledgeGraphItem item = new APIs.KnowledgeGraphAPI.KnowledgeGraphItem();
+               List<string> splitted = s.Split("<").ToList();
+               APIs.KnowledgeGraphAPI.KnowledgeGraphItem item = new APIs.KnowledgeGraphAPI.KnowledgeGraphItem();
                for(int i = 0; i < splitted.Count; i++)
                 {
-                    string split = splitted[i].Replace(">", "");
+                    string split = splitted[i].Replace(">", string.Empty);
                     if (i == 1)
                     {
-                        item.s = split;
+                        item.s = split.Remove(split.Length - 1,1);
                     }
                     else if (i == 2)
                     {
-                        item.r = split;
+                        item.r = split.Remove(split.Length - 1, 1);
                     }
                     else if (i == 3)
                     {

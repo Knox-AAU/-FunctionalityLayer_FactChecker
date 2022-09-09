@@ -13,7 +13,7 @@ namespace XUnitTestProject
         [Fact]
         public void TestOverlapThrowsException()
         {
-            PassageItem pi = new PassageItem("Hej med dig")
+            PassageRetrievalHandler pi = new PassageRetrievalHandler("Hej med dig")
             {
                 PassageLength = 20
             };
@@ -24,7 +24,7 @@ namespace XUnitTestProject
         [Fact]
         public void TestOverlapCalculation()
         {
-            PassageItem pi = new PassageItem("Hej med dig");
+            PassageRetrievalHandler pi = new PassageRetrievalHandler("Hej med dig");
             pi.PassageLength = 10;
 
             Assert.Equal(2, pi.PassageOverlap = 2);
@@ -34,7 +34,7 @@ namespace XUnitTestProject
         [Fact]
         public void TestTextInputSplit()
         {
-            PassageItem pi = new PassageItem("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean laoreet risus id felis vulputate pellentesque. Phasellus tempor consequat nisl a.");
+            PassageRetrievalHandler pi = new PassageRetrievalHandler("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean laoreet risus id felis vulputate pellentesque. Phasellus tempor consequat nisl a.");
 
             Assert.Equal(20, pi.FullText.Split(' ').Length);
         }
@@ -42,7 +42,7 @@ namespace XUnitTestProject
         [Fact]
         public void TestNumberOfPassagesFound()
         {
-            PassageItem pi = new PassageItem("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean laoreet risus id felis vulputate pellentesque. Phasellus tempor consequat nisl a.");
+            PassageRetrievalHandler pi = new PassageRetrievalHandler("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean laoreet risus id felis vulputate pellentesque. Phasellus tempor consequat nisl a.");
 
             pi.PassageLength = 8;
             pi.PassageOverlap = 4;

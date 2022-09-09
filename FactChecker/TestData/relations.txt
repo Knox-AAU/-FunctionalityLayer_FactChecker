@@ -6,7 +6,7 @@
 <4DX> <owned by> <CJ CGV>
 <Marvel Comics> <Wikidata property> <Marvel character ID>
 <Marvel Comics> <Wikidata property> <Marvel Comics creators ID>
-<Jump Kick> <instance of> <fighting-type Pokémon move>
+<Jump Kick> <instance of> <fighting type Pokémon move>
 <Jump Kick> <instance of> <Physical move>
 <Joe Biden> <country of citizenship> <United States of America>
 <Joe Biden> <instance of> <human>
@@ -22,10 +22,10 @@
 <Kanye West> <instance of> <human>
 <Astroworld> <place of publication> <United States of America>
 <Astroworld> <country of origin> <United States of America>
-<Shang-Chi and the Legend of the Ten Rings> <country of origin> <United States of America>
-<Shang-Chi and the Legend of the Ten Rings> <narrative location> <San Francisco>
-<Shang-Chi> <country of citizenship> <People's Republic of China>
-<Shang-Chi> <member of> <Five Weapons Society>
+<Shang Chi and the Legend of the Ten Rings> <country of origin> <United States of America>
+<Shang Chi and the Legend of the Ten Rings> <narrative location> <San Francisco>
+<Shang Chi> <country of citizenship> <People's Republic of China>
+<Shang Chi> <member of> <Five Weapons Society>
 <Simu Liu> <country of citizenship> <Canada>
 <Simu Liu> <residence> <Toronto>
 <Razor Fist> <character type> <supervillain>
@@ -34,8 +34,8 @@
 <Riot Games> <headquarters location> <Los Angeles>
 <Paris> <capital of> <France>
 <Paris> <country> <France>
-<computer-generated imagery> <subclass of> <image>
-<computer-generated imagery> <practiced by> <CG artist>
+<computer generated imagery> <subclass of> <image>
+<computer generated imagery> <practiced by> <CG artist>
 <Arcane> <country of origin> <United States of America>
 <Arcane> <voice actor> <Mia Sinclair Jenness>
 <Marvel Comics> <Wikidata property> <Marvel character ID>
@@ -43,7 +43,7 @@
 <Tom Holland> <country of citizenship> <England>
 <Tom Holland> <instance of> <human>
 <Marvel Cinematic Universe> <country of origin> <United States of America>
-<Marvel Cinematic Universe> <fictional universe described in> <Marvel One-Shots>
+<Marvel Cinematic Universe> <fictional universe described in> <Marvel One Shots>
 <Zendaya> <country of citizenship> <United States of America>
 <Zendaya> <instance of> <human>
 <Adele> <country of citizenship> <United Kingdom>
@@ -82,10 +82,10 @@
 <Los Angeles> <continent> <North America>
 <Prisoners> <country of origin> <United States of America>
 <Prisoners> <different from> <Labyrint>
-<Spider-Man: Far from Home> <country of origin> <United States of America>
-<Spider-Man: Far from Home> <narrative location> <New York City>
+<Spider Man: Far from Home> <country of origin> <United States of America>
+<Spider Man: Far from Home> <narrative location> <New York City>
 <Marvel Cinematic Universe> <country of origin> <United States of America>
-<Marvel Cinematic Universe> <fictional universe described in> <Marvel One-Shots>
+<Marvel Cinematic Universe> <fictional universe described in> <Marvel One Shots>
 <President of the United States> <country> <United States of America>
 <President of the United States> <applies to jurisdiction> <United States of America>
 <Republican Party> <country> <United States of America>
@@ -98,8 +98,8 @@
 <FIFA> <official language> <French>
 <Mongolia> <diplomatic relation> <France>
 <Mongolia> <diplomatic relation> <United Kingdom>
-<World Anti-Doping Agency> <country> <Canada>
-<World Anti-Doping Agency> <instance of> <nonprofit organization>
+<World Anti Doping Agency> <country> <Canada>
+<World Anti Doping Agency> <instance of> <nonprofit organization>
 <Ghostbusters> <country of origin> <United States of America>
 <Ghostbusters> <narrative location> <New York City>
 <Ghostbusters> <country of origin> <United States of America>
