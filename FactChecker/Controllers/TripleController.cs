@@ -34,7 +34,7 @@ namespace FactChecker.Controllers
             foreach(TFIDF.TFIDFItem article in tFIDFItems)
                 articles.Add(article.articleId);
             TMWIIS.TMWIISHandler tMWIISHandler = new(articles, item);
-            item.passage = tMWIISHandler.Evidence().ToString();
+            item.passage = tMWIISHandler.Evidence().ToString(); // This needs to be changed
             return item;
         }
     }
