@@ -55,7 +55,7 @@ namespace FactChecker.PassageRetrieval
         /// Contructor taking one argument of type <paramref name="string"/>. Used for creating new passages.
         /// </summary>
         /// <param name="text"></param>
-        public PassageItem(string text)
+        public PassageRetrievalHandler(string text)
         {
             FullText = text;
         }

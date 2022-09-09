@@ -13,7 +13,7 @@ namespace FactChecker.Controllers
     [Route("[controller]")]
     public class TripleController : ControllerBase
     {
-        public static TestData.WikiDataTriples WikiDataTriples = new TestData.WikiDataTriples();
+        public static TestData.WikiDataTriples WikiDataTriples = new ();
 
         [HttpGet]
         public IEnumerable<APIs.KnowledgeGraphAPI.KnowledgeGraphItem> Get()
@@ -24,21 +24,17 @@ namespace FactChecker.Controllers
         [HttpPost]
         public APIs.KnowledgeGraphAPI.KnowledgeGraphItem Post(APIs.KnowledgeGraphAPI.KnowledgeGraphItem item)
         {
-            TFIDF.TFIDFHandler tFIDFHandler = new TFIDF.TFIDFHandler();
+            TFIDF.TFIDFHandler tFIDFHandler = new ();
             string search = item.s + " " + item.r + " " + item.t;
             List<string> searchList = new List<string>();
             foreach(string s in search.Split(' '))
-            {
                 searchList.Add(s);
-            }
             List<TFIDF.TFIDFItem> tFIDFItems = tFIDFHandler.CalculateTFIDF(searchList);
             List<int> articles = new List<int>();
             foreach(TFIDF.TFIDFItem article in tFIDFItems)
-            {
                 articles.Add(article.articleId);
-            }
-            TMWIIS.TMWIISHandler tMWIISHandler = new TMWIIS.TMWIISHandler(articles, item);
-            item.passage = tMWIISHandler.Evidence();
+            TMWIIS.TMWIISHandler tMWIISHandler = new(articles, item);
+            item.passage = tMWIISHandler.Evidence().ToString();
             return item;
         }
     }
