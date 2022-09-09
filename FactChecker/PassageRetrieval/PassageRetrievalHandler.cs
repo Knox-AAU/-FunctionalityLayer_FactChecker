@@ -51,6 +51,10 @@ namespace FactChecker.PassageRetrieval
             }
         }
 
+        /// <summary>
+        /// Contructor taking one argument of type <paramref name="string"/>. Used for creating new passages.
+        /// </summary>
+        /// <param name="text"></param>
         public PassageRetrievalHandler(string text)
         {
             FullText = text;
@@ -61,46 +65,40 @@ namespace FactChecker.PassageRetrieval
             return FullText;
         }
 
+        /// <summary>
+        /// Method used to create passages from the best ranked articles.
+        /// </summary>
+        /// <returns>A list of passages</returns>
         public List<string> GetPassages()
         {
             List<string> passages = new List<string>();
-            List<string> splittedText = FullText.Split(' ').ToList();
+            List<string> splitText = FullText.Split(' ').ToList();
             string passage = "";
-            int length = splittedText.Count;
+            int length = splitText.Count;
             int count = 0;
 
 
             for (int i = 0; i < length; i++)
             {
-                if (i == length - 1)
+                if (i == length - 1) //If the end of splitText is found, add the rest of splitText to a passage
                 {
-                    passage += " " + splittedText[i];
-                    if (passage.Split(' ').Length == PassageLength)
-                    {
-                        passages.Add(passage);
-                    }
-                    else
-                    {
-                        i -= PassageLength;
-                        count = 0;
-                        passage = "";
-                    }
-                }
-                else if (count == PassageLength)
+                    passage += " " + splitText[i];
+                    passages.Add(passage);
+                }else if (count == PassageLength) //If count succesfully reaches PassageLength, add passage of correct length
                 {
-                    passage += " " + splittedText[i];
+                    passage += " " + splitText[i];
                     passages.Add(passage);
                     passage = "";
-                    i -= PassageOverlap;
+                    i -= PassageOverlap; //Go back the amount you wish to overlap and start counting again
                     count = 0;
                 }
-                else
+                else //Make sure there are spaces between each word in the passage.
                 {
                     if(count > 1)
                     {
                         passage += " ";
                     }
-                    passage += splittedText[i];
+                    passage += splitText[i];
                 }
                 count++;
             }

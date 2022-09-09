@@ -12,6 +12,15 @@ namespace FactChecker.WordcountDB
         public int ArticleID { get; set; }
         public int Occurrence { get; set; }
 
+        /// <summary>
+        /// Constructor taking four arguments of type 
+        /// (<typeparamref name="int"/>, <typeparamref name="string"/>, <typeparamref name="int"/>, <typeparamref name="int"/>).
+        /// Used to create new articles when fetching from the database using a specific word.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="word"></param>
+        /// <param name="articleid"></param>
+        /// <param name="occurrence"></param>
         public WordCountItem(int id, string word, int articleid, int occurrence)
         {
             WordID = id;

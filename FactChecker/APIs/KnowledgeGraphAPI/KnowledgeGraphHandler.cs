@@ -11,12 +11,22 @@ using System.Linq;
 
 namespace FactChecker.APIs.KnowledgeGraphAPI
 {
+    /// <summary>
+    /// A class used to retrieve triples from Wikidatas knowledge graph.
+    /// </summary>
     public class KnowledgeGraphHandler
     {
 
         public string knowledgeGraphURL = "https://query.wikidata.org/bigdata/namespace/wdq/sparql";
         HttpClient client = new HttpClient();
         public string xmlResultName = "{http://www.w3.org/2005/sparql-results#}result";
+        /// <summary>
+        /// A method taking two arguments of type (<paramref name="string"/>, <paramref name="int"/>). 
+        /// Used to extract triples using SparQL from Wikidata.
+        /// </summary>
+        /// <param name="s">Entity used to generate triples</param>
+        /// <param name="limit">Number of triples per entity you want returned</param>
+        /// <returns>A list of type <paramref name="KnowledgeGraphItem"/> containing triples.</returns>
         public async Task<List<KnowledgeGraphItem>> GetTriplesBySparQL(string s, int limit)
         {
             client.DefaultRequestHeaders.Add("User-Agent", "FactChecker/0.0 (kontakt@magnusaxelsen.dk) generic-library/0.0");

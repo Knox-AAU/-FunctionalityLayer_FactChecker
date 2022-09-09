@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace FactChecker.APIs
 {
+    /// <summary>
+    /// A class containing the method GetSearchItem. Used for handling searches on the Knox server.
+    /// NOTE: This class is NOT used in this iteration of Knox but might be useful in the future.
+    /// </summary>
     public class SearchHandler
     {
 
