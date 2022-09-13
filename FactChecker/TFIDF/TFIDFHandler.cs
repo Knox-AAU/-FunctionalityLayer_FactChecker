@@ -26,25 +26,21 @@ namespace FactChecker.TFIDF
         {
             WordcountDB.WordCount wordCount = new WordcountDB.WordCount();
             List<TFIDFItem> articles = new List<TFIDFItem>();
-            foreach(string s in search) //In this iteration of the project, search is a list of words from the chosen triple 
+            search.RemoveAll(p => string.IsNullOrEmpty(p) || string.IsNullOrWhiteSpace(p));
+            foreach (string s in search) //In this iteration of the project, search is a list of words from the chosen triple 
             {                           
                 List<WordcountDB.WordCountItem> wordcountItems = wordCount.FetchDB(s);
                 foreach(WordcountDB.WordCountItem item in wordcountItems)
                 {
                     float tf = CalculateTermFrequency(item.Occurrence);
                     float idf = CalculateInverseDocumentFrequency(numberOfArticles, wordcountItems.Count);
-                    bool foundArticle = false;
-                    foreach(TFIDFItem article in articles) //Add TF-IDF score to specific article which contain s
+                    var article_res = articles.Where(a => a.articleId == item.ArticleID).FirstOrDefault();
+                    if ( article_res != null) //Add TF-IDF score to specific article which contain s
                     {
-                        if(article.articleId == item.ArticleID)
-                        {
-                            article.score += tf * idf;
-                            foundArticle = true;
-                        }
-                    }
-                    if(!foundArticle) //If an article containing s is not found, a new TFIDFItem is added to a list
+                        article_res.score += tf * idf;
+                    } else  //If an article containing s is not found, a new TFIDFItem is added to a list
                     {
-                        TFIDFItem article = new TFIDFItem(item.ArticleID, tf * idf);
+                        TFIDFItem article = new(item.ArticleID, tf * idf);
                         articles.Add(article);
                     }
                 }
@@ -76,7 +72,7 @@ namespace FactChecker.TFIDF
         /// </returns>
         public float CalculateInverseDocumentFrequency (int numberOfDocuments, int numberOfDocumentsWithTerm)
         {
-            return (float)Math.Log(numberOfDocuments / numberOfDocumentsWithTerm,10);
+            return (float)Math.Log(numberOfDocuments / numberOfDocumentsWithTerm, 10);
         }
     }
 }
