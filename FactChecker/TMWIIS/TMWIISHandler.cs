@@ -22,8 +22,8 @@ namespace FactChecker.TMWIIS
         }
         public List<TMWIISItem> Evidence()
         {
-            List<TMWIISItem> rankedPassages = new List<TMWIISItem>();
-            WordcountDB.Article articleHandler = new WordcountDB.Article();
+            List<TMWIISItem> rankedPassages = new();
+            WordcountDB.Article articleHandler = new();
 
             int sourceTotalOccurence = GetNumberOfOccurencesInAllDocuments(knowledgeGraphItem.s);
             int relationTotalOccurence = GetNumberOfOccurencesInAllDocuments(knowledgeGraphItem.r);
@@ -57,7 +57,7 @@ namespace FactChecker.TMWIIS
         }
         public List<string> GetPassages(string text)
         {
-            PassageRetrievalHandler pr = new PassageRetrievalHandler(text);
+            PassageRetrievalHandler pr = new(text);
             return pr.GetPassages();
         }
         public float EvidenceCalculator(int passageLength, int uniqueLength, int passageOccurrence, int documentOccurrence, int totalOccurrence)
@@ -73,13 +73,11 @@ namespace FactChecker.TMWIIS
         public int GetNumberOfOccurencesInAllDocuments (string word)
         {
             List<string> splitted = word.Split(' ').ToList();           
-            WordcountDB.WordCount wordCount = new WordcountDB.WordCount();
+            WordcountDB.WordCount wordCount = new ();
             int sum = 0;
 
             foreach(string s in splitted)
-            {
                 sum += wordCount.FetchSumOfOccurences(s);
-            }
      
             return sum;
         }
@@ -95,15 +93,9 @@ namespace FactChecker.TMWIIS
             int length = passageWords.Count;
             int occurrences = 0;
             for(int j = 0; j < entityList.Count; j++)
-            {
                 for (int i = 0; i < length; i++)
-                {
                     if (passageWords[i] == entityList[j] && !stopwords.stopwords.ContainsKey(passageWords[i]))
-                    {
                         occurrences++;
-                    }
-                }
-            }
             return occurrences;
         }
     }

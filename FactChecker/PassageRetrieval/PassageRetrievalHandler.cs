@@ -7,33 +7,9 @@ namespace FactChecker.PassageRetrieval
 {
     public class PassageRetrievalHandler
     {
-        private int _passageLength = 80;
         private int _passageOverlap = 20;
-        private string _fullText;
-
-        public string FullText
-        {
-            get
-            {
-                return _fullText;
-            }
-            set
-            {
-                _fullText = value;
-            }
-        }
-
-        public int PassageLength
-        {
-            get
-            {
-                return _passageLength;
-            }
-            set
-            {
-                _passageLength = value;
-            }
-        }
+        public int PassageLength { get; set; } = 80;
+        public string FullText { get; set; }
 
         public int PassageOverlap
         {
@@ -47,7 +23,7 @@ namespace FactChecker.PassageRetrieval
                 {
                     throw new ArgumentOutOfRangeException("Passage overlap can not be greater than passage length");
                 }
-                _passageOverlap = _passageLength - (_passageLength - value);
+                _passageOverlap = PassageLength - (PassageLength - value);
             }
         }
 
@@ -71,7 +47,8 @@ namespace FactChecker.PassageRetrieval
         /// <returns>A list of passages</returns>
         public List<string> GetPassages()
         {
-            List<string> passages = new List<string>();
+            // errors when splitting since some texts does not have a space '"universe.A"'
+            List<string> passages = new();
             List<string> splitText = FullText.Split(' ').ToList();
             string passage = "";
             int length = splitText.Count;

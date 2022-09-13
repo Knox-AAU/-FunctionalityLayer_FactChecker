@@ -35,19 +35,9 @@ def articleStore(article):
 if __name__ == '__main__':
     db = sqlite3.connect("wordcount.db")
 
-    db.execute('''CREATE TABLE WORDCOUNT
-            (ID INTEGER PRIMARY KEY    AUTOINCREMENT,
-            WORD           TEXT    NOT NULL,
-            ARTICLEID       INT    NOT NULL,
-            OCCURRENCE      INT     NOT NULL,
-            FOREIGN KEY (ARTICLEID) REFERENCES ARTICLE (ID));''')
-    db.execute('''CREATE TABLE ARTICLE
-                    (ID INTEGER PRIMARY KEY    AUTOINCREMENT,
-                    LINK           TEXT    NOT NULL,
-                    LENGTH       INT    NOT NULL,
-                    UNIQUE_LENGTH      INT     NOT NULL,
-                    TEXT TEXT NOT NULL);''')
+
     links = [
+             "https://en.wikipedia.org/wiki/Wikipedia:Random",
              "https://en.wikipedia.org/wiki/Manufacturers_Association_of_Nigeria",
              "https://en.wikipedia.org/wiki/Eternals_(film)",
              "https://en.wikipedia.org/wiki/Kenosha_unrest_shooting",
@@ -87,5 +77,8 @@ if __name__ == '__main__':
                     "INSERT INTO WORDCOUNT (WORD,ARTICLEID,OCCURRENCE) VALUES (?, ?, ?)", data_tuple)
                 db.commit()
                 cursor.close()
+        break
+
+    print(f"{url}")
 
     db.close()

@@ -22,7 +22,7 @@ namespace FactChecker.TestData
             foreach (string s in await fileStreamHandler.ReadFile("./TestData/relations.txt"))
             {
                List<string> splitted = s.Split("<").ToList();
-               APIs.KnowledgeGraphAPI.KnowledgeGraphItem item = new APIs.KnowledgeGraphAPI.KnowledgeGraphItem();
+               APIs.KnowledgeGraphAPI.KnowledgeGraphItem item = new ();
                for(int i = 0; i < splitted.Count; i++)
                 {
                     string split = splitted[i].Replace(">", string.Empty);

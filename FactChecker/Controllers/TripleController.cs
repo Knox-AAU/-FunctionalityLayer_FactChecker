@@ -24,6 +24,7 @@ namespace FactChecker.Controllers
         [HttpPost]
         public APIs.KnowledgeGraphAPI.KnowledgeGraphItem Post(APIs.KnowledgeGraphAPI.KnowledgeGraphItem item)
         {
+            // Add support for multiple knowledgegraph items and sum the tf-idf score to get the result
             TFIDF.TFIDFHandler tFIDFHandler = new ();
             List<string> searchList = new() { item.s, item.r, item.t };
             List<TFIDF.TFIDFItem> tFIDFItems = tFIDFHandler.CalculateTFIDF(searchList);
