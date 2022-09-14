@@ -8,13 +8,15 @@ namespace FactChecker.WordcountDB
 {
     public class Article
     {
+        private string source = "wordcount.db";
+
         /// <summary>Takes parameter of type <paramref name="int"/> and fetches the matching article</summary>
         /// <param name="id"></param>
         /// <returns>The articles that matches the input parameter</returns>
         public ArticleItem FetchDB(int id)
         {
             List<ArticleItem> list = new List<ArticleItem>();
-            string connection_string = "Data Source=wordcount.db";
+            string connection_string = $"Data Source={source}";
             using var connection = new SQLiteConnection(connection_string);
             connection.Open();
 

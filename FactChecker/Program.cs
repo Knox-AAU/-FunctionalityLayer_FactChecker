@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FactChecker.APIs.KnowledgeGraphAPI;
 using FactChecker.TMWIIS;
+using FactChecker.BenchMarks;
 
 namespace FactChecker
 {
@@ -16,8 +17,8 @@ namespace FactChecker
     {
         public static void Main(string[] args)
         {
+            //PostBenchMark.Run();
             CreateHostBuilder(args).Build().Run();
-
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

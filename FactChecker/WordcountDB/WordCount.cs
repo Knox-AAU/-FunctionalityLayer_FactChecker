@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.IO;
 
 namespace FactChecker.WordcountDB
 {
     public class WordCount
     {
+        private string source = "wordcount.db";
         /// <summary>Takes parameter of type <paramref name="string"/> and fetches all matching articles.</summary>
         /// <param name="word"></param>
         /// <returns></returns>
         public List<WordCountItem> FetchDB(string word)
         {
+            Console.WriteLine(Directory.GetCurrentDirectory());
             List<WordCountItem> list = new List<WordCountItem>();
-            string connection_string = "Data Source=wordcount.db";
+            string connection_string = $"Data Source={source}";
             using var connection = new SQLiteConnection(connection_string);
             connection.Open();
 
@@ -32,7 +35,7 @@ namespace FactChecker.WordcountDB
 
         public int FetchSumOfOccurences(string word)
         {
-            string connection_string = "Data Source=wordcount.db";
+            string connection_string = $"Data Source={source}";
             using var connection = new SQLiteConnection(connection_string);
             connection.Open();
 
