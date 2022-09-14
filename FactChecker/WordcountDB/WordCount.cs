@@ -7,13 +7,12 @@ namespace FactChecker.WordcountDB
 {
     public class WordCount
     {
-        private string source = "../../../../../../../wordcount.db";
+        private string source = "wordcount.db";
         /// <summary>Takes parameter of type <paramref name="string"/> and fetches all matching articles.</summary>
         /// <param name="word"></param>
         /// <returns></returns>
         public List<WordCountItem> FetchDB(string word)
         {
-            return new List<WordCountItem>() { new(139649, "Zendaya", 5, 7) };
             Console.WriteLine(Directory.GetCurrentDirectory());
             List<WordCountItem> list = new List<WordCountItem>();
             string connection_string = $"Data Source={source}";
@@ -36,7 +35,6 @@ namespace FactChecker.WordcountDB
 
         public int FetchSumOfOccurences(string word)
         {
-            return 7;
             string connection_string = $"Data Source={source}";
             using var connection = new SQLiteConnection(connection_string);
             connection.Open();

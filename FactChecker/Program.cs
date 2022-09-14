@@ -17,8 +17,8 @@ namespace FactChecker
     {
         public static void Main(string[] args)
         {
-             PostBenchMark.Run();
-            //CreateHostBuilder(args).Build().Run();
+            //PostBenchMark.Run();
+            CreateHostBuilder(args).Build().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
