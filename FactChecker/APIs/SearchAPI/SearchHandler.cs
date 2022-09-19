@@ -16,23 +16,13 @@ namespace FactChecker.APIs
 
         public string wordRatioURL = "http://knox-node02.srv.aau.dk/WordRatio";
 
-        static HttpClient client = new HttpClient();
+        private readonly HttpClient _client = new();
 
         public async Task<SearchItem[]> GetSearchItem (string term)
         {
-            SearchItem[] articles = null;
-            try
-            {
-                HttpResponseMessage response = await client.GetAsync(wordRatioURL + "?terms=" + term);
-                if (response.IsSuccessStatusCode)
-                {
-                    articles = await response.Content.ReadAsAsync<SearchItem[]>();
-                }
-            }
-            catch
-            {
-                throw;
-            }
+            HttpResponseMessage response = await _client.GetAsync(wordRatioURL + "?terms=" + term);
+            response.EnsureSuccessStatusCode();
+            var articles = await response.Content.ReadAsAsync<SearchItem[]>();
             return articles;
         }
     }
