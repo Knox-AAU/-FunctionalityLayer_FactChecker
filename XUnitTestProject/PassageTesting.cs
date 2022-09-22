@@ -20,7 +20,7 @@ namespace XUnitTestProject
             pi.PassageLength = 2;
             pi.PassageOverlap = 1;
             Article article = new Article() { FullText = "lorem ipsum casper dipsum" };
-            Assert.Equal(2, pi.GetPassages(article).ToList().Count);
+            Assert.Equal(3, pi.GetPassages(article).ToList().Count);
         }
         [Fact]
         public void TestNumberOfPassagesFound2()

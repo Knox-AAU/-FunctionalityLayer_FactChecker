@@ -103,7 +103,7 @@ namespace FactChecker.PassageRetrieval
             while (i < new_text.Count)
             {
                 if (i > 0)
-                    new_text.RemoveRange(0, PassageOverlap);
+                    new_text.RemoveRange(0, Math.Min(PassageOverlap, new_text.Count));
                 StringBuilder sb = new();
                 for (int j = Math.Max(0, i); j < Math.Min(new_text.Count - 1, i + PassageLength); j++)
                     sb.Append(new_text[j]);
