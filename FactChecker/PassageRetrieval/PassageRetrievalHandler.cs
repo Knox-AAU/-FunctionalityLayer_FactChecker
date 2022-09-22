@@ -1,52 +1,27 @@
-﻿using System;
+﻿using FactChecker.APIs.KnowledgeGraphAPI;
+using FactChecker.Controllers.Exceptions;
+using FactChecker.Intefaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace FactChecker.PassageRetrieval
 {
-    public class PassageRetrievalHandler
+    public class PassageRetrievalHandler : IPassageRetrieval
     {
-        private int _passageOverlap = 20;
         public int PassageLength { get; set; } = 80;
-        public string FullText { get; set; }
-
-        public int PassageOverlap
-        {
-            get
-            {
-                return _passageOverlap;
-            }
-            set
-            {
-                if(value > PassageLength)
-                {
-                    throw new ArgumentOutOfRangeException("Passage overlap can not be greater than passage length");
-                }
-                _passageOverlap = PassageLength - (PassageLength - value);
-            }
-        }
-
-        /// <summary>
-        /// Contructor taking one argument of type <paramref name="string"/>. Used for creating new passages.
-        /// </summary>
-        /// <param name="text"></param>
-        public PassageRetrievalHandler(string text)
-        {
-            FullText = text;
-        }
-
-        public override string ToString()
-        {
-            return FullText;
-        }
-
+        private string FullText { get; set; }
+        public int PassageOverlap { get; set; } = 20;
         /// <summary>
         /// Method used to create passages from the best ranked articles.
         /// </summary>
         /// <returns>A list of passages</returns>
-        public List<string> GetPassages()
+        private List<string> GetPassages(string text)
         {
+            if (PassageOverlap > PassageLength)
+                throw new PassageRetrievalFailedFilteredException("'PassageOverlap' can not be higher than 'PassageLength'");
+            FullText = text;
             // errors when splitting since some texts does not have a space '"universe.A"'
             List<string> passages = new();
             List<string> splitText = FullText.Split(' ').ToList();
@@ -79,8 +54,10 @@ namespace FactChecker.PassageRetrieval
                 }
                 count++;
             }
-
             return passages;
         }
+        public IEnumerable<Passage> GetPassages(Article article) =>
+            GetPassages(article.FullText).Select(p => new Passage
+                { Text = p });
     }
 }

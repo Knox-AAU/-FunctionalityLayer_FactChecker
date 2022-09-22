@@ -1,37 +1,32 @@
 ﻿using FactChecker.APIs.KnowledgeGraphAPI;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FactChecker.Intefaces
 {
     public interface IPassageRetrieval
     {
-        public List<Passage> GetPassages(List<Article> articles, List<KnowledgeGraphItem> items);
-        public List<Passage> GetPassages(List<Article> articles, KnowledgeGraphItem item);
+        public IEnumerable<Passage> GetPassages(Article _);
     }
     public interface IArticleRetrieval
     {
-        public List<Article> GetArticles(List<KnowledgeGraphItem> items);
-        public List<Article> GetArticles(KnowledgeGraphItem item);
+        public IEnumerable<Article> GetArticles(List<KnowledgeGraphItem> items);
+        public IEnumerable<Article> GetArticles(KnowledgeGraphItem item);
     }
 
-    public interface IEvidenceRetrieval : IPassageRetrieval, IArticleRetrieval
+    public interface IEvidenceRetrieval
     {
-        public List<Passage> GetEvidence(List<KnowledgeGraphItem> items)
-        {
-            return GetPassages(GetArticles(items), items);
-        }
-        public List<Passage> GetEvidence(KnowledgeGraphItem item)
-        {
-            return GetPassages(GetArticles(item), item);
-        }
+        public IEnumerable<Passage> GetEvidence(List<Article> articles, List<KnowledgeGraphItem> items);
+        public IEnumerable<Passage> GetEvidence(List<Article> articles, KnowledgeGraphItem item);
     }
 
     public class Passage
     {
-        public string text { get; set; }
+        public string Text { get; set; }
     }
     public class Article
     {
         public int Id { get; set; }
+        public string FullText { get; set; }
     }
 }

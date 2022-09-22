@@ -5,22 +5,19 @@ using System.Threading.Tasks;
 using FactChecker.TFIDF;
 using FactChecker.PassageRetrieval;
 using FactChecker.APIs.KnowledgeGraphAPI;
+using FactChecker.Intefaces;
+using FactChecker.Controllers.Exceptions;
 
 namespace FactChecker.TMWIIS
 {
-    public class TMWIISHandler
+    public class TMWIISHandler : IEvidenceRetrieval
     {
-        private int maxPassages = 5;
-        public List<int> articleIDs;
-        public KnowledgeGraphItem knowledgeGraphItem;
-        public Stopwords.Stopwords stopwords = new();
-        float lambda1 = 0.9f, lambda2 = 0.05f, lambda3 = 0.05f;
-        public TMWIISHandler(List<int> articleID, KnowledgeGraphItem KGitem)
-        {
-            articleIDs = articleID;
-            knowledgeGraphItem = KGitem;
-        }
-        public List<TMWIISItem> Evidence()
+        private readonly int maxPassages = 5;
+        private List<Article> Articles;
+        private KnowledgeGraphItem knowledgeGraphItem;
+        private Stopwords.Stopwords stopwords = new();
+        readonly float lambda1 = 0.9f, lambda2 = 0.05f, lambda3 = 0.05f;
+        private List<Passage> Evidence()
         {
             List<TMWIISItem> rankedPassages = new();
             WordcountDB.Article articleHandler = new();
@@ -29,9 +26,9 @@ namespace FactChecker.TMWIIS
             int relationTotalOccurence = GetNumberOfOccurencesInAllDocuments(knowledgeGraphItem.r);
             int targetTotalOccurence = GetNumberOfOccurencesInAllDocuments(knowledgeGraphItem.t);
 
-            for (int j = 0; j < articleIDs.Count; j++)
+            for (int j = 0; j < Articles.Count; j++)
             {
-                WordcountDB.ArticleItem article = articleHandler.FetchDB(articleIDs[j]);
+                WordcountDB.ArticleItem article = articleHandler.FetchDB(Articles[j].Id);
                 List<string> passages = GetPassages(article.Text);
                 int sourceDocumentOccurence = WordOccurrence(knowledgeGraphItem.s, article.Text);
                 int relationDocumentOccurence = WordOccurrence(knowledgeGraphItem.r, article.Text);
@@ -53,14 +50,19 @@ namespace FactChecker.TMWIIS
                 }
             }
             rankedPassages.Sort((p, q) => q.score.CompareTo(p.score));
-            return rankedPassages.Take(maxPassages).ToList();
+            var list_of_passages =  rankedPassages.OrderByDescending(p => p.score).Take(maxPassages).Select(p => new Passage
+            {
+                Text = p.passage
+            }).ToList();
+            if (list_of_passages.Count == 0) throw new PassageNotFoundFilteredException(knowledgeGraphItem.s);
+            return list_of_passages;
         }
-        public List<string> GetPassages(string text)
+        private List<string> GetPassages(string text)
         {
-            PassageRetrievalHandler pr = new(text);
-            return pr.GetPassages();
+            PassageRetrievalHandler pr = new();
+            return pr.GetPassages(new Article() { FullText=text }).Select(p => p.Text).ToList();
         }
-        public float EvidenceCalculator(int passageLength, int uniqueLength, int passageOccurrence, int documentOccurrence, int totalOccurrence)
+        private float EvidenceCalculator(int passageLength, int uniqueLength, int passageOccurrence, int documentOccurrence, int totalOccurrence)
         {
             float passageSource, documentSource, collectionSource; 
 
@@ -70,7 +72,7 @@ namespace FactChecker.TMWIIS
             return  passageSource  * documentSource * collectionSource;
         }
 
-        public int GetNumberOfOccurencesInAllDocuments (string word)
+        private int GetNumberOfOccurencesInAllDocuments (string word)
         {
             List<string> splitted = word.Split(' ').ToList();           
             WordcountDB.WordCount wordCount = new ();
@@ -78,15 +80,14 @@ namespace FactChecker.TMWIIS
 
             foreach(string s in splitted)
                 sum += wordCount.FetchSumOfOccurences(s);
-     
             return sum;
         }
-        public int PassageLength(string passage)
+        private int PassageLength(string passage)
         {
             int length = passage.Split(' ').ToList().Count;
             return length;
         }
-        public int WordOccurrence(string entity, string passage)
+        private int WordOccurrence(string entity, string passage)
         {
             List<string> passageWords = passage.Split(" ").ToList();
             List<string> entityList = entity.Split(" ").ToList();
@@ -97,6 +98,17 @@ namespace FactChecker.TMWIIS
                     if (passageWords[i] == entityList[j] && !stopwords.stopwords.ContainsKey(passageWords[i]))
                         occurrences++;
             return occurrences;
+        }
+
+        public IEnumerable<Passage> GetEvidence(List<Article> articles, List<KnowledgeGraphItem> items)
+        {
+            Articles = articles;
+            knowledgeGraphItem = items.First();
+            return Evidence();
+        }
+        public IEnumerable<Passage> GetEvidence(List<Article> articles, KnowledgeGraphItem item)
+        {
+            return GetEvidence(articles, new List<KnowledgeGraphItem>() { item });
         }
     }
 }

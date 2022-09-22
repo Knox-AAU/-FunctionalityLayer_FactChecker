@@ -12,30 +12,30 @@ namespace FactChecker.BenchMarks
     [MemoryDiagnoser]
     public class PostBenchMark
     {
-        [Benchmark]
-        public KnowledgeGraphItem PostPassageFound()
-        {
-            KnowledgeGraphItem item = new KnowledgeGraphItem("Zendaya", "", "");
-            TFIDF.TFIDFHandler tFIDFHandler = new();
-            List<string> searchList = new() { item.s, item.r, item.t };
-            List<TFIDF.TFIDFItem> tFIDFItems = tFIDFHandler.CalculateTFIDF(searchList);
-            List<int> articles = tFIDFItems.Select(p => p.articleId).ToList();
-            TMWIIS.TMWIISHandler tMWIISHandler = new(articles, item);
-            item.passage = tMWIISHandler.Evidence().OrderByDescending(p => p.score).FirstOrDefault()?.passage ?? "No Passage found";
-            return item;
-        }
-        [Benchmark]
-        public KnowledgeGraphItem PostNoPassageFound()
-        {
-            KnowledgeGraphItem item = new KnowledgeGraphItem("Zendaya", "", "");
-            TFIDF.TFIDFHandler tFIDFHandler = new();
-            List<string> searchList = new() { item.s, item.r, item.t };
-            List<TFIDF.TFIDFItem> tFIDFItems = tFIDFHandler.CalculateTFIDF(searchList);
-            List<int> articles = tFIDFItems.Select(p => p.articleId).ToList();
-            TMWIIS.TMWIISHandler tMWIISHandler = new(articles, item);
-            item.passage = tMWIISHandler.Evidence().OrderByDescending(p => p.score).FirstOrDefault()?.passage ?? "No Passage found";
-            return item;
-        }
+        //[Benchmark]
+        //public KnowledgeGraphItem PostPassageFound()
+        //{
+        //    KnowledgeGraphItem item = new KnowledgeGraphItem("Zendaya", "", "");
+        //    TFIDF.TFIDFHandler tFIDFHandler = new();
+        //    List<string> searchList = new() { item.s, item.r, item.t };
+        //    List<TFIDF.TFIDFItem> tFIDFItems = tFIDFHandler.CalculateTFIDF(searchList);
+        //    List<int> articles = tFIDFItems.Select(p => p.articleId).ToList();
+        //    TMWIIS.TMWIISHandler tMWIISHandler = new(articles, item);
+        //    item.passage = tMWIISHandler.Evidence().OrderByDescending(p => p.score).FirstOrDefault()?.passage ?? "No Passage found";
+        //    return item;
+        //}
+        //[Benchmark]
+        //public KnowledgeGraphItem PostNoPassageFound()
+        //{
+        //    KnowledgeGraphItem item = new KnowledgeGraphItem("Zendaya", "", "");
+        //    TFIDF.TFIDFHandler tFIDFHandler = new();
+        //    List<string> searchList = new() { item.s, item.r, item.t };
+        //    List<TFIDF.TFIDFItem> tFIDFItems = tFIDFHandler.CalculateTFIDF(searchList);
+        //    List<int> articles = tFIDFItems.Select(p => p.articleId).ToList();
+        //    TMWIIS.TMWIISHandler tMWIISHandler = new(articles, item);
+        //    item.passage = tMWIISHandler.Evidence().OrderByDescending(p => p.score).FirstOrDefault()?.passage ?? "No Passage found";
+        //    return item;
+        //}
 
         public static void Run()
         {

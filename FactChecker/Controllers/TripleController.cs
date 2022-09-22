@@ -1,4 +1,6 @@
-﻿    using Microsoft.AspNetCore.Mvc;
+﻿using FactChecker.APIs.KnowledgeGraphAPI;
+using FactChecker.Intefaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -16,22 +18,18 @@ namespace FactChecker.Controllers
         public static TestData.WikiDataTriples WikiDataTriples = new ();
 
         [HttpGet]
-        public IEnumerable<APIs.KnowledgeGraphAPI.KnowledgeGraphItem> Get()
+        public IEnumerable<KnowledgeGraphItem> Get()
         {
             return WikiDataTriples.triples;
         }
 
+        // Add support for multiple knowledgegraph items and sum the tf-idf score to get the result
         [HttpPost]
-        public APIs.KnowledgeGraphAPI.KnowledgeGraphItem Post(APIs.KnowledgeGraphAPI.KnowledgeGraphItem item)
+        public ActionResult<KnowledgeGraphItem> Post(KnowledgeGraphItem item)
         {
-            // Add support for multiple knowledgegraph items and sum the tf-idf score to get the result
-            TFIDF.TFIDFHandler tFIDFHandler = new ();
-            List<string> searchList = new() { item.s, item.r, item.t };
-            List<TFIDF.TFIDFItem> tFIDFItems = tFIDFHandler.CalculateTFIDF(searchList);
-            List<int> articles = tFIDFItems.Select(p => p.articleId).ToList();
-            TMWIIS.TMWIISHandler tMWIISHandler = new(articles, item);
-            item.passage = tMWIISHandler.Evidence().OrderByDescending(p => p.score).FirstOrDefault()?.passage ?? "No Passage found";
-            return item;
+            List<Article> articles = new TFIDF.TFIDFHandler().GetArticles(item).ToList();
+            item.passage = new TMWIIS.TMWIISHandler().GetEvidence(articles, item).FirstOrDefault()?.Text ?? "No Passage found";
+            return Ok(item);
         }
     }
 }

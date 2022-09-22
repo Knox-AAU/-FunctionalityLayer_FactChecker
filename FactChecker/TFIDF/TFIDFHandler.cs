@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FactChecker.APIs.KnowledgeGraphAPI;
+using FactChecker.Intefaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,11 +10,10 @@ namespace FactChecker.TFIDF
     /// <summary>
     /// Contains the method <c>CalculateTFIDF</c>
     /// </summary>
-    public class TFIDFHandler
+    public class TFIDFHandler : IArticleRetrieval
     {
         int numberOfArticles = 15;
-        public int maxArticles = 5;
-
+        private int maxArticles = 5;
         /// <summary>
         /// Takes a list of <typeparamref name="string"/> 
         /// and ranks articles using each <typeparamref name="string"/> in the list.
@@ -22,10 +23,11 @@ namespace FactChecker.TFIDF
         /// A list containing the Top 5 articles which are most likely 
         /// to support the <typeparamref name="search"/> parameter.
         /// </returns>
-        public List<TFIDFItem> CalculateTFIDF (List<string> search)
+        private List<Article> CalculateTFIDF (List<string> search)
         {
-            WordcountDB.WordCount wordCount = new WordcountDB.WordCount();
-            List<TFIDFItem> articles = new List<TFIDFItem>();
+            WordcountDB.Article articleHandler = new();
+            WordcountDB.WordCount wordCount = new ();
+            List<TFIDFItem> articles = new ();
             search.RemoveAll(p => string.IsNullOrEmpty(p) || string.IsNullOrWhiteSpace(p));
             foreach (string s in search) //In this iteration of the project, search is a list of words from the chosen triple 
             {                           
@@ -46,7 +48,11 @@ namespace FactChecker.TFIDF
                 }
             }
             articles.Sort((p, q) => q.score.CompareTo(p.score));
-            return articles.Take(maxArticles).ToList();
+            return articles.Take(maxArticles).Select(p => new Article()
+            {
+                Id = p.articleId,
+                FullText = articleHandler.FetchDB(p.articleId).Text,
+            }).ToList();
         }
 
         /// <summary>
@@ -73,6 +79,15 @@ namespace FactChecker.TFIDF
         public float CalculateInverseDocumentFrequency (int numberOfDocuments, int numberOfDocumentsWithTerm)
         {
             return (float)Math.Log(numberOfDocuments / numberOfDocumentsWithTerm, 10);
+        }
+
+        public IEnumerable<Article> GetArticles(List<KnowledgeGraphItem> items)
+        {
+            return CalculateTFIDF(items.Select(p => new List<string>() {p.s, p.r, p.t}).SelectMany(l => l).Distinct().ToList());
+        }
+        public IEnumerable<Article> GetArticles(KnowledgeGraphItem item)
+        {
+            return GetArticles(new List<KnowledgeGraphItem>() { item });
         }
     }
 }
