@@ -62,7 +62,7 @@ namespace FactChecker.TFIDF
         /// <returns>
         /// Term frequenzy of type <typeparamref name="float"/>
         /// </returns>
-        private float CalculateTermFrequency (int f_td)
+        public float CalculateTermFrequency (int f_td)
         {
             return (float)(1 + Math.Log(f_td,10));
         }
@@ -76,7 +76,7 @@ namespace FactChecker.TFIDF
         /// <returns>
         /// Inverse document frequenzy of type <typeparamref name="float"/>
         /// </returns>
-        private float CalculateInverseDocumentFrequency (int numberOfDocuments, int numberOfDocumentsWithTerm)
+        public float CalculateInverseDocumentFrequency (int numberOfDocuments, int numberOfDocumentsWithTerm)
         {
             return (float)Math.Log(numberOfDocuments / numberOfDocumentsWithTerm, 10);
         }

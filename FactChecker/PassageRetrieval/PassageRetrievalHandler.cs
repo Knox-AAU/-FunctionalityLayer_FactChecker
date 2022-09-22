@@ -10,9 +10,9 @@ namespace FactChecker.PassageRetrieval
 {
     public class PassageRetrievalHandler : IPassageRetrieval
     {
-        private int PassageLength { get; set; } = 80;
+        public int PassageLength { get; set; } = 80;
         private string FullText { get; set; }
-        private int PassageOverlap { get; set; } = 20;
+        public int PassageOverlap { get; set; } = 20;
         /// <summary>
         /// Method used to create passages from the best ranked articles.
         /// </summary>
