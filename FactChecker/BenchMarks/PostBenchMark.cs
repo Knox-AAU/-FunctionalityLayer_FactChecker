@@ -37,7 +37,7 @@ namespace FactChecker.BenchMarks
         //    return item;
         //}
 
-        public static void Run()
+        public static void RunBenchmarks()
         {
             var summary = BenchmarkRunner.Run<PostBenchMark>();
         }
