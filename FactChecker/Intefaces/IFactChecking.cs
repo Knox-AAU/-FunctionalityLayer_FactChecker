@@ -23,6 +23,7 @@ namespace FactChecker.Intefaces
     public class Passage
     {
         public string Text { get; set; }
+        public float Score { get; set; }
     }
     public class Article
     {

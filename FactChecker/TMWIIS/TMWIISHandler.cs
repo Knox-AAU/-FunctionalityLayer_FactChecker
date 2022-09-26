@@ -50,16 +50,17 @@ namespace FactChecker.TMWIIS
                 }
             }
             rankedPassages.Sort((p, q) => q.score.CompareTo(p.score));
-            var list_of_passages =  rankedPassages.OrderByDescending(p => p.score).Take(maxPassages).Select(p => new Passage
+            var list_of_passages =  rankedPassages.Select(p => new Passage
             {
-                Text = p.passage
+                Text = p.passage,
+                Score = p.score
             }).ToList();
             if (list_of_passages.Count == 0) throw new PassageNotFoundFilteredException(knowledgeGraphItem.s);
             return list_of_passages;
         }
         private List<string> GetPassages(string text)
         {
-            PassageRetrievalHandler pr = new();
+            IPassageRetrieval pr = new PassageRetrievalHandler();
             return pr.GetPassages(new Article() { FullText=text }).Select(p => p.Text).ToList();
         }
         private float EvidenceCalculator(int passageLength, int uniqueLength, int passageOccurrence, int documentOccurrence, int totalOccurrence)
@@ -100,11 +101,27 @@ namespace FactChecker.TMWIIS
             return occurrences;
         }
 
+        /// <summary>
+        /// This could potetially give wrong results, needs a fix
+        /// </summary>
+        /// <param name="articles"></param>
+        /// <param name="items"></param>
+        /// <returns></returns>
         public IEnumerable<Passage> GetEvidence(List<Article> articles, List<KnowledgeGraphItem> items)
         {
             Articles = articles;
-            knowledgeGraphItem = items.First();
-            return Evidence();
+            List<Passage> res_passages = new();
+            foreach (var item in items)
+            {
+                knowledgeGraphItem = item;
+                var evidence = Evidence();
+                if (res_passages.Count == 0)
+                    res_passages.AddRange(evidence);
+                else
+                    for (int i = 0; i < evidence.Count; i++)
+                        res_passages[i].Score += evidence[i].Score;
+            }
+            return res_passages.OrderByDescending(p => p.Score).Take(50);
         }
         public IEnumerable<Passage> GetEvidence(List<Article> articles, KnowledgeGraphItem item)
         {
