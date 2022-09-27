@@ -54,7 +54,7 @@ namespace FactChecker.Controllers
             return Ok(passages.ToList().OrderByDescending(p => p.Score));
         }
 
-        [HttpPost("Leven")]
+        [HttpPost("JaccardLevenshtein")]
         public async Task<ActionResult<KnowledgeGraphItem>> PostLeven([FromBody] KnowledgeGraphItem item)
         {
             List<Article> articles = ar.GetArticles(item).ToList();
@@ -64,7 +64,7 @@ namespace FactChecker.Controllers
                 //string triple = (await lh.GetLemmatizedText($"{item.s} {item.r} {item.t}", "en")).lemmatized_string;
                 //string? passage_ = (await lh.GetLemmatizedText(p.Text, "en"))?.lemmatized_string ?? null;
                 //if (passage_ == null) continue;
-                p.ls_score = (double)Levenshtein.LevenshteinDistanceAlgorithm.LevenshteinDistance_V1($"{item.s} {item.r} {item.t}", p.Text) / (double)p.Text.Length * 100;
+                p.ls_score = (double)Levenshtein.LevenshteinDistanceAlgorithm.LevenshteinDistance_V2($"{item.s} {item.r} {item.t}", p.Text) / p.Text.Length * 100;
                 p.js_score = Math.Round(js.Similarity($"{item.s} {item.r} {item.t}", p.Text), 2) * 2000;
             }
             passages = passages.ToList().OrderBy(p => p.ls_score);

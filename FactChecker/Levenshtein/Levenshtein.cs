@@ -58,61 +58,22 @@ namespace FactChecker.Levenshtein
                 matrix[i] = new int[source.Length + 1];
 
             for (int i = 0; i < target.Length + 1; i++)
-            {
                 matrix[i][0] = i;
-            }
-
             for (int i = 0; i < source.Length + 1; i++)
-            {
                 matrix[0][i] = i;
-            }
-            for (int row = 1; row < target.Length + 1; row = row + 1)
-            {
-                for (int col = 1; col < source.Length + 1; col = col + 1)
-                {
-
-                    //charaters are same
-                    if (source[col - 1] == target[row - 1])
-                    {
-                        matrix[row][ col] = matrix[row - 1][ col - 1];
-                    }
-
-
-                    //charaters are different
-                    else
-                    {
-                        matrix[row][ col] = Math.Min(matrix[row][ col - 1], Math.Min(
-                            matrix[row - 1][ col], matrix[row - 1][ col - 1])) + 1;
-                    }
-                }
-            }
-
-            return matrix[target.Length][source.Length];
-        }
-
-
-        public static int LevenshteinDistance_V3(string target, string source)
-        {
-            List<int[]> matrix = new List<int[]>();
-            for (int i = 0; i < target.Length + 1; i++)
-            {
-                matrix.Add(new int[source.Length + 1]);
-                matrix[i][0] = i;
-                for (int j = 0; j < source.Length + 1; j++)
-                    matrix[0][j] = i;
-            }
-
             for (int row = 1; row < target.Length + 1; row++)
                 for (int col = 1; col < source.Length + 1; col++)
                     //charaters are same
                     if (source[col - 1] == target[row - 1])
-                        matrix[row][col] = matrix[row - 1][col - 1];
+                        matrix[row][ col] = matrix[row - 1][ col - 1];
+                    //charaters are different
                     else
-                        matrix[row][col] = Math.Min(matrix[row][col - 1], Math.Min(
-                            matrix[row - 1][col], matrix[row - 1][col - 1])) + 1;
+                        matrix[row][ col] = Math.Min(matrix[row][ col - 1], Math.Min(
+                            matrix[row - 1][ col], matrix[row - 1][ col - 1])) + 1;
 
             return matrix[target.Length][source.Length];
         }
 
+        
     }
 }

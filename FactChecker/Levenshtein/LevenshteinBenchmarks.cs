@@ -18,39 +18,24 @@ namespace FactChecker.Levenshtein
         [Benchmark]
         public void Levenshtein_V1_long()
         {
-            Levenshtein.LevenshteinDistanceAlgorithm.LevenshteinDistance_V1(__checkstring_target_long, __checkstring_source_long);
+            LevenshteinDistanceAlgorithm.LevenshteinDistance_V1(__checkstring_target_long, __checkstring_source_long);
         }
         [Benchmark]
         public void Levenshtein_V1_short()
         {
-            Levenshtein.LevenshteinDistanceAlgorithm.LevenshteinDistance_V1(__checkstring_target_short, __checkstring_source_short);
+            LevenshteinDistanceAlgorithm.LevenshteinDistance_V1(__checkstring_target_short, __checkstring_source_short);
         }
-
-
 
         [Benchmark]
         public void Levenshtein_V2_long()
         {
-            Levenshtein.LevenshteinDistanceAlgorithm.LevenshteinDistance_V2(__checkstring_target_long, __checkstring_source_long);
+            LevenshteinDistanceAlgorithm.LevenshteinDistance_V2(__checkstring_target_long, __checkstring_source_long);
         }
         [Benchmark]
         public void Levenshtein_V2_short()
         {
-            Levenshtein.LevenshteinDistanceAlgorithm.LevenshteinDistance_V2(__checkstring_target_short, __checkstring_source_short);
+            LevenshteinDistanceAlgorithm.LevenshteinDistance_V2(__checkstring_target_short, __checkstring_source_short);
         }
-
-
-        [Benchmark]
-        public void Levenshtein_V3_long()
-        {
-            Levenshtein.LevenshteinDistanceAlgorithm.LevenshteinDistance_V3(__checkstring_target_long, __checkstring_source_long);
-        }
-        [Benchmark]
-        public void Levenshtein_V3_short()
-        {
-            Levenshtein.LevenshteinDistanceAlgorithm.LevenshteinDistance_V3(__checkstring_target_short, __checkstring_source_short);
-        }
-
 
 
         public static void RunBenchmarks()
