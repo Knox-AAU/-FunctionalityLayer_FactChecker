@@ -4,18 +4,32 @@
     {
         static void Main(string[] args)
         {
-            Graph graph = new();
-            graph.init();
-
+            Graph graph = new Graph(numericGraphAndDirected: false, 
+                                    path: @"D:\FunctionalityLayer_FactChecker\SimRank\SimRank\ConsoleApp1\relations.txt");
+            
             int iteration = 500;
-
-            Similarity similarity = new Similarity(graph, decay_factor:0.9f);
+            float decay_factor = 0.9f;
+            
+            graph.init();
+            Similarity sim = new(graph, decay_factor:decay_factor);
 
             for (int i = 0; i < iteration; i++)
-                similarity.SimRank_one_iter(graph, similarity.old_sim);
-            similarity.Print_Sim();
+                sim.SimRank_one_iter(graph, sim.old_sim);
+            
+            sim.Print_Sim();
+            graph.Print_Nodes();
         }
 
+        class Node
+        {
+            public string data { get; set; }
+            public List<Node> children = new();
+            public List<Node> parents = new();
+            public Node(string data)
+            {
+                this.data = data;
+            }
+        }
         class Triple
         {
             public string S { get; set; }
@@ -94,13 +108,8 @@
                     }
                 }
                 for (int i = 0; i < new_sim.Count; i++)
-                {
                     for (int j = 0; j < new_sim.Count; j++)
-                    {
-                        float a = new_sim[i][j];
-                        old_sim[i][j] = a;
-                    }
-                }
+                        old_sim[i][j] = new_sim[i][j];
             }
             private float get_sim_value(Node node1, Node node2)
             {
@@ -131,6 +140,15 @@
             }
             public void Print_Sim()
             {
+                foreach (string n in name_list)
+                {
+                    string name = (n.Length > 5) ? n[..5] : n;
+                    Console.Write(name);
+                    int max_print_len = 7 - name.ToString().Length;
+                    for (int i = 0; i < max_print_len; i++)
+                        Console.Write("-");
+                }
+                Console.WriteLine();
                 foreach (var row in old_sim)
                 {
                     foreach (float elem in row)
@@ -146,42 +164,57 @@
                 }
             }
         }
-
-        class Node
-        {
-            public string data { get; set; }
-            public string property { get; set; }
-            public List<Node> children = new();
-            public List<Node> parents = new();
-            public int index { get; set; }
-
-            public Node(string data)
-            {
-                this.data = data;
-            }
-
-        }
-
         class Graph
         {
             public List<Node> nodes = new();
             private List<Triple> triples = new();
+            private string path { get; set; }
 
             public List<List<float>> old_sim = new();
+            private bool isNumericAndDirected = false;
+
+            public Graph(bool numericGraphAndDirected, string path)
+            {
+                isNumericAndDirected = numericGraphAndDirected;
+                this.path = path;
+            }
 
             public void init()
             {
-                getTriples();
+                if (isNumericAndDirected)
+                    getNumbers();
+                else
+                    getTriples();
+
                 foreach (Triple t in triples)
                 {
                     Node a = nodes.FirstOrDefault(o => o.data == t.S) ?? init_node(t.S);
                     Node b = nodes.FirstOrDefault(o => o.data == t.T) ?? init_node(t.T);
                     
-                    if(!a.children.Any(o => o.data == t.T))
-                        nodes.First(o => o.data == a.data).children.Add(b);
+                    if (!isNumericAndDirected)
+                    {
+                        if (!a.children.Any(o => o.data == t.T))
+                        {
+                            nodes.First(o => o.data == a.data).children.Add(b);
+                            nodes.First(o => o.data == a.data).parents.Add(b);
+                        }
 
-                    if (!b.parents.Any(o => o.data == t.S))
-                        nodes.First(o => o.data == b.data).parents.Add(a);
+                        if (!b.parents.Any(o => o.data == t.S))
+                        {
+                            nodes.First(o => o.data == b.data).parents.Add(a);
+                            nodes.First(o => o.data == b.data).children.Add(a);
+                        }
+                    }
+                    else
+                    {
+                        if (!a.children.Any(o => o.data == t.T))
+                            nodes.First(o => o.data == a.data).children.Add(b);
+
+                        if (!b.parents.Any(o => o.data == t.S))
+                            nodes.First(o => o.data == b.data).parents.Add(a);
+                    }
+
+
                 }
 
                 Node init_node(string input)
@@ -192,16 +225,39 @@
                 }
             }
 
+            
+            private void getNumbers()
+            {
+                foreach (string line in System.IO.File.ReadLines(path))
+                {
+                    String[] splitTriple = line.Split(",");
+                    Triple t = new(splitTriple[0], " ", splitTriple[1]);
+                    triples.Add(t);
+                    //System.Console.WriteLine(line);
+                }
+            }
+
+            private void getTriples()
+            {
+                foreach (string line in System.IO.File.ReadLines(path))
+                {
+                    String[] splitTriple = line.Split("> <");
+                    Triple t = new(splitTriple[0].TrimStart('<'), splitTriple[1], splitTriple[2].TrimEnd('>'));
+                    triples.Add(t);
+                    //System.Console.WriteLine(line);
+                }
+            }
+
             public void Print_Nodes()
             {
                 foreach (Node n in nodes)
                 {
-                    Console.Write($"Node: {n.data} - parent:");
+                    Console.Write($"Node: {n.data} | parent:");
                     foreach (Node p in n.parents)
                     {
                         Console.Write($" {p.data} ");
                     }
-                    Console.Write(" - child:");
+                    Console.Write(" | child:");
                     foreach (Node c in n.children)
                     {
                         Console.Write($" {c.data} ");
@@ -210,83 +266,6 @@
                 }
             }
 
-            private void getTriples()
-            {
-                foreach (string line in System.IO.File.ReadLines(@"C:\Users\minhs\Desktop\SimRank\SimRank\ConsoleApp1\number_test.txt"))
-                {
-                    String[] splitTriple = line.Split(",");
-                    Triple t = new(splitTriple[0], " ", splitTriple[1]);
-                    triples.Add(t);
-                    //System.Console.WriteLine(line);
-                }
-            }
-        }
-
-        class Node2
-        {
-            public string data { get; set; }
-            public string property { get; set; }
-            public List<Node2> neighbours = new();
-            public int index { get; set; }
-
-            public Node2(string data)
-            {
-                this.data = data;
-            }
-
-        }
-
-        class Graph2
-        {
-            public List<Node2> nodes = new();
-            private List<Triple> triples = new();
-
-            public List<List<float>> old_sim = new();
-
-            private int next_index = 0;
-
-            public void init()
-            {
-                getTriples();
-                foreach (Triple t in triples)
-                {
-                    Node2 a = new Node2(t.S);
-                    Node2 b = new Node2(t.T);
-
-                    if (!nodes.Any(o => o?.data == t.S))
-                    {
-                        a.neighbours = new List<Node2> { b };
-                        a.index = next_index++;
-                        nodes.Add(a);
-                    }
-                    else
-                    {
-                        nodes.First(o => o.data == t.S).neighbours.Add(b);
-                    }
-
-                    if (!nodes.Any(o => o?.data == t.T))
-                    {
-                        b.neighbours = new List<Node2> { a };
-                        b.index = next_index++;
-                        nodes.Add(b);
-                    }
-                    else
-                    {
-                        nodes.First(o => o.data == t.T).neighbours.Add(a);
-                    }
-                }
-            }
-
-            private void getTriples()
-            {
-                foreach (string line in System.IO.File.ReadLines(@"C:\Users\minhs\Desktop\SimRank\SimRank\ConsoleApp1\test_relations.txt"))
-                {
-                    String[] splitTriple = line.Split("> <");
-                    Triple t = new(splitTriple[0].TrimStart('<'), splitTriple[1], splitTriple[2].TrimEnd('>'));
-                    triples.Add(t);
-                    //System.Console.WriteLine(line);
-                }
-            }
         }
 
     }
