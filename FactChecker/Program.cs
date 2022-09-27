@@ -10,8 +10,6 @@ using System.Threading.Tasks;
 using FactChecker.APIs.KnowledgeGraphAPI;
 using FactChecker.TMWIIS;
 using FactChecker.BenchMarks;
-using BenchmarkDotNet.Running;
-using FactChecker.JaccardSim;
 
 namespace FactChecker
 {
@@ -19,8 +17,8 @@ namespace FactChecker
     {
         public static void Main(string[] args)
         {
-            var summary = BenchmarkRunner.Run<JaccardBenchmark>();
-            //CreateHostBuilder(args).Build().Run();
+            //Levenshtein.LevenshteinBenchmarks.RunBenchmarks();
+            CreateHostBuilder(args).Build().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
