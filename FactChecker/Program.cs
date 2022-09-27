@@ -17,8 +17,13 @@ namespace FactChecker
     {
         public static void Main(string[] args)
         {
-            //PostBenchMark.Run();
-            CreateHostBuilder(args).Build().Run();
+
+            //Console.WriteLine(Levenshtein.LevenshteinDistanceAlgorithm.LevenshteinDistance_V1("hello there dawpdjapw djpaowd ", "this is a test"));
+            //Console.WriteLine(Levenshtein.LevenshteinDistanceAlgorithm.LevenshteinDistance_V2("hello there dawpdjapw djpaowd ", "this is a test"));
+            //Console.WriteLine(Levenshtein.LevenshteinDistanceAlgorithm.LevenshteinDistance_V3("hello there dawpdjapw djpaowd ", "this is a test"));
+
+            Levenshtein.LevenshteinBenchmarks.RunBenchmarks();
+            //CreateHostBuilder(args).Build().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
