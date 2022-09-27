@@ -1,25 +1,44 @@
-﻿namespace ConsoleApp1
+﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Running;
+
+namespace ConsoleApp1
 {
-    internal class Program
+    public class Program
     {
         static void Main(string[] args)
         {
-            Graph graph = new Graph(numericGraphAndDirected: false, 
-                                    path: @"D:\FunctionalityLayer_FactChecker\SimRank\SimRank\ConsoleApp1\relations.txt");
-            
+            //RunBenchmarks();
+            main();
+        }
+        public static void main()
+        {
+            Graph graph = new Graph();
+
             int iteration = 500;
             float decay_factor = 0.9f;
-            
+
             graph.init();
-            Similarity sim = new(graph, decay_factor:decay_factor);
+            Similarity sim = new(graph, decay_factor: decay_factor);
 
             for (int i = 0; i < iteration; i++)
                 sim.SimRank_one_iter(graph, sim.old_sim);
-            
-            sim.Print_Sim();
-            graph.Print_Nodes();
-        }
 
+            sim.Print_Sim();
+            //graph.Print_Nodes();
+        }
+        [MemoryDiagnoser]
+        public class BM
+        {
+            [Benchmark]
+            public void Test1()
+            {
+                main();
+            }
+        }
+        public static void RunBenchmarks()
+        {
+            BenchmarkRunner.Run<BM>();
+        }
         class Node
         {
             public string data { get; set; }
@@ -162,59 +181,36 @@
                     }
                     Console.WriteLine();
                 }
+                Console.WriteLine();
             }
         }
         class Graph
         {
             public List<Node> nodes = new();
             private List<Triple> triples = new();
-            private string path { get; set; }
 
             public List<List<float>> old_sim = new();
-            private bool isNumericAndDirected = false;
-
-            public Graph(bool numericGraphAndDirected, string path)
-            {
-                isNumericAndDirected = numericGraphAndDirected;
-                this.path = path;
-            }
 
             public void init()
             {
-                if (isNumericAndDirected)
-                    getNumbers();
-                else
-                    getTriples();
+                getTriples();
 
-                foreach (Triple t in triples)
+                foreach (Triple triple in triples)
                 {
-                    Node a = nodes.FirstOrDefault(o => o.data == t.S) ?? init_node(t.S);
-                    Node b = nodes.FirstOrDefault(o => o.data == t.T) ?? init_node(t.T);
+                    Node a = nodes.FirstOrDefault(o => o.data == triple.S) ?? init_node(triple.S);
+                    Node b = nodes.FirstOrDefault(o => o.data == triple.T) ?? init_node(triple.T);
                     
-                    if (!isNumericAndDirected)
+                    if (!a.children.Any(o => o.data == triple.T))
                     {
-                        if (!a.children.Any(o => o.data == t.T))
-                        {
-                            nodes.First(o => o.data == a.data).children.Add(b);
-                            nodes.First(o => o.data == a.data).parents.Add(b);
-                        }
-
-                        if (!b.parents.Any(o => o.data == t.S))
-                        {
-                            nodes.First(o => o.data == b.data).parents.Add(a);
-                            nodes.First(o => o.data == b.data).children.Add(a);
-                        }
-                    }
-                    else
-                    {
-                        if (!a.children.Any(o => o.data == t.T))
-                            nodes.First(o => o.data == a.data).children.Add(b);
-
-                        if (!b.parents.Any(o => o.data == t.S))
-                            nodes.First(o => o.data == b.data).parents.Add(a);
+                        nodes.First(o => o.data == a.data).children.Add(b);
+                        nodes.First(o => o.data == a.data).parents.Add(b);
                     }
 
-
+                    if (!b.parents.Any(o => o.data == triple.S))
+                    {
+                        nodes.First(o => o.data == b.data).parents.Add(a);
+                        nodes.First(o => o.data == b.data).children.Add(a);
+                    }
                 }
 
                 Node init_node(string input)
@@ -225,21 +221,9 @@
                 }
             }
 
-            
-            private void getNumbers()
-            {
-                foreach (string line in System.IO.File.ReadLines(path))
-                {
-                    String[] splitTriple = line.Split(",");
-                    Triple t = new(splitTriple[0], " ", splitTriple[1]);
-                    triples.Add(t);
-                    //System.Console.WriteLine(line);
-                }
-            }
-
             private void getTriples()
             {
-                foreach (string line in System.IO.File.ReadLines(path))
+                foreach (string line in System.IO.File.ReadLines(@"D:\FunctionalityLayer_FactChecker\SimRank\SimRank\ConsoleApp1\small_sample.txt"))
                 {
                     String[] splitTriple = line.Split("> <");
                     Triple t = new(splitTriple[0].TrimStart('<'), splitTriple[1], splitTriple[2].TrimEnd('>'));
@@ -254,14 +238,12 @@
                 {
                     Console.Write($"Node: {n.data} | parent:");
                     foreach (Node p in n.parents)
-                    {
                         Console.Write($" {p.data} ");
-                    }
+                    
                     Console.Write(" | child:");
                     foreach (Node c in n.children)
-                    {
                         Console.Write($" {c.data} ");
-                    }
+
                     Console.WriteLine();
                 }
             }
