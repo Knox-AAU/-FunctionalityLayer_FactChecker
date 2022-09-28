@@ -53,6 +53,38 @@ namespace FactChecker.Controllers
             }
             return Ok(passages.ToList().OrderByDescending(p => p.Score));
         }
+
+        [HttpPost("JaccardLevenshtein")]
+        public async Task<ActionResult<KnowledgeGraphItem>> PostLeven([FromBody] KnowledgeGraphItem item)
+        {
+            List<Article> articles = ar.GetArticles(item).ToList();
+            IEnumerable<Passage> passages = er.GetEvidence(articles, item).Take(50);
+            foreach (var p in passages)
+            {
+                //string triple = (await lh.GetLemmatizedText($"{item.s} {item.r} {item.t}", "en")).lemmatized_string;
+                //string? passage_ = (await lh.GetLemmatizedText(p.Text, "en"))?.lemmatized_string ?? null;
+                //if (passage_ == null) continue;
+                p.ls_score = (double)Levenshtein.LevenshteinDistanceAlgorithm.LevenshteinDistance_V2($"{item.s} {item.r} {item.t}", p.Text) / p.Text.Length * 100;
+                p.js_score = Math.Round(js.Similarity($"{item.s} {item.r} {item.t}", p.Text), 2) * 2000;
+            }
+            passages = passages.ToList().OrderBy(p => p.ls_score);
+            for (int i = 0; i < passages.Count(); i++)
+            {
+                Passage passage = passages.ToList()[i];
+                passage.ls_rank = i + 1;
+            }
+            passages = passages.ToList().OrderByDescending(p => p.js_score);
+            for (int i = 0; i < passages.Count(); i++)
+            {
+                Passage passage = passages.ToList()[i];
+                passage.js_rank = i + 1;
+            }
+            foreach (var item_ in passages)
+            {
+                item_.Score = item_.js_rank + item_.ls_rank;
+            }
+            return Ok(passages.ToList().OrderBy(p => p.Score)); 
+        }
         [HttpPost("Multiple")]
         public ActionResult<KnowledgeGraphItem> PostMultiple([FromBody]MultipleKnowledgeGraphItem Request)
         {

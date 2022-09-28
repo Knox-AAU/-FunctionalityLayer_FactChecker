@@ -17,7 +17,7 @@ namespace FactChecker
     {
         public static void Main(string[] args)
         {
-            //PostBenchMark.Run();
+            //Levenshtein.LevenshteinBenchmarks.RunBenchmarks();
             CreateHostBuilder(args).Build().Run();
         }
 
