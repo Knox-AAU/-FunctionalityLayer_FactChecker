@@ -35,7 +35,7 @@ namespace FactChecker.Controllers
         public ActionResult<KnowledgeGraphItem> Post([FromBody]KnowledgeGraphItem item)
         {
             List<Article> articles = ar.GetArticles(item).ToList();
-            item.passage = er.GetEvidence(articles, item).FirstOrDefault()?.Text ?? "No Passage found";
+            item.passage = er.GetEvidence(articles, item).FirstOrDefault()?.FullPassage ?? "No Passage found";
             return Ok(item);
         }
 
@@ -49,7 +49,7 @@ namespace FactChecker.Controllers
                 //string triple = (await lh.GetLemmatizedText($"{item.s} {item.r} {item.t}", "en")).lemmatized_string;
                 //string? passage_ = (await lh.GetLemmatizedText(p.Text, "en"))?.lemmatized_string ?? null;
                 //if (passage_ == null) continue;
-                p.Score = (float)Math.Round(js.Similarity($"{item.s} {item.r} {item.t}", p.Text), 2);
+                p.Score = (float)Math.Round(js.Similarity($"{item.s} {item.r} {item.t}", p.FullPassage), 2);
             }
             return Ok(passages.ToList().OrderByDescending(p => p.Score));
         }
@@ -64,8 +64,8 @@ namespace FactChecker.Controllers
                 //string triple = (await lh.GetLemmatizedText($"{item.s} {item.r} {item.t}", "en")).lemmatized_string;
                 //string? passage_ = (await lh.GetLemmatizedText(p.Text, "en"))?.lemmatized_string ?? null;
                 //if (passage_ == null) continue;
-                p.ls_score = (double)Levenshtein.LevenshteinDistanceAlgorithm.LevenshteinDistance_V2($"{item.s} {item.r} {item.t}", p.Text) / p.Text.Length * 100;
-                p.js_score = Math.Round(js.Similarity($"{item.s} {item.r} {item.t}", p.Text), 2) * 2000;
+                p.ls_score = (double)Levenshtein.LevenshteinDistanceAlgorithm.LevenshteinDistance_V2($"{item.s} {item.r} {item.t}", p.FullPassage) / p.FullPassage.Length * 100;
+                p.js_score = Math.Round(js.Similarity($"{item.s} {item.r} {item.t}", p.FullPassage), 2) * 2000;
             }
             passages = passages.ToList().OrderBy(p => p.ls_score);
             for (int i = 0; i < passages.Count(); i++)
@@ -86,11 +86,27 @@ namespace FactChecker.Controllers
             return Ok(passages.ToList().OrderBy(p => p.Score)); 
         }
         [HttpPost("Multiple")]
-        public ActionResult<KnowledgeGraphItem> PostMultiple([FromBody]MultipleKnowledgeGraphItem Request)
+        public ActionResult<KnowledgeGraphItem> PostMultiple([FromBody]KnowledgeGraphItem Request)
         {
-            List<Article> articles = ar.GetArticles(Request.items).ToList();
-            Request.passage = er.GetEvidence(articles, Request.items).FirstOrDefault()?.Text ?? "No Passage found";
+            List<Article> articles = ar.GetArticles(Request).ToList();
+            Request.passage = er.GetEvidence(articles, Request).FirstOrDefault()?.FullPassage ?? "No Passage found";
             return Ok(Request);
+        }
+        [HttpPost("Rake")]
+        public async Task<ActionResult<List<Passage>>> PostRake([FromBody] KnowledgeGraphItem Request) {
+            List<Article> articles = ar.GetArticles(Request).ToList();
+            List<Passage> passages = er.GetEvidence(articles, Request).Take(50).ToList();
+            List<Passage> tmp = new List<Passage>();
+            Rake.Rake r = new();
+            foreach(var article in articles) { 
+                tmp = r.GetPassages(article).ToList();
+                foreach(var passage in tmp) { 
+                    passage.Artical_ID = article.Id;
+                    passages.Add(passage);
+                }
+            }
+            
+            return Ok(passages);
         }
     }
 }

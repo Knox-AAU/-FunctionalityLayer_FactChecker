@@ -5,8 +5,12 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Reflection;
+using FactChecker.Intefaces;
+using DotLiquid.Util;
+using FactChecker.WordcountDB;
+using Article = FactChecker.Intefaces.Article;
 
-namespace FactChecker.rakentlk
+namespace FactChecker.Rake
 {
 
     public enum Metric{
@@ -15,7 +19,7 @@ namespace FactChecker.rakentlk
         WORD_DEGREE = 1, // Uses d(w) alone as the metric
         WORD_FREQUENCY = 2  // Uses f(w) alone as the metric
     }
-    public class Rake
+    public class Rake : IPassageRetrieval
     {
         public HashSet<string> stopwords { get; set; } 
         public HashSet<string> punctuation { get; set; } 
@@ -36,10 +40,13 @@ namespace FactChecker.rakentlk
                 int max_length = 100000, int min_length = 1, bool include_repeat_phrase = true)
         {
             if(stopwords == null) {
+                Stopwords.Stopwords s = new();
                 this.stopwords = new();
-                foreach (var line in File.ReadLines("..\\..\\..\\Stopwords\\stopwords.txt")) {
-                    this.stopwords.Add(line);
+                foreach (var item in s.stopwords)
+                {
+                    stopwords.Add(item.Key);
                 }
+                
 
             }else{
                 this.stopwords = stopwords.ToHashSet();
@@ -177,10 +184,11 @@ namespace FactChecker.rakentlk
                     }
                     }
                 }
-                phrase.rank = rank;
+                
+                phrase.rake_rank = rank;
                 this.rank_list.Add(phrase);
             }
-            this.rank_list = this.rank_list.OrderByDescending(t => t.rank).ToList();
+            this.rank_list = this.rank_list.OrderByDescending(t => t.rake_rank).ToList();
         }
         public void _generate_phrases(List<string> sentences){
             List<string> word_list = new();
@@ -232,6 +240,12 @@ namespace FactChecker.rakentlk
                 }
             }
             return phrases;
+        }
+
+        public IEnumerable<Passage> GetPassages(Article _)
+        {
+            this.extract_keywords_from_text(_.FullText);
+            return get_ranked_phrases();
         }
     }
 }

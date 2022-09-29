@@ -119,6 +119,6 @@ namespace FactChecker.PassageRetrieval
        
     public IEnumerable<Passage> GetPassages(Article article) =>
             GetPassage_new_V3(article.FullText).Select(p => new Passage
-                { Text = p });
+                { FullPassage = p });
     }
 }
