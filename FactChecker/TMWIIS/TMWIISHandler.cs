@@ -5,33 +5,30 @@ using System.Threading.Tasks;
 using FactChecker.TFIDF;
 using FactChecker.PassageRetrieval;
 using FactChecker.APIs.KnowledgeGraphAPI;
+using FactChecker.Intefaces;
+using FactChecker.Controllers.Exceptions;
 
 namespace FactChecker.TMWIIS
 {
-    public class TMWIISHandler
+    public class TMWIISHandler : IEvidenceRetrieval
     {
-        private int maxPassages = 5;
-        public List<int> articleIDs;
-        public KnowledgeGraphItem knowledgeGraphItem;
-        public Stopwords.Stopwords stopwords = new();
-        float lambda1 = 0.9f, lambda2 = 0.05f, lambda3 = 0.05f;
-        public TMWIISHandler(List<int> articleID, KnowledgeGraphItem KGitem)
+        private readonly int maxPassages = 5;
+        private List<Article> Articles;
+        private KnowledgeGraphItem knowledgeGraphItem;
+        private Stopwords.Stopwords stopwords = new();
+        readonly float lambda1 = 0.9f, lambda2 = 0.05f, lambda3 = 0.05f;
+        private List<Passage> Evidence()
         {
-            articleIDs = articleID;
-            knowledgeGraphItem = KGitem;
-        }
-        public List<TMWIISItem> Evidence()
-        {
-            List<TMWIISItem> rankedPassages = new List<TMWIISItem>();
-            WordcountDB.Article articleHandler = new WordcountDB.Article();
+            List<TMWIISItem> rankedPassages = new();
+            WordcountDB.Article articleHandler = new();
 
             int sourceTotalOccurence = GetNumberOfOccurencesInAllDocuments(knowledgeGraphItem.s);
             int relationTotalOccurence = GetNumberOfOccurencesInAllDocuments(knowledgeGraphItem.r);
             int targetTotalOccurence = GetNumberOfOccurencesInAllDocuments(knowledgeGraphItem.t);
 
-            for (int j = 0; j < articleIDs.Count; j++)
+            for (int j = 0; j < Articles.Count; j++)
             {
-                WordcountDB.ArticleItem article = articleHandler.FetchDB(articleIDs[j]);
+                WordcountDB.ArticleItem article = articleHandler.FetchDB(Articles[j].Id);
                 List<string> passages = GetPassages(article.Text);
                 int sourceDocumentOccurence = WordOccurrence(knowledgeGraphItem.s, article.Text);
                 int relationDocumentOccurence = WordOccurrence(knowledgeGraphItem.r, article.Text);
@@ -53,14 +50,20 @@ namespace FactChecker.TMWIIS
                 }
             }
             rankedPassages.Sort((p, q) => q.score.CompareTo(p.score));
-            return rankedPassages.Take(maxPassages).ToList();
+            var list_of_passages =  rankedPassages.Select(p => new Passage
+            {
+                Text = p.passage,
+                Score = p.score
+            }).ToList();
+            if (list_of_passages.Count == 0) throw new PassageNotFoundFilteredException(knowledgeGraphItem.s);
+            return list_of_passages;
         }
-        public List<string> GetPassages(string text)
+        private List<string> GetPassages(string text)
         {
-            PassageRetrievalHandler pr = new PassageRetrievalHandler(text);
-            return pr.GetPassages();
+            IPassageRetrieval pr = new PassageRetrievalHandler();
+            return pr.GetPassages(new Article() { FullText=text }).Select(p => p.Text).ToList();
         }
-        public float EvidenceCalculator(int passageLength, int uniqueLength, int passageOccurrence, int documentOccurrence, int totalOccurrence)
+        private float EvidenceCalculator(int passageLength, int uniqueLength, int passageOccurrence, int documentOccurrence, int totalOccurrence)
         {
             float passageSource, documentSource, collectionSource; 
 
@@ -70,41 +73,59 @@ namespace FactChecker.TMWIIS
             return  passageSource  * documentSource * collectionSource;
         }
 
-        public int GetNumberOfOccurencesInAllDocuments (string word)
+        private int GetNumberOfOccurencesInAllDocuments (string word)
         {
             List<string> splitted = word.Split(' ').ToList();           
-            WordcountDB.WordCount wordCount = new WordcountDB.WordCount();
+            WordcountDB.WordCount wordCount = new ();
             int sum = 0;
 
             foreach(string s in splitted)
-            {
                 sum += wordCount.FetchSumOfOccurences(s);
-            }
-     
             return sum;
         }
-        public int PassageLength(string passage)
+        private int PassageLength(string passage)
         {
             int length = passage.Split(' ').ToList().Count;
             return length;
         }
-        public int WordOccurrence(string entity, string passage)
+        private int WordOccurrence(string entity, string passage)
         {
             List<string> passageWords = passage.Split(" ").ToList();
             List<string> entityList = entity.Split(" ").ToList();
             int length = passageWords.Count;
             int occurrences = 0;
             for(int j = 0; j < entityList.Count; j++)
-            {
                 for (int i = 0; i < length; i++)
-                {
                     if (passageWords[i] == entityList[j] && !stopwords.stopwords.ContainsKey(passageWords[i]))
-                    {
                         occurrences++;
-                    }
-                }
-            }
             return occurrences;
+        }
+
+        /// <summary>
+        /// This could potetially give wrong results, needs a fix
+        /// </summary>
+        /// <param name="articles"></param>
+        /// <param name="items"></param>
+        /// <returns></returns>
+        public IEnumerable<Passage> GetEvidence(List<Article> articles, List<KnowledgeGraphItem> items)
+        {
+            Articles = articles;
+            List<Passage> res_passages = new();
+            foreach (var item in items)
+            {
+                knowledgeGraphItem = item;
+                var evidence = Evidence();
+                if (res_passages.Count == 0)
+                    res_passages.AddRange(evidence);
+                else
+                    for (int i = 0; i < evidence.Count; i++)
+                        res_passages[i].Score += evidence[i].Score;
+            }
+            return res_passages.OrderByDescending(p => p.Score).Take(50);
+        }
+        public IEnumerable<Passage> GetEvidence(List<Article> articles, KnowledgeGraphItem item)
+        {
+            return GetEvidence(articles, new List<KnowledgeGraphItem>() { item });
         }
     }
 }

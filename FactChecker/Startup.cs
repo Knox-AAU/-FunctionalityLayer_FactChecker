@@ -1,3 +1,4 @@
+using FactChecker.Controllers.Exceptions;
 using FactChecker.PassageRetrieval;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,25 +16,18 @@ namespace FactChecker
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            
         }
 
         async void AppendRelationsToFile ()
         {
-            TestData.WikiDataEntities wikiDataEntities = new TestData.WikiDataEntities();
-            APIs.KnowledgeGraphAPI.KnowledgeGraphHandler handler = new APIs.KnowledgeGraphAPI.KnowledgeGraphHandler();
-            IO.FileStreamHandler fileStreamHandler = new IO.FileStreamHandler();
+            TestData.WikiDataEntities wikiDataEntities = new ();
+            APIs.KnowledgeGraphAPI.KnowledgeGraphHandler handler = new();
+            IO.FileStreamHandler fileStreamHandler = new ();
             Console.WriteLine("begin");
-            foreach(String s in wikiDataEntities.entities)
-            {
-                List<APIs.KnowledgeGraphAPI.KnowledgeGraphItem> triples = await handler.GetTriplesBySparQL(s, 2);
-                foreach(APIs.KnowledgeGraphAPI.KnowledgeGraphItem triple in triples)
-                {
+            foreach(string s in wikiDataEntities.entities)
+                foreach(APIs.KnowledgeGraphAPI.KnowledgeGraphItem triple in await handler.GetTriplesBySparQL(s, 2))
                     fileStreamHandler.AppendToFile("./TestData/relations.txt", triple.ToString());
-                }
-            }
             Console.WriteLine("done");
-            
         }
 
         public IConfiguration Configuration { get; }
@@ -41,7 +35,10 @@ namespace FactChecker
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllersWithViews(opt =>
+            {
+                opt.Filters.Add<HttpResponseExceptionFilter>();
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FactChecker", Version = "v1" });

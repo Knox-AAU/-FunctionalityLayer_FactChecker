@@ -42,7 +42,6 @@
 <Marvel Comics> <Wikidata property> <Marvel Comics creators ID>
 <Tom Holland> <country of citizenship> <England>
 <Tom Holland> <instance of> <human>
-<Tom Holland> <instance of> <Spider-Man>
 <Marvel Cinematic Universe> <country of origin> <United States of America>
 <Marvel Cinematic Universe> <fictional universe described in> <Marvel One Shots>
 <Zendaya> <country of citizenship> <United States of America>
