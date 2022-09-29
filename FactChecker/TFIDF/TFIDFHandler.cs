@@ -30,7 +30,7 @@ namespace FactChecker.TFIDF
             List<TFIDFItem> articles = new ();
             search.RemoveAll(p => string.IsNullOrEmpty(p) || string.IsNullOrWhiteSpace(p));
             foreach (string s in search) //In this iteration of the project, search is a list of words from the chosen triple 
-            {                           
+            {
                 List<WordcountDB.WordCountItem> wordcountItems = wordCount.FetchDB(s);
                 foreach(WordcountDB.WordCountItem item in wordcountItems)
                 {
@@ -54,7 +54,6 @@ namespace FactChecker.TFIDF
                 FullText = articleHandler.FetchDB(p.articleId).Text,
             }).ToList();
         }
-
         /// <summary>
         /// Takes the amount of times a specific word occurs in an article and calculates termfrequecy.
         /// </summary>
@@ -64,7 +63,7 @@ namespace FactChecker.TFIDF
         /// </returns>
         public float CalculateTermFrequency (int f_td)
         {
-            return (float)(1 + Math.Log(f_td,10));
+            return (float)(1 + Math.Log(f_td, 10));
         }
 
         /// <summary>
