@@ -128,7 +128,7 @@ namespace FactChecker.Controllers
                 item_.Score = item_.js_rank + item_.ls_rank;
             }
 
-            return Ok(passages);
+            return Ok(passages.ToList().OrderBy(p => p.Score));
         }
     }
 }
