@@ -95,7 +95,7 @@ namespace FactChecker.Controllers
         [HttpPost("Rake")]
         public async Task<ActionResult<List<Passage>>> PostRake([FromBody] KnowledgeGraphItem Request) {
             List<Article> articles = ar.GetArticles(Request).ToList();
-            List<Passage> passages = er.GetEvidence(articles, Request).Take(50).ToList();
+            List<Passage> passages = new();
             List<Passage> tmp = new List<Passage>();
             Rake.Rake r = new();
             foreach(var article in articles) { 
@@ -105,7 +105,7 @@ namespace FactChecker.Controllers
                     passages.Add(passage);
                 }
             }
-            
+
             return Ok(passages);
         }
     }
