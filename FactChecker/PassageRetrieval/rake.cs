@@ -41,13 +41,7 @@ namespace FactChecker.Rake
         {
             if(stopwords == null) {
                 Stopwords.Stopwords s = new();
-                this.stopwords = new();
-                foreach (var item in s.stopwords)
-                {
-                    stopwords.Add(item.Key);
-                }
-                
-
+                this.stopwords = s.stopwords_hashset;
             }else{
                 this.stopwords = stopwords.ToHashSet();
             }
