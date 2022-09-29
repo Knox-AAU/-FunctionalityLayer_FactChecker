@@ -94,6 +94,7 @@ namespace FactChecker.Controllers
         }
         [HttpPost("Rake")]
         public async Task<ActionResult<List<Passage>>> PostRake([FromBody] KnowledgeGraphItem Request) {
+            
             List<Article> articles = ar.GetArticles(Request).ToList();
             List<Passage> passages = new();
             List<Passage> tmp = new List<Passage>();
@@ -104,6 +105,27 @@ namespace FactChecker.Controllers
                     passage.Artical_ID = article.Id;
                     passages.Add(passage);
                 }
+            }
+            foreach (var p in passages)
+            {
+                p.ls_score = (double)Levenshtein.LevenshteinDistanceAlgorithm.LevenshteinDistance_V2($"{Request.s} {Request.r} {Request.t}", p.FullPassage) / p.FullPassage.Length * 100;
+                p.js_score = Math.Round(js.Similarity($"{Request.s} {Request.r} {Request.t}", p.FullPassage), 2) * 2000;
+            }
+            passages = passages.OrderBy(p => p.ls_score).ToList();
+            for (int i = 0; i < passages.Count(); i++)
+            {
+                Passage passage = passages.ToList()[i];
+                passage.ls_rank = i + 1;
+            }
+            passages = passages.OrderByDescending(p => p.js_score).ToList();
+            for (int i = 0; i < passages.Count(); i++)
+            {
+                Passage passage = passages.ToList()[i];
+                passage.js_rank = i + 1;
+            }
+            foreach (var item_ in passages)
+            {
+                item_.Score = item_.js_rank + item_.ls_rank;
             }
 
             return Ok(passages);
