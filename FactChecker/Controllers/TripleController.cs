@@ -17,13 +17,13 @@ namespace FactChecker.Controllers
     [Route("[controller]")]
     public class TripleController : ControllerBase
     {
-        public static TestData.WikiDataTriples WikiDataTriples = new ();
+        public static TestData.WikiDataTriples WikiDataTriples = new();
         readonly IEvidenceRetrieval er = new TMWIIS.TMWIISHandler();
         readonly IArticleRetrieval ar = new TFIDF.TFIDFHandler();
         readonly IPassageRetrieval pr = new PassageRetrieval.PassageRetrievalHandler();
         readonly LemmatizerHandler lh = new();
         readonly Jaccard js = new();
-        
+
         [HttpGet]
         public IEnumerable<KnowledgeGraphItem> Get()
         {
@@ -32,7 +32,7 @@ namespace FactChecker.Controllers
 
         // Add support for multiple knowledgegraph items and sum the tf-idf score to get the result
         [HttpPost]
-        public ActionResult<KnowledgeGraphItem> Post([FromBody]KnowledgeGraphItem item)
+        public ActionResult<KnowledgeGraphItem> Post([FromBody] KnowledgeGraphItem item)
         {
             List<Article> articles = ar.GetArticles(item).ToList();
             item.passage = er.GetEvidence(articles, item).FirstOrDefault()?.FullPassage ?? "No Passage found";
@@ -83,25 +83,28 @@ namespace FactChecker.Controllers
             {
                 item_.Score = item_.js_rank + item_.ls_rank;
             }
-            return Ok(passages.ToList().OrderBy(p => p.Score)); 
+            return Ok(passages.ToList().OrderBy(p => p.Score));
         }
         [HttpPost("Multiple")]
-        public ActionResult<KnowledgeGraphItem> PostMultiple([FromBody]KnowledgeGraphItem Request)
+        public ActionResult<KnowledgeGraphItem> PostMultiple([FromBody] KnowledgeGraphItem Request)
         {
             List<Article> articles = ar.GetArticles(Request).ToList();
             Request.passage = er.GetEvidence(articles, Request).FirstOrDefault()?.FullPassage ?? "No Passage found";
             return Ok(Request);
         }
         [HttpPost("Rake")]
-        public async Task<ActionResult<List<Passage>>> PostRake([FromBody] KnowledgeGraphItem Request) {
-            
+        public async Task<ActionResult<List<Passage>>> PostRake([FromBody] KnowledgeGraphItem Request)
+        {
+
             List<Article> articles = ar.GetArticles(Request).ToList();
             List<Passage> passages = new();
             List<Passage> tmp = new List<Passage>();
             Rake.Rake r = new();
-            foreach(var article in articles) { 
+            foreach (var article in articles)
+            {
                 tmp = r.GetPassages(article).ToList();
-                foreach(var passage in tmp) { 
+                foreach (var passage in tmp)
+                {
                     passage.Artical_ID = article.Id;
                     passages.Add(passage);
                 }
@@ -129,7 +132,7 @@ namespace FactChecker.Controllers
             }
             passages = passages.OrderBy(p => p.Score).ToList();
             return Ok(passages);
-            }
+        }
 
         [HttpPost("TF-IDF")]
         public async Task<ActionResult<KnowledgeGraphItem>> PostTfIdRewrite([FromBody] MultipleKnowledgeGraphItem item)
@@ -142,5 +145,6 @@ namespace FactChecker.Controllers
                 item2.TFIDF *= 10000;
             }
             return Ok(articles);
+        }
     }
 }
