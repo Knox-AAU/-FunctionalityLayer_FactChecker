@@ -28,11 +28,5 @@ namespace XUnitTestProject
 
             Assert.Equal(0.3, Math.Round(idf, 2));
         }
-        [Fact]
-        public void TestTF()
-        {
-            var tfIfdHandler = new FactChecker.TFIDF.TFIDFHandler();
-            var res = tfIfdHandler.GetArticles(new KnowledgeGraphItem("human", "", ""));
-        }
     }
 }
