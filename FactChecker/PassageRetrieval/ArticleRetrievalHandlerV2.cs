@@ -44,7 +44,7 @@ namespace FactChecker.PassageRetrieval
             foreach (var item in items)
             {
                 item.TF = (double)item.Occurrence / (double)fulltext_count;
-                item.IDF = Math.Log2(1 + (double)wordCount.FetchArticlesCountContainingWord(item.Word) / (double)wordCount.FetchTotalDocuments());
+                item.IDF = Math.Log10(1 + (double)wordCount.FetchArticlesCountContainingWord(item.Word) / (double)wordCount.FetchTotalDocuments());
                 article.TFIDF += item.TF * item.IDF;
             }
             article.WordCountItems.AddRange(items);
