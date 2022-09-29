@@ -57,5 +57,7 @@ namespace FactChecker.Intefaces
     {
         public int Id { get; set; }
         public string FullText { get; set; }
+        public List<WordcountDB.WordCountItem> WordCountItems { get; set; }
+        public double? TFIDF { get; set; }
     }
 }

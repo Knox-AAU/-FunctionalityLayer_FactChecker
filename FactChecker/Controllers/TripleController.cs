@@ -129,6 +129,18 @@ namespace FactChecker.Controllers
             }
             passages = passages.OrderBy(p => p.Score).ToList();
             return Ok(passages);
-        }
+            }
+
+        [HttpPost("TF-IDF")]
+        public async Task<ActionResult<KnowledgeGraphItem>> PostTfIdRewrite([FromBody] MultipleKnowledgeGraphItem item)
+        {
+            FactChecker.PassageRetrieval.ArticleRetrievalHandlerV2 arv2 = new();
+            List<Article> articles = arv2.GetArticles(item.items).ToList();
+            foreach (var item2 in articles)
+            {
+                item2.FullText = "";
+                item2.TFIDF *= 10000;
+            }
+            return Ok(articles);
     }
 }

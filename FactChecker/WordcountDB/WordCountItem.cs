@@ -12,6 +12,9 @@ namespace FactChecker.WordcountDB
         public int ArticleID { get; set; }
         public int Occurrence { get; set; }
 
+        public double TF;
+        public double IDF;
+
         /// <summary>
         /// Constructor taking four arguments of type 
         /// (<typeparamref name="int"/>, <typeparamref name="string"/>, <typeparamref name="int"/>, <typeparamref name="int"/>).

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using System.Data.SQLite;
-
+using FactChecker.APIs.KnowledgeGraphAPI;
 
 namespace XUnitTestProject
 {
@@ -14,7 +14,7 @@ namespace XUnitTestProject
         [Fact]
         public void TestTermFrequency ()
         {
-            FactChecker.TFIDF.TFIDFHandler tFIDFHandler = new FactChecker.TFIDF.TFIDFHandler();
+            FactChecker.TFIDF.TFIDFHandler tFIDFHandler = new();
             float tf = tFIDFHandler.CalculateTermFrequency(20);
 
             Assert.Equal(2.3, Math.Round(tf, 2));
@@ -23,8 +23,8 @@ namespace XUnitTestProject
         [Fact]
         public void TestInverseDocumentFrequenct()
         {
-            FactChecker.TFIDF.TFIDFHandler tFIDFHandler = new FactChecker.TFIDF.TFIDFHandler();
-            float idf = tFIDFHandler.CalculateInverseDocumentFrequency(10,5);
+            FactChecker.TFIDF.TFIDFHandler tFIDFHandler = new();
+            float idf = tFIDFHandler.CalculateInverseDocumentFrequency(10, 5);
 
             Assert.Equal(0.3, Math.Round(idf, 2));
         }
