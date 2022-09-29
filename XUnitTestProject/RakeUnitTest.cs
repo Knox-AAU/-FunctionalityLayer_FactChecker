@@ -19,7 +19,7 @@ namespace XUnitTestProject
             List<string> Expted_Passages = new List<string>() {"late 2006, biden's stance", "shifted considerably " };
             List<string> Retrived_Passages = new List<string>();
             FileStreamHandler f = new FileStreamHandler();
-            List<string> stopwords = (await f.ReadFile("..\\..\\..\\..\\FactChecker\\TestData\\stopwords.txt"));
+            List<string> stopwords = (await f.ReadFile("../../../../FactChecker/TestData/stopwords.txt"));
             Rake rake = new(stopwords: stopwords);
             rake.extract_keywords_from_text("late 2006, Biden's stance had shifted considerably.");
             List<Passage> ps = rake.get_ranked_phrases();
@@ -32,7 +32,7 @@ namespace XUnitTestProject
         [Fact]
         public async void ReturnPasagesCount() {
             FileStreamHandler f = new FileStreamHandler();
-            List<string> stopwords = (await f.ReadFile("..\\..\\..\\..\\FactChecker\\TestData\\stopwords.txt"));
+            List<string> stopwords = (await f.ReadFile("../../../../FactChecker/TestData/stopwords.txt"));
             Rake rake = new(stopwords: stopwords);
             rake.extract_keywords_from_text("he died of brain cancer in 2015.");
             List<Passage> ps = rake.get_ranked_phrases();
@@ -42,7 +42,7 @@ namespace XUnitTestProject
         [Fact]
         public async void WordTokenizeToWords() {
             FileStreamHandler f = new FileStreamHandler();
-            List<string> stopwords = (await f.ReadFile("..\\..\\..\\..\\FactChecker\\TestData\\stopwords.txt"));
+            List<string> stopwords = (await f.ReadFile("../../../../FactChecker/TestData/stopwords.txt"));
             Rake rake = new(stopwords: stopwords);
             List<string> expedted_words = new() { "he", "died", "of", "brain", "cancer", "in", "2015", "."};
             List<string> retrived_words = rake._tokenize_sentence_to_words("he died of brain cancer in 2015.");
