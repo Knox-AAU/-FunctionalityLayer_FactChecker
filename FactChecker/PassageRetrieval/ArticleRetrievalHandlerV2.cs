@@ -1,5 +1,5 @@
 ﻿using FactChecker.APIs.KnowledgeGraphAPI;
-using FactChecker.Intefaces;
+using FactChecker.Interfaces;
 using FactChecker.WordcountDB;
 using System;
 using System.Collections.Generic;
@@ -9,12 +9,12 @@ namespace FactChecker.PassageRetrieval
 {
     public class ArticleRetrievalHandlerV2 : IArticleRetrieval
     {
-        List<Intefaces.Article> Articles = new();
+        List<Interfaces.Article> Articles = new();
         WordcountDB.Article articleHandler = new();
         WordCount wordCount = new();
         List<string> searchItems = new();
 
-        public IEnumerable<Intefaces.Article> GetArticles(List<KnowledgeGraphItem> items)
+        public IEnumerable<Interfaces.Article> GetArticles(List<KnowledgeGraphItem> items)
         {
             searchItems = items.Select(p => new List<string>() { p.s, p.r, p.t }).SelectMany(l => l).Distinct().ToList();
             List<WordCountItem> wcItems = new();
@@ -34,7 +34,7 @@ namespace FactChecker.PassageRetrieval
         {
             string fulltext = articleHandler.FetchDB(items.First().ArticleID).Text;
             int fulltext_count = wordCount.FetchSumOfOccurencesFromArticleId(items.First().ArticleID);
-            Intefaces.Article article = new Intefaces.Article()
+            Interfaces.Article article = new Interfaces.Article()
             {
                 FullText = fulltext,
                 Id = items.First().ArticleID,
@@ -51,7 +51,7 @@ namespace FactChecker.PassageRetrieval
             Articles.Add(article);
         }
 
-        public IEnumerable<Intefaces.Article> GetArticles(KnowledgeGraphItem item)
+        public IEnumerable<Interfaces.Article> GetArticles(KnowledgeGraphItem item)
         {
             return GetArticles(new List<KnowledgeGraphItem>() { item });
         }

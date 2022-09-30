@@ -5,10 +5,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Reflection;
-using FactChecker.Intefaces;
+using FactChecker.Interfaces;
 using DotLiquid.Util;
 using FactChecker.WordcountDB;
-using Article = FactChecker.Intefaces.Article;
+using Article = FactChecker.Interfaces.Article;
 
 namespace FactChecker.Rake
 {

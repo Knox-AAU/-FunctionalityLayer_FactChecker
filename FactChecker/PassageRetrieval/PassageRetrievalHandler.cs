@@ -2,7 +2,7 @@
 using BenchmarkDotNet.Running;
 using FactChecker.APIs.KnowledgeGraphAPI;
 using FactChecker.Controllers.Exceptions;
-using FactChecker.Intefaces;
+using FactChecker.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;

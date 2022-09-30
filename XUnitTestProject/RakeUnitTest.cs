@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Xunit;
 using System.Data.SQLite;
 using FactChecker.Rake;
-using FactChecker.Intefaces;
+using FactChecker.Interfaces;
 using FactChecker.IO;
 using System.Runtime;
 

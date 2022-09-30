@@ -1,5 +1,5 @@
 ﻿using FactChecker.APIs.KnowledgeGraphAPI;
-using FactChecker.Intefaces;
+using FactChecker.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
