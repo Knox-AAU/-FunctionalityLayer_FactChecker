@@ -22,7 +22,6 @@ namespace FactChecker.Intefaces
 
     public class Passage
     {
-        public static int ID = 0;
         public string FullPassage { get; set; }
         public double Score { get; set; }
         public int ls_rank { get; set; } = 0;
@@ -43,11 +42,9 @@ namespace FactChecker.Intefaces
             } }
         public Passage()
         {
-            ID = ID + 1;
         }
         public Passage(string fullPassage, List<string> prosecsPassage)
         {
-            ID = ID + 1;
             FullPassage = fullPassage;
             ProsecsPassage = prosecsPassage;
         }
