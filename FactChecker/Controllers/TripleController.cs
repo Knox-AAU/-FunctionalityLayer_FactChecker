@@ -1,5 +1,5 @@
 ﻿using FactChecker.APIs.KnowledgeGraphAPI;
-using FactChecker.Intefaces;
+using FactChecker.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;

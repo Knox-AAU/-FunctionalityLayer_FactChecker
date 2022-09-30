@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using FactChecker.TFIDF;
 using FactChecker.PassageRetrieval;
 using FactChecker.APIs.KnowledgeGraphAPI;
-using FactChecker.Intefaces;
+using FactChecker.Interfaces;
 using FactChecker.Controllers.Exceptions;
 
 namespace FactChecker.TMWIIS

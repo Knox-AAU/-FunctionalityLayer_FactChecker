@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FactChecker.Intefaces
+namespace FactChecker.Interfaces
 {
     public interface IPassageRetrieval
     {
