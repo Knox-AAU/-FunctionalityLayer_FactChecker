@@ -24,7 +24,7 @@ namespace XUnitTestProject
             rake.extract_keywords_from_text("late 2006, Biden's stance had shifted considerably.");
             List<Passage> ps = rake.get_ranked_phrases();
             foreach (Passage passage in ps) {
-                Retrived_Passages.Add(passage.ProsecsPassageAsString);
+                Retrived_Passages.Add(passage.ProcessedPassageAsString);
             }
             Assert.True(Expted_Passages.Contains(Retrived_Passages.First()) && Expted_Passages.Contains(Retrived_Passages.Last()));
             

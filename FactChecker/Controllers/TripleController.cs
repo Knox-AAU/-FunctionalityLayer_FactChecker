@@ -85,6 +85,19 @@ namespace FactChecker.Controllers
             }
             return Ok(passages.ToList().OrderBy(p => p.Score));
         }
+        [HttpPost("WordEmbedding")]
+        public async Task<ActionResult<KnowledgeGraphItem>> PostWordEmbedding([FromBody] KnowledgeGraphItem item)
+        {
+            List<Article> articles = ar.GetArticles(item).ToList();
+            IEnumerable<Passage> passages = er.GetEvidence(articles, item).Take(50);
+            WordEmbedding.WordEmbedding v = new();
+            foreach (var p in passages)
+            {
+                p.ls_score = v.GetEvidence($"{item.s} {item.r} {item.t}", p.FullPassage);
+            }
+            passages = passages.ToList().OrderByDescending(p => p.ls_score);
+            return Ok(passages);
+        }
         [HttpPost("Multiple")]
         public ActionResult<KnowledgeGraphItem> PostMultiple([FromBody] KnowledgeGraphItem Request)
         {
