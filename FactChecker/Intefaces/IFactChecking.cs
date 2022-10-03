@@ -30,11 +30,11 @@ namespace FactChecker.Interfaces
         public double js_score { get; set; } = 0;
         public float rake_rank { get; set; } = 0;
         public int Artical_ID { get; set; }
-        public List<string> ProsecsPassage { get; set; }
-        public string ProsecsPassageAsString { get {
-                if (ProsecsPassage != null)
+        public List<string> ProcessedPassage { get; set; }
+        public string ProcessedPassageAsString { get {
+                if (ProcessedPassage != null)
                 {
-                    return string.Join(' ', ProsecsPassage);
+                    return string.Join(' ', ProcessedPassage);
                 }
                 else { 
                     return string.Empty;
@@ -46,7 +46,7 @@ namespace FactChecker.Interfaces
         public Passage(string fullPassage, List<string> prosecsPassage)
         {
             FullPassage = fullPassage;
-            ProsecsPassage = prosecsPassage;
+            ProcessedPassage = prosecsPassage;
         }
 
     }

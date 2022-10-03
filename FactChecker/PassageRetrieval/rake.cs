@@ -113,7 +113,7 @@ namespace FactChecker.Rake
         }
         public void _build_frequency_dist(List<Passage> phrase_list){
             foreach(var phrase in phrase_list){
-                foreach(var word in phrase.ProsecsPassage){
+                foreach(var word in phrase.ProcessedPassage){
                     if(this.frequency_dist.ContainsKey(word)){
                         this.frequency_dist[word] +=1;
                     } else{
@@ -126,8 +126,8 @@ namespace FactChecker.Rake
             Dictionary<string, Dictionary<string, int>> co_occurance_graph = new();
             Console.WriteLine("Building occurance graph");
             foreach (var phrase in phrase_list){
-                foreach(var word in phrase.ProsecsPassage){
-                    foreach(string coword in phrase.ProsecsPassage){
+                foreach(var word in phrase.ProcessedPassage){
+                    foreach(string coword in phrase.ProcessedPassage){
                         if(word != coword){
                             if(co_occurance_graph.ContainsKey(word) && co_occurance_graph[word].ContainsKey(coword))
                             {
@@ -166,7 +166,7 @@ namespace FactChecker.Rake
             foreach (var phrase in phrase_list)
             {
                 rank = 0.0f;
-                foreach (var word in phrase.ProsecsPassage)
+                foreach (var word in phrase.ProcessedPassage)
                 {
                     if (word != "" && degree.ContainsKey(word)) { 
                     if(this.ranking_metric == Metric.DEGREE_TO_FREQUENCY_RATIO){
