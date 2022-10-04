@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using Accord.Math;
 using PEFile;
 using System.Globalization;
+using FactChecker.Stopwords;
 
 namespace FactChecker.Cosine
 {
@@ -34,10 +35,9 @@ namespace FactChecker.Cosine
 
         public List<string> removeStopword(List<string> withStopword)
         {
-            string words = ""; //Need stopwords here
-            List<string> stopwords = words.Split().Replace("", String.Empty).Where(p => !string.IsNullOrWhiteSpace(p)).ToList();
+            Stopwords.Stopwords sw = new();
 
-            foreach (string removeWord in stopwords)
+            foreach (string removeWord in sw.stopwords_hashset)
             {
                 for (int i = 0; i < withStopword.Count; i++)
                     withStopword.Remove(removeWord);
