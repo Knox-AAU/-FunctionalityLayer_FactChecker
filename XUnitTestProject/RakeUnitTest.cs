@@ -60,7 +60,6 @@ namespace XUnitTestProject
                 }
             }
             Assert.True(issame);
-        
         }
     }
 }
