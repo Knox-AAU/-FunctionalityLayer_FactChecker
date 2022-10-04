@@ -48,5 +48,18 @@ namespace XUnitTestProject
             List<string> retrived_words = rake._tokenize_sentence_to_words("he died of brain cancer in 2015.");
             Assert.Equal(expedted_words.Count(), retrived_words.Count());
         }
+        [Fact]
+        public async void StopwordsSet() { 
+            List<string> stopwords = new() { "a", "test", "List" };
+            Rake rake = new(stopwords: stopwords);
+            bool issame = true;
+            foreach (var stopword in rake.stopwords) {
+                if (!stopwords.Contains(stopword))
+                {
+                    issame = false;
+                }
+            }
+            Assert.True(issame);
+        }
     }
 }
