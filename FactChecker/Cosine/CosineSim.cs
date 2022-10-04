@@ -32,6 +32,24 @@ namespace FactChecker.Cosine
             return Math.Round(sum / ((csNorm(bow1) * csNorm(bow2))), 2);
         }
 
+        public double similarity_v2(string triple, string passage)
+        {
+            triple = Filter(triple);
+            passage = Filter(passage);
+            List<string> tripleSplit = triple.Split(" ").ToList();
+            List<string> passageSplit = passage.Split(" ").ToList();
+            List<string> union = new List<string>();
+            passageSplit = removeStopword(passageSplit);
+            tripleSplit = removeStopword(tripleSplit);
+            union = tripleSplit.Concat(passageSplit).ToList();
+            union = union.GroupBy(p => p).Select(p => p.First()).Distinct().ToList();
+            double[] bow1 = listToArr(tripleSplit, union).Select(p => (double)p).ToArray();
+            double[] bow2 = listToArr(passageSplit, union).Select(p => (double)p).ToArray();
+            double sum = Matrix.Dot(bow1, bow2);
+
+            return Math.Round(sum / ((csNorm(bow1) * csNorm(bow2))), 2);
+        }
+
         public List<string> removeStopword(List<string> withStopword)
         {
             Stopwords.Stopwords sw = new();
