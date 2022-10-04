@@ -29,7 +29,6 @@ namespace FactChecker.Cosine
             double[] bow2 = listToArr(passageSplit, union).Select(p => (double)p).ToArray();
             double sum = Matrix.Dot(bow1, bow2);
 
-
             return Math.Round(sum / ((csNorm(bow1) * csNorm(bow2))), 2);
         }
 
@@ -75,8 +74,6 @@ namespace FactChecker.Cosine
                 {
                     if (entry == comp)
                         bag[i] += 1;
-                    else
-                        bag[i] += 0;
                 }
                 i++;
             }
