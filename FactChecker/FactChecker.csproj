@@ -6,6 +6,7 @@
 	
 
   <ItemGroup>
+    <PackageReference Include="Accord.Math" Version="3.8.0" />
     <PackageReference Include="AForge.Math" Version="2.2.5" />
     <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
     <PackageReference Include="F23.StringSimilarity" Version="5.0.0" />

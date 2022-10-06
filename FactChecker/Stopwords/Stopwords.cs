@@ -8,7 +8,7 @@ namespace FactChecker.Stopwords
     public class Stopwords
     {
         public Dictionary<string,string> stopwords = new();
-        public HashSet<string> stopwords_hashset= new();
+        public HashSet<string> stopwords_hashset = new();
         public Stopwords ()
         {
             GetStopWords();
