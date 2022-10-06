@@ -10,22 +10,6 @@ namespace ConsoleApp1
             //RunBenchmarks();
             main();
         }
-        public static void main()
-        {
-            Graph graph = new Graph();
-
-            int iteration = 500;
-            float decay_factor = 0.9f;
-
-            graph.init();
-            Similarity sim = new(graph, decay_factor: decay_factor);
-
-            for (int i = 0; i < iteration; i++)
-                sim.SimRank_one_iter(graph, sim.old_sim);
-
-            sim.Print_Sim();
-            //graph.Print_Nodes();
-        }
         [MemoryDiagnoser]
         public class BM
         {
@@ -38,6 +22,29 @@ namespace ConsoleApp1
         public static void RunBenchmarks()
         {
             BenchmarkRunner.Run<BM>();
+        }
+        public static void main()
+        {
+            Console.WriteLine("Which SimRank do u want?");
+            string input = Console.ReadLine();
+            string[] input2 = input.Split(", ");
+
+            Graph graph = new Graph();
+
+            int iteration = 100;
+            float decay_factor = 0.9f;
+
+            graph.init();
+            Similarity sim = new(graph, decay_factor: decay_factor);
+
+            for (int i = 0; i < iteration; i++)
+                sim.SimRank_one_iter(graph, sim.old_sim);
+
+            
+            sim.Print_Sim();
+
+            Console.WriteLine($"Queried score: {sim.get_sim_value(input2[0], input2[1])}");
+            //graph.Print_Nodes();
         }
         class Node
         {
@@ -112,7 +119,6 @@ namespace ConsoleApp1
 
                     sim.Add(temp_sim);
                 }
-
                 return (name_list, sim);
             }
 
@@ -135,6 +141,13 @@ namespace ConsoleApp1
                 int node1_idx = name_list.IndexOf(node1.data);
                 int node2_idx = name_list.IndexOf(node2.data);
                 return old_sim[node1_idx][node2_idx];
+            }
+
+            public float get_sim_value(string name1, string name2)
+            {
+                int idx1 = name_list.IndexOf(name1);
+                int idx2 = name_list.IndexOf(name2);
+                return old_sim[idx1][idx2];
             }
             private float Calculate_SimRank(Node node1, Node node2)
             {
@@ -199,7 +212,7 @@ namespace ConsoleApp1
                 {
                     Node a = nodes.FirstOrDefault(o => o.data == triple.S) ?? init_node(triple.S);
                     Node b = nodes.FirstOrDefault(o => o.data == triple.T) ?? init_node(triple.T);
-                    
+
                     if (!a.children.Any(o => o.data == triple.T))
                     {
                         nodes.First(o => o.data == a.data).children.Add(b);
@@ -223,7 +236,7 @@ namespace ConsoleApp1
 
             private void getTriples()
             {
-                foreach (string line in System.IO.File.ReadLines(@"D:\FunctionalityLayer_FactChecker\SimRank\SimRank\ConsoleApp1\small_sample.txt"))
+                foreach (string line in System.IO.File.ReadLines(Path.GetFullPath("../../../small_sample.txt")))
                 {
                     String[] splitTriple = line.Split("> <");
                     Triple t = new(splitTriple[0].TrimStart('<'), splitTriple[1], splitTriple[2].TrimEnd('>'));

@@ -23,6 +23,7 @@ namespace FactChecker.Controllers
         readonly IPassageRetrieval pr = new PassageRetrieval.PassageRetrievalHandler();
         readonly LemmatizerHandler lh = new();
         readonly Jaccard js = new();
+        SimRank.SimRank sr = new();
         
         [HttpGet]
         public IEnumerable<KnowledgeGraphItem> Get()
@@ -91,6 +92,12 @@ namespace FactChecker.Controllers
             List<Article> articles = ar.GetArticles(Request.items).ToList();
             Request.passage = er.GetEvidence(articles, Request.items).FirstOrDefault()?.Text ?? "No Passage found";
             return Ok(Request);
+        }
+
+        [HttpPost("SimRank")]
+        public async Task<ActionResult<KnowledgeGraphItem>> PostSimRank([FromBody] KnowledgeGraphItem item)
+        {
+            return Ok($"Similarity between triple.s and triple.t: {sr.getSimRank(item.s, item.t)}");
         }
     }
 }
