@@ -53,10 +53,11 @@ namespace FactChecker.Cosine
         public List<string> removeStopword(List<string> withStopword)
         {
             Stopwords.Stopwords sw = new();
+            int itera = withStopword.Count;
 
             foreach (string removeWord in sw.stopwords_hashset)
             {
-                for (int i = 0; i < withStopword.Count; i++)
+                for (int i = 0; i < itera; i++)
                     withStopword.Remove(removeWord);
             }
 
@@ -66,10 +67,11 @@ namespace FactChecker.Cosine
         public List<string> removeStopword_v2(List<string> withStopword)
         {
             Stopwords.Stopwords sw = new();
+            int itera = withStopword.Count;
 
             foreach (string removeWord in sw.stopwords_hashset)
             {
-                for (int i = 0; i < withStopword.Count; i++)
+                for (int i = 0; i < itera; i++)
                     withStopword.Remove(removeWord);
             }
 
