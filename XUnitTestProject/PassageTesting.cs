@@ -1,5 +1,5 @@
 ﻿using FactChecker.Controllers.Exceptions;
-using FactChecker.Intefaces;
+using FactChecker.Interfaces;
 using FactChecker.PassageRetrieval;
 using System;
 using System.Collections.Generic;

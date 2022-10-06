@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FactChecker.Intefaces
+namespace FactChecker.Interfaces
 {
     public interface IPassageRetrieval
     {
@@ -22,16 +22,39 @@ namespace FactChecker.Intefaces
 
     public class Passage
     {
-        public string Text { get; set; }
+        public string FullPassage { get; set; }
         public double Score { get; set; }
         public int ls_rank { get; set; } = 0;
         public double ls_score { get; set; } = 0;
         public int js_rank { get; set; } = 0;
         public double js_score { get; set; } = 0;
+        public float rake_rank { get; set; } = 0;
+        public int Artical_ID { get; set; }
+        public List<string> ProcessedPassage { get; set; }
+        public string ProcessedPassageAsString { get {
+                if (ProcessedPassage != null)
+                {
+                    return string.Join(' ', ProcessedPassage);
+                }
+                else { 
+                    return string.Empty;
+                }
+            } }
+        public Passage()
+        {
+        }
+        public Passage(string fullPassage, List<string> prosecsPassage)
+        {
+            FullPassage = fullPassage;
+            ProcessedPassage = prosecsPassage;
+        }
+
     }
     public class Article
     {
         public int Id { get; set; }
         public string FullText { get; set; }
+        public List<WordcountDB.WordCountItem> WordCountItems { get; set; }
+        public double? TFIDF { get; set; }
     }
 }

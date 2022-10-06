@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
-using FactChecker.Intefaces;
+using FactChecker.Interfaces;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

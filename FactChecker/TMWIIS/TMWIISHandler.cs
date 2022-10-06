@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using FactChecker.TFIDF;
 using FactChecker.PassageRetrieval;
 using FactChecker.APIs.KnowledgeGraphAPI;
-using FactChecker.Intefaces;
+using FactChecker.Interfaces;
 using FactChecker.Controllers.Exceptions;
 
 namespace FactChecker.TMWIIS
@@ -52,7 +52,7 @@ namespace FactChecker.TMWIIS
             rankedPassages.Sort((p, q) => q.score.CompareTo(p.score));
             var list_of_passages =  rankedPassages.Select(p => new Passage
             {
-                Text = p.passage,
+                FullPassage = p.passage,
                 Score = p.score
             }).ToList();
             if (list_of_passages.Count == 0) throw new PassageNotFoundFilteredException(knowledgeGraphItem.s);
@@ -61,7 +61,7 @@ namespace FactChecker.TMWIIS
         private List<string> GetPassages(string text)
         {
             IPassageRetrieval pr = new PassageRetrievalHandler();
-            return pr.GetPassages(new Article() { FullText=text }).Select(p => p.Text).ToList();
+            return pr.GetPassages(new Article() { FullText=text }).Select(p => p.FullPassage).ToList();
         }
         private float EvidenceCalculator(int passageLength, int uniqueLength, int passageOccurrence, int documentOccurrence, int totalOccurrence)
         {
