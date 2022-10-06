@@ -23,6 +23,7 @@ namespace FactChecker.Controllers
         readonly IPassageRetrieval pr = new PassageRetrieval.PassageRetrievalHandler();
         readonly LemmatizerHandler lh = new();
         readonly Jaccard js = new();
+        SimRank.SimRank sr = new();
 
         [HttpGet]
         public IEnumerable<KnowledgeGraphItem> Get()
@@ -145,6 +146,12 @@ namespace FactChecker.Controllers
             }
             passages = passages.OrderBy(p => p.Score).ToList();
             return Ok(passages);
+        }
+
+        [HttpPost("SimRank")]
+        public async Task<ActionResult<KnowledgeGraphItem>> PostSimRank([FromBody] KnowledgeGraphItem item)
+        {
+            return Ok($"SimRank for s({item.s},{item.t}): {sr.getSimRank(item.s, item.t)}");
         }
 
         [HttpPost("TF-IDF")]
