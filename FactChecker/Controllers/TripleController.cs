@@ -151,7 +151,7 @@ namespace FactChecker.Controllers
         [HttpPost("SimRank")]
         public async Task<ActionResult<KnowledgeGraphItem>> PostSimRank([FromBody] KnowledgeGraphItem item)
         {
-            return Ok(sr.getSimRank(item.s, item.t));
+            return Ok($"SimRank for s({item.s},{item.t}): {sr.getSimRank(item.s, item.t)}");
         }
 
         [HttpPost("TF-IDF")]
