@@ -13,7 +13,6 @@ namespace FactChecker.WordcountDB
         /// <returns></returns>
         public List<WordCountItem> FetchDB(string word)
         {
-            Console.WriteLine(Directory.GetCurrentDirectory());
             List<WordCountItem> list = new List<WordCountItem>();
             string connection_string = $"Data Source={source}";
             using var connection = new SQLiteConnection(connection_string);
@@ -35,7 +34,6 @@ namespace FactChecker.WordcountDB
 
         public int FetchArticlesCountContainingWord(string word)
         {
-            Console.WriteLine(Directory.GetCurrentDirectory());
             List<WordCountItem> list = new List<WordCountItem>();
             string connection_string = $"Data Source={source}";
             using var connection = new SQLiteConnection(connection_string);

@@ -13,23 +13,6 @@ namespace XUnitTestProject
     public class TFIDFTesting
     {
         [Fact]
-        public void TestTermFrequency ()
-        {
-            FactChecker.TFIDF.TFIDFHandler tFIDFHandler = new();
-            float tf = tFIDFHandler.CalculateTermFrequency(20);
-
-            Assert.Equal(2.3, Math.Round(tf, 2));
-        }
-
-        [Fact]
-        public void TestInverseDocumentFrequenct()
-        {
-            FactChecker.TFIDF.TFIDFHandler tFIDFHandler = new();
-            float idf = tFIDFHandler.CalculateInverseDocumentFrequency(10, 5);
-
-            Assert.Equal(0.3, Math.Round(idf, 2));
-        }
-        [Fact]
         public void TestCalculateTfIdf()
         {
             int fulltext_count = 5;
@@ -58,19 +41,19 @@ namespace XUnitTestProject
                 {
                     case 0:
                         Assert.Equal(0.2, item.TF, 0);
-                        Assert.Equal(0.301, item.IDF, 1);
+                        Assert.Equal(0.301, item.IDF, 3);
                         break;
                     case 1:
                         Assert.Equal(0.2, item.TF, 0);
-                        Assert.Equal(0.301, item.IDF, 1);
+                        Assert.Equal(0.301, item.IDF, 3);
                         break;
                     case 2:
                         Assert.Equal(0.4, item.TF, 0);
-                        Assert.Equal(0.176, item.IDF, 1);
+                        Assert.Equal(0.176, item.IDF, 3);
                         break;
                     case 4:
                         Assert.Equal(0.2, item.TF, 0);
-                        Assert.Equal(0.176, item.IDF, 1);
+                        Assert.Equal(0.176, item.IDF, 3);
                         break;
                 }
 

@@ -45,7 +45,6 @@ namespace FactChecker.Controllers.Exceptions
                 Value = exception.ToString(),
             };
             context.ExceptionHandled = true;
-            
         }
     }
     public interface ITrackChangeException
