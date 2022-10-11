@@ -58,11 +58,6 @@ namespace FactChecker.TMWIIS
             if (list_of_passages.Count == 0) throw new PassageNotFoundFilteredException(knowledgeGraphItem.s);
             return list_of_passages;
         }
-        private List<string> GetPassages(string text)
-        {
-            IPassageRetrieval pr = new PassageRetrievalHandler();
-            return pr.GetPassages(new Article() { FullText=text }).Select(p => p.FullPassage).ToList();
-        }
         private float EvidenceCalculator(int passageLength, int uniqueLength, int passageOccurrence, int documentOccurrence, int totalOccurrence)
         {
             float passageSource, documentSource, collectionSource; 
@@ -126,6 +121,12 @@ namespace FactChecker.TMWIIS
         public IEnumerable<Passage> GetEvidence(List<Article> articles, KnowledgeGraphItem item)
         {
             return GetEvidence(articles, new List<KnowledgeGraphItem>() { item });
+        }
+
+        private List<string> GetPassages(string text)
+        {
+            IPassageRetrieval pr = new PassageRetrievalHandler();
+            return pr.GetPassages(new Article() { FullText=text }).Select(p => p.FullPassage).ToList();
         }
     }
 }

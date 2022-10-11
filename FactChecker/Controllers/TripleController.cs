@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using F23.StringSimilarity;
 using FactChecker.APIs.LemmatizerAPI;
 using FactChecker.TFIDF;
+using FactChecker.Levenshtein;
+using static FactChecker.Controllers.AlgChooser;
 
 namespace FactChecker.Controllers
 {
@@ -22,7 +24,9 @@ namespace FactChecker.Controllers
         readonly IEvidenceRetrieval er = new TMWIIS.TMWIISHandler();
         readonly IArticleRetrieval ar = new TFIDF.TFIDFHandler();
         readonly IPassageRetrieval pr = new PassageRetrieval.PassageRetrievalHandler();
+        readonly IPassageRetrieval rake = new Rake.Rake();
         readonly LemmatizerHandler lh = new();
+        readonly WordEmbedding.WordEmbedding wordEmbedding = new();
         readonly Jaccard js = new();
         SimRank.SimRank sr = new();
 
@@ -39,6 +43,100 @@ namespace FactChecker.Controllers
             List<Article> articles = ar.GetArticles(item).ToList();
             item.passage = er.GetEvidence(articles, item).FirstOrDefault()?.FullPassage ?? "No Passage found";
             return Ok(item);
+        }
+
+        [HttpPost("AlgChooser")]
+        public async Task<ActionResult<List<Article>>> PostAlgChooser([FromBody] AlgChooser algs)
+        {
+            List<Article> articles;
+            articles = algs.ArticleRetrieval switch
+            {
+                ArticleRetrievalEnum.TF_IDF => ar.GetArticles(algs.MultipleKnowledgeGraphItem.Items).ToList(),
+                _ => ar.GetArticles(algs.MultipleKnowledgeGraphItem.Items).ToList()
+            };
+            foreach (var art in articles)
+            {
+                art.Passages = algs.PassageExtraction switch
+                {
+                    PassageExtractionEnum.Default => pr.GetPassages(art).Take(50).ToList(),
+                    PassageExtractionEnum.Rake => rake.GetPassages(art).Take(50).ToList(),
+                    _ => pr.GetPassages(art).ToList()
+                };
+                foreach (Passage passage in art.Passages)
+                {
+                    foreach (var passageRanking in algs.PassageRankings)
+                    {
+                        switch (passageRanking)
+                        {
+                            case PassageRankingEnum.Jaccard:
+                                double jaccard_value = (double)Math.Round(js.Similarity(algs.MultipleKnowledgeGraphItem.ItemsAsString, passage.FullPassage), 2);
+                                passage.JaccardScore = jaccard_value;
+                                break;
+                            case PassageRankingEnum.Levenshtein:
+                                double leven_value = (double)LevenshteinDistanceAlgorithm.LevenshteinDistance_V2(algs.MultipleKnowledgeGraphItem.ItemsAsString, passage.FullPassage);
+                                passage.LevenshteinScore = leven_value;
+                                break;
+                            case PassageRankingEnum.Cosine:
+                                double cosine_value = (double)new Cosine.CosineSim().similarity_v2(algs.MultipleKnowledgeGraphItem.ItemsAsString, passage.FullPassage);
+                                passage.CosineScore = cosine_value;
+                                break;
+                            case PassageRankingEnum.WordEmbedding:
+                                double wordEmbedding_value = wordEmbedding.GetEvidence(algs.MultipleKnowledgeGraphItem.ItemsAsString, passage.FullPassage);
+                                passage.WordEmbeddingScore = wordEmbedding_value;
+                                break;
+                        }
+                    }
+                }
+
+                foreach (var passageRanking in algs.PassageRankings)
+                {
+                    switch (passageRanking)
+                    {
+
+                        case PassageRankingEnum.Jaccard:
+                            art.Passages = art.Passages.OrderByDescending(p => p.JaccardScore).ToList();
+                            for (int i = 0; i < art.Passages.Count; i++)
+                            {
+                                var passage = art.Passages[i];
+                                passage.KeyValuePairs.Remove(passageRanking);
+                                passage.KeyValuePairs.Add(passageRanking, i + 1);
+                            }
+                            break;
+                        case PassageRankingEnum.Cosine:
+                            art.Passages = art.Passages.OrderByDescending(p => p.CosineScore).ToList();
+                            for (int i = 0; i < art.Passages.Count; i++)
+                            {
+                                var passage = art.Passages[i];
+                                passage.KeyValuePairs.Remove(passageRanking);
+                                passage.KeyValuePairs.Add(passageRanking, i + 1);
+                            }
+                            break;
+                        case PassageRankingEnum.WordEmbedding:
+                            art.Passages = art.Passages.OrderByDescending(p => p.WordEmbeddingScore).ToList();
+                            for (int i = 0; i < art.Passages.Count; i++)
+                            {
+                                var passage = art.Passages[i];
+                                passage.KeyValuePairs.Remove(passageRanking);
+                                passage.KeyValuePairs.Add(passageRanking, i + 1);
+                            }
+                            break;
+                        case PassageRankingEnum.Levenshtein:
+                            art.Passages = art.Passages.OrderBy(p => p.LevenshteinScore).ToList();
+                            for (int i = 0; i < art.Passages.Count; i++)
+                            {
+                                var passage = art.Passages[i];
+                                passage.KeyValuePairs.Remove(passageRanking);
+                                passage.KeyValuePairs.Add(passageRanking, i + 1);
+                            }
+                            break;
+                    }
+                }
+                foreach (var passage in art.Passages) passage.CalculateScoreFromKeyValuePairs();
+                art.Passages = art.Passages.OrderBy(p => p.Score).ToList();
+                art.FullText = art.FullText[0..100];
+                art.Passages = art.Passages.Take(3).ToList();
+            }
+            return Ok(articles);
         }
 
         [HttpPost("Jaccard")]
@@ -159,7 +257,7 @@ namespace FactChecker.Controllers
         public async Task<ActionResult<KnowledgeGraphItem>> PostTfIdRewrite([FromBody] MultipleKnowledgeGraphItem item)
         {
             ArticleRetrievalHandlerV2 arv2 = new();
-            List<Article> articles = arv2.GetArticles(item.items).ToList();
+            List<Article> articles = arv2.GetArticles(item.Items).ToList();
             foreach (var item2 in articles)
             {
                 item2.FullText = "";

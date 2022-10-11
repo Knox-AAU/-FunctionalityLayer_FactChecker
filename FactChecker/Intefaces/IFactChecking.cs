@@ -1,6 +1,8 @@
 ﻿using FactChecker.APIs.KnowledgeGraphAPI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using static FactChecker.Controllers.AlgChooser;
 
 namespace FactChecker.Interfaces
 {
@@ -29,8 +31,11 @@ namespace FactChecker.Interfaces
         public int js_rank { get; set; } = 0;
         public double js_score { get; set; } = 0;
         public float rake_rank { get; set; } = 0;
+        public double JaccardScore { get; set; } = 0;
         public int Artical_ID { get; set; }
+        public Dictionary<PassageRankingEnum, double> KeyValuePairs { get; set; } = new();
         public List<string> ProcessedPassage { get; set; }
+        public double LevenshteinScore { get; set; }
         public string ProcessedPassageAsString { get {
                 if (ProcessedPassage != null)
                 {
@@ -40,6 +45,10 @@ namespace FactChecker.Interfaces
                     return string.Empty;
                 }
             } }
+
+        public double CosineScore { get; set; }
+        public double WordEmbeddingScore { get; set; }
+
         public Passage()
         {
         }
@@ -49,6 +58,16 @@ namespace FactChecker.Interfaces
             ProcessedPassage = prosecsPassage;
         }
 
+        internal double GetPassageRankingWeight(PassageRankingEnum PRE)
+        {
+            return 1;
+        }
+
+        internal void CalculateScoreFromKeyValuePairs()
+        {
+            foreach (KeyValuePair<PassageRankingEnum, double> entry in KeyValuePairs)
+                this.Score += entry.Value * GetPassageRankingWeight((PassageRankingEnum)entry.Key);
+        }
     }
     public class Article
     {
@@ -56,5 +75,6 @@ namespace FactChecker.Interfaces
         public string FullText { get; set; }
         public List<WordcountDB.WordCountItem> WordCountItems { get; set; }
         public double? TFIDF { get; set; }
+        public List<Passage> Passages { get; set; } = new();
     }
 }
