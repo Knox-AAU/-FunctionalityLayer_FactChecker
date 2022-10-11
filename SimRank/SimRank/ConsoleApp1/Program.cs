@@ -20,6 +20,8 @@ namespace ConsoleApp1
             graph.init();
             Similarity sim = new(graph, decay_factor: decay_factor);
 
+            sim.Print_Sim();
+
             for (int i = 0; i < iteration; i++)
                 sim.SimRank_one_iter(graph, sim.old_sim);
 
@@ -112,7 +114,6 @@ namespace ConsoleApp1
 
                     sim.Add(temp_sim);
                 }
-
                 return (name_list, sim);
             }
 
@@ -159,6 +160,7 @@ namespace ConsoleApp1
             }
             public void Print_Sim()
             {
+                Console.Write("       ");
                 foreach (string n in name_list)
                 {
                     string name = (n.Length > 5) ? n[..5] : n;
@@ -168,8 +170,15 @@ namespace ConsoleApp1
                         Console.Write("-");
                 }
                 Console.WriteLine();
+
+                int ct = 0;
                 foreach (var row in old_sim)
                 {
+                    string name = (name_list[ct].Length > 5) ? name_list[ct][..5] : name_list[ct];
+                    Console.Write(name);
+                    int max_print_len2 = 7 - name.ToString().Length;
+                    for (int i = 0; i < max_print_len2; i++)
+                        Console.Write("-");
                     foreach (float elem in row)
                     {
                         float rounded = MathF.Round(elem, 3);
@@ -180,6 +189,7 @@ namespace ConsoleApp1
                             Console.Write(" ");
                     }
                     Console.WriteLine();
+                    ct++;
                 }
                 Console.WriteLine();
             }
@@ -201,16 +211,10 @@ namespace ConsoleApp1
                     Node b = nodes.FirstOrDefault(o => o.data == triple.T) ?? init_node(triple.T);
                     
                     if (!a.children.Any(o => o.data == triple.T))
-                    {
                         nodes.First(o => o.data == a.data).children.Add(b);
-                        nodes.First(o => o.data == a.data).parents.Add(b);
-                    }
 
                     if (!b.parents.Any(o => o.data == triple.S))
-                    {
                         nodes.First(o => o.data == b.data).parents.Add(a);
-                        nodes.First(o => o.data == b.data).children.Add(a);
-                    }
                 }
 
                 Node init_node(string input)
@@ -223,7 +227,7 @@ namespace ConsoleApp1
 
             private void getTriples()
             {
-                foreach (string line in System.IO.File.ReadLines(@"D:\FunctionalityLayer_FactChecker\SimRank\SimRank\ConsoleApp1\small_sample.txt"))
+                foreach (string line in System.IO.File.ReadLines(@"D:\FunctionalityLayer_FactChecker\SimRank\SimRank\ConsoleApp1\TextFile1.txt"))
                 {
                     String[] splitTriple = line.Split("> <");
                     Triple t = new(splitTriple[0].TrimStart('<'), splitTriple[1], splitTriple[2].TrimEnd('>'));
