@@ -26,7 +26,7 @@ namespace FactChecker.Rake
         public HashSet<string> punctuation { get; set; } 
         public string language { get; set; }
         public Metric ranking_metric { get; set; }
-        public int Sencences_max_length { get; set; }
+        public int Sentences_max_length { get; set; }
         public int max_length {get; set; }
         public int min_length {get; set; } 
         public bool include_repeat_phrase {get; set; }
@@ -39,7 +39,7 @@ namespace FactChecker.Rake
         public List<Passage> passages { get; set; } = new();
 
         public Rake(List<string> stopwords = default, List<string> punctuation = default, string language = "english", Metric ranking_metric = Metric.DEGREE_TO_FREQUENCY_RATIO, 
-                int max_length = 100000, int min_length = 1, bool include_repeat_phrase = true, int sencences_max_length = 100)
+                int max_length = 100000, int min_length = 1, bool include_repeat_phrase = true, int sentences_max_length = 100)
         {
             if(stopwords == null) {
                 Stopwords.Stopwords s = new(Stopwords.Stopwords_Language.en);
@@ -54,7 +54,7 @@ namespace FactChecker.Rake
             else{
                 this.punctuation = punctuation.ToHashSet();
             }
-            this.Sencences_max_length = sencences_max_length;
+            this.Sentences_max_length = sentences_max_length;
             this.language = language;
             this.ranking_metric = ranking_metric;
             this.max_length = max_length;
@@ -85,7 +85,7 @@ namespace FactChecker.Rake
             List<string> sentences = new List<string>();
             foreach (var word in text.Split(' ')) {
                 
-                if (!exceptions.Any(w => w.ToLower() == word.ToLower()) && punctuation.Any(p => word.Contains(p)) && _tmp.Count() >= Sencences_max_length)
+                if (!exceptions.Any(w => w.ToLower() == word.ToLower()) && punctuation.Any(p => word.Contains(p)) && _tmp.Count() >= Sentences_max_length)
                 {
                     _tmp += (word);
                     sentences.Add(_tmp.TrimStart());
