@@ -35,7 +35,7 @@ namespace FactChecker.Rake
         public Dictionary<string, int> frequency_dist { get; set; } = new();
         public Dictionary<string, int> degree { get; set; } = new();
         public List<Passage> rank_list { get; set; } = new();
-        public List<string> exceptions { get; set; } = new() { "jr.", "u.s.", "mrs.", "mr.", "ms."};
+        public List<string> exceptions { get; set; } = new() { "jr.", "u.s.", "mrs.", "mr.", "ms.", "st."};
         public List<Passage> passages { get; set; } = new();
 
         public Rake(List<string> stopwords = default, List<string> punctuation = default, string language = "english", Metric ranking_metric = Metric.DEGREE_TO_FREQUENCY_RATIO, 
@@ -87,9 +87,12 @@ namespace FactChecker.Rake
                 
                 if (!exceptions.Any(w => w.ToLower() == word.ToLower()) && punctuation.Any(p => word.Contains(p)) && _tmp.Count() >= Sentences_max_length)
                 {
+                    if(word.Count() > 2){
+
                     _tmp += (word);
                     sentences.Add(_tmp.TrimStart());
                     _tmp = "";
+                    }
                 }
                 else {
                     _tmp += (word + " ");
@@ -219,11 +222,17 @@ namespace FactChecker.Rake
             Tuple<bool, List<string>> _tmp = new(true, new());
             foreach(var word in word_list){
                 if(this.punctuation.Contains(word)){
+                    if(word.Count() > 2){
+
                     groups.Add(_tmp);
                     _tmp = new(false, new());
                     _tmp.Item2.Add(word);
                     groups.Add(_tmp);
                     _tmp = new(true, new());
+                    } else { 
+                        _tmp.Item2.Add(word);
+                    }
+
                 }else if(this.stopwords.Contains(word)){
                     continue;
                 }else{
