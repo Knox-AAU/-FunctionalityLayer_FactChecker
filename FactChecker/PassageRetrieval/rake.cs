@@ -9,6 +9,7 @@ using FactChecker.Interfaces;
 using DotLiquid.Util;
 using FactChecker.WordcountDB;
 using Article = FactChecker.Interfaces.Article;
+using FactChecker.APIs.LemmatizerAPI;
 
 namespace FactChecker.Rake
 {
@@ -40,7 +41,7 @@ namespace FactChecker.Rake
                 int max_length = 100000, int min_length = 1, bool include_repeat_phrase = true)
         {
             if(stopwords == null) {
-                Stopwords.Stopwords s = new();
+                Stopwords.Stopwords s = new(Stopwords.Stopwords_Language.en);
                 this.stopwords = s.stopwords_hashset;
             }else{
                 this.stopwords = stopwords.ToHashSet();
@@ -213,12 +214,14 @@ namespace FactChecker.Rake
             List<Tuple<bool, List<string>>> groups = new();
             Tuple<bool, List<string>> _tmp = new(true, new());
             foreach(var word in word_list){
-                if(this.punctuation.Contains(word) || this.stopwords.Contains(word)){
+                if(this.punctuation.Contains(word)){
                     groups.Add(_tmp);
                     _tmp = new(false, new());
                     _tmp.Item2.Add(word);
                     groups.Add(_tmp);
                     _tmp = new(true, new());
+                }else if(this.stopwords.Contains(word)){
+                    continue;
                 }else{
                     _tmp.Item2.Add(word);
                 }        

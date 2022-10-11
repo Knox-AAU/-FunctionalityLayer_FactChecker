@@ -22,14 +22,6 @@ namespace FactChecker.Interfaces
 
     public class Passage
     {
-        public string FullPassage { get; set; }
-        public double Score { get; set; }
-        public int ls_rank { get; set; } = 0;
-        public double ls_score { get; set; } = 0;
-        public int js_rank { get; set; } = 0;
-        public double js_score { get; set; } = 0;
-        public float rake_rank { get; set; } = 0;
-        public int Artical_ID { get; set; }
         public List<string> ProcessedPassage { get; set; }
         public string ProcessedPassageAsString { get {
                 if (ProcessedPassage != null)
@@ -40,6 +32,14 @@ namespace FactChecker.Interfaces
                     return string.Empty;
                 }
             } }
+        public string FullPassage { get; set; }
+        public double Score { get; set; }
+        public int ls_rank { get; set; } = 0;
+        public double ls_score { get; set; } = 0;
+        public int js_rank { get; set; } = 0;
+        public double js_score { get; set; } = 0;
+        public float rake_rank { get; set; } = 0;
+        public int Artical_ID { get; set; }
         public Passage()
         {
         }
