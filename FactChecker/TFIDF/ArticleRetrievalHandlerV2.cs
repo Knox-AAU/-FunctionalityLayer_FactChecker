@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FactChecker.PassageRetrieval
+namespace FactChecker.TFIDF
 {
     public class ArticleRetrievalHandlerV2 : IArticleRetrieval
     {
@@ -13,7 +13,13 @@ namespace FactChecker.PassageRetrieval
         WordcountDB.Article articleHandler = new();
         WordCount wordCount = new();
         List<string> searchItems = new();
+        private readonly double __total_documents;
 
+
+        public ArticleRetrievalHandlerV2()
+        {
+            __total_documents = wordCount.FetchTotalDocuments();
+        }
         public IEnumerable<Interfaces.Article> GetArticles(List<KnowledgeGraphItem> items)
         {
             searchItems = items.Select(p => new List<string>() { p.s, p.r, p.t }).SelectMany(l => l).Distinct().ToList();
@@ -43,8 +49,8 @@ namespace FactChecker.PassageRetrieval
             article.TFIDF = 0;
             foreach (var item in items)
             {
-                item.TF = (double)item.Occurrence / (double)fulltext_count;
-                item.IDF = Math.Log10(1 + (double)wordCount.FetchArticlesCountContainingWord(item.Word) / (double)wordCount.FetchTotalDocuments());
+                item.TF = item.Occurrence / (double)fulltext_count;
+                item.IDF = Math.Log10(1 + wordCount.FetchArticlesCountContainingWord(item.Word) / __total_documents);
                 article.TFIDF += item.TF * item.IDF;
             }
             article.WordCountItems.AddRange(items);

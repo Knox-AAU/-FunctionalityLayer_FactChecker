@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using F23.StringSimilarity;
 using FactChecker.APIs.LemmatizerAPI;
+using FactChecker.TFIDF;
 
 namespace FactChecker.Controllers
 {
@@ -157,7 +158,7 @@ namespace FactChecker.Controllers
         [HttpPost("TF-IDF")]
         public async Task<ActionResult<KnowledgeGraphItem>> PostTfIdRewrite([FromBody] MultipleKnowledgeGraphItem item)
         {
-            FactChecker.PassageRetrieval.ArticleRetrievalHandlerV2 arv2 = new();
+            ArticleRetrievalHandlerV2 arv2 = new();
             List<Article> articles = arv2.GetArticles(item.items).ToList();
             foreach (var item2 in articles)
             {

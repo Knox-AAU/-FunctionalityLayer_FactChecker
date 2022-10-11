@@ -12,8 +12,12 @@ namespace FactChecker.PassageRetrieval
     public class PassageRetrievalBenchmarks
     {
         private static string __benchmark_article_text = "";
-        private static int __benchmark_passage_length = 10;
-        private readonly static int __benchmark_passage_overlap = 5;
+
+
+        [Params(50, 75, 100)]
+        public int __benchmark_passage_length { get; set; }
+
+        private readonly static int __benchmark_passage_overlap = 20;
         [Benchmark]
         public void Old_Passage_Retrieval()
         {
