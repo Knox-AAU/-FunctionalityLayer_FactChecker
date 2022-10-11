@@ -40,5 +40,16 @@ namespace FactChecker.APIs.LemmatizerAPI
             lemmatizerItem = await response.Content.ReadAsAsync<LemmatizerItem>();
             return lemmatizerItem.lemmatized_string;
         }
+        public async Task<string> GetLanguageFromText(string text)
+        {
+            string data = "{\"string\":\"" + text + "\"}";
+            
+            var content = new StringContent(data, System.Text.Encoding.UTF8, "application/json");
+            LemmatizerItem lemmatizerItem;
+            HttpResponseMessage response = await __client.PostAsync($"{lemmatizerURL}GetLanguage", content);
+            response.EnsureSuccessStatusCode();
+            lemmatizerItem = await response.Content.ReadAsAsync<LemmatizerItem>();
+            return lemmatizerItem.lemmatized_language;
+        }
     }
 }
