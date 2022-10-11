@@ -49,7 +49,6 @@ namespace FactChecker.APIs.LemmatizerAPI
             HttpResponseMessage response = await __client.PostAsync($"{lemmatizerURL}GetLanguage", content);
             response.EnsureSuccessStatusCode();
             lemmatizerItem = await response.Content.ReadAsAsync<LemmatizerItem>();
-            System.Console.WriteLine(lemmatizerItem.lemmatized_language);
             return lemmatizerItem.lemmatized_language;
         }
     }
