@@ -16,7 +16,7 @@ namespace XUnitTestProject
     {
         [Fact]
         public async void ReturnPasagesMatch() { 
-            List<string> Expted_Passages = new List<string>() {"late 2006, biden's stance", "shifted considerably " };
+            List<string> Expted_Passages = new List<string>() {"late 2006, biden's stance shifted considerably " };
             List<string> Retrived_Passages = new List<string>();
             FileStreamHandler f = new FileStreamHandler();
             List<string> stopwords = (await f.ReadFile("../../../../FactChecker/TestData/stopwords.txt"));
@@ -36,7 +36,7 @@ namespace XUnitTestProject
             Rake rake = new(stopwords: stopwords);
             rake.extract_keywords_from_text("he died of brain cancer in 2015.");
             List<Passage> ps = rake.get_ranked_phrases();
-            Assert.Equal(3, ps.Count());
+            Assert.Equal(1, ps.Count());
             
         }
         [Fact]
