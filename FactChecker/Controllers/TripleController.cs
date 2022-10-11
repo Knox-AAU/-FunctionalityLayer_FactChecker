@@ -24,7 +24,7 @@ namespace FactChecker.Controllers
         readonly IEvidenceRetrieval er = new TMWIIS.TMWIISHandler();
         readonly IArticleRetrieval ar = new TFIDF.TFIDFHandler();
         readonly IPassageRetrieval pr = new PassageRetrieval.PassageRetrievalHandler();
-        readonly IPassageRetrieval rake = new Rake.Rake();
+        readonly IPassageRetrieval rake = new Rake.Rake(sentences_min_length: 100*4);
         readonly LemmatizerHandler lh = new();
         readonly WordEmbedding.WordEmbedding wordEmbedding = new();
         readonly Jaccard js = new();
