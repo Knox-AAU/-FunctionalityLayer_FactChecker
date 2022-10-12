@@ -138,9 +138,40 @@ namespace FactChecker.Controllers
                 }
             return passages;
         }
-        
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="algs"></param>
+        /// <returns></returns>
+        /// /// <remarks>
+        /// 
+        ///     {
+            ///    "PassageExtraction": 1,
+            ///    "ArticleRetrieval": 0,
+            ///    "PassageRankings": [0, 1, 2, 3],
+            ///    "ConfidenceEnum": 1,
+            ///    "MultipleKnowledgeGraphItem": {
+            ///        "Items": [
+            ///            {
+            ///                "s": "Holland",
+            ///                "r": "instance of",
+            ///                "t": "Spider-Man"
+            ///            },
+            ///           {
+            ///              "s": "Tom Holland",
+            ///                "r": "instance of",
+            ///                "t": "Spider-Man"
+            ///            }
+            ///        ]
+            ///    }
+            ///}
+        /// 
+        /// </remarks>
         [HttpPost("AlgChooser")]
+        [ProducesResponseType(typeof(AlgChooserReturn), 200)]
+        [Produces("application/json")]
         public async Task<ActionResult<List<Article>>> PostAlgChooser([FromBody] AlgChooser algs)
         {
             List<Article> articles = ArticleRetrieval(algs);
