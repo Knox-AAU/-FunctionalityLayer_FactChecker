@@ -11,5 +11,6 @@ namespace FactChecker.APIs.LemmatizerAPI
     public class LemmatizerItem
     {
         public string lemmatized_string;
+        public string lemmatized_language { get; set; }
     }
 }
