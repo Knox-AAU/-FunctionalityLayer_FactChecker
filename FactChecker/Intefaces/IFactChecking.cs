@@ -1,4 +1,5 @@
 ﻿using FactChecker.APIs.KnowledgeGraphAPI;
+using FactChecker.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,6 +48,8 @@ namespace FactChecker.Interfaces
                     return string.Empty;
                 }
             } }
+
+
         public Passage()
         {
         }
@@ -67,6 +70,49 @@ namespace FactChecker.Interfaces
                 this.Score += entry.Value * GetPassageRankingWeight((PassageRankingEnum)entry.Key);
         }
     }
+    public static class PassageListExtensions
+    {
+        public static void RankJaccard(this List<Passage> passages)
+        {
+            passages = passages.OrderByDescending(p => p.JaccardScore).ToList();
+            for (int i = 0; i < passages.Count; i++)
+            {
+                var passage = passages[i];
+                passage.KeyValuePairs.Remove(PassageRankingEnum.Jaccard);
+                passage.KeyValuePairs.Add(PassageRankingEnum.Jaccard, i + 1);
+            }
+        }
+        public static void RankWordEmbedding(this List<Passage> passages)
+        {
+            passages = passages.OrderByDescending(p => p.WordEmbeddingScore).ToList();
+            for (int i = 0; i < passages.Count; i++)
+            {
+                var passage = passages[i];
+                passage.KeyValuePairs.Remove(PassageRankingEnum.WordEmbedding);
+                passage.KeyValuePairs.Add(PassageRankingEnum.WordEmbedding, i + 1);
+            }
+        }
+        public static void RankWordLevenshtein(this List<Passage> passages)
+        {
+            passages = passages.OrderBy(p => p.LevenshteinScore).ToList();
+            for (int i = 0; i < passages.Count; i++)
+            {
+                var passage = passages[i];
+                passage.KeyValuePairs.Remove(PassageRankingEnum.Levenshtein);
+                passage.KeyValuePairs.Add(PassageRankingEnum.Levenshtein, i + 1);
+            }
+        }
+        public static void RankCosine(this List<Passage> passages)
+        {
+            passages = passages.OrderByDescending(p => p.CosineScore).ToList();
+            for (int i = 0; i < passages.Count; i++)
+            {
+                var passage = passages[i];
+                passage.KeyValuePairs.Remove(PassageRankingEnum.Cosine);
+                passage.KeyValuePairs.Add(PassageRankingEnum.Cosine, i + 1);
+            }
+        }
+}
     public class Article
     {
         public int Id { get; set; }

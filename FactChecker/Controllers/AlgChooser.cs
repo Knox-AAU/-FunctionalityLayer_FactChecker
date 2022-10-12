@@ -8,28 +8,29 @@ namespace FactChecker.Controllers
 
         public PassageExtractionEnum PassageExtraction { get; set; } = PassageExtractionEnum.Default;
         public ArticleRetrievalEnum ArticleRetrieval { get; set; } = ArticleRetrievalEnum.TF_IDF;
+        public ConfidenceEnum ConfidenceEnum { get; set; } = ConfidenceEnum.Disabled;
         public List<PassageRankingEnum> PassageRankings { get; set; } = new() { PassageRankingEnum.Levenshtein, PassageRankingEnum.Cosine };
         public MultipleKnowledgeGraphItem MultipleKnowledgeGraphItem { get; set; }
-
-        public enum ConfidenceEnum
-        {
-            SimRank
-        }
-        public enum PassageExtractionEnum
-        {
-            Default,
-            Rake
-        }
-        public enum ArticleRetrievalEnum
-        {
-            TF_IDF
-        }
-        public enum PassageRankingEnum
-        {
-            Levenshtein,
-            Jaccard,
-            Cosine,
-            WordEmbedding
-        }
+    }
+    public enum ConfidenceEnum
+    {
+        Disabled,
+        SimRank
+    }
+    public enum PassageExtractionEnum
+    {
+        Default,
+        Rake
+    }
+    public enum ArticleRetrievalEnum
+    {
+        TF_IDF
+    }
+    public enum PassageRankingEnum
+    {
+        Levenshtein,
+        Jaccard,
+        Cosine,
+        WordEmbedding
     }
 }
