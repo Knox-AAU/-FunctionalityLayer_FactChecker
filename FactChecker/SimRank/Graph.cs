@@ -1,34 +1,33 @@
-﻿using System;
+﻿using FactChecker.APIs.KnowledgeGraphAPI;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
 namespace FactChecker.SimRank
 {
-    public partial class SimRank
-    {
-        class Graph
+        public class Graph
         {
             public List<Node> nodes = new();
-            private List<Triple> triples = new();
+            private List<KnowledgeGraphItem> triples = new();
             public List<List<float>> old_sim = new();
 
             public void init()
             {
                 getTriplesFromPath();
 
-                foreach (Triple triple in triples)
+                foreach (KnowledgeGraphItem triple in triples)
                 {
-                    Node a = nodes.FirstOrDefault(o => o.data == triple.S) ?? init_node(triple.S);
-                    Node b = nodes.FirstOrDefault(o => o.data == triple.T) ?? init_node(triple.T);
+                    Node a = nodes.FirstOrDefault(o => o.data == triple.s) ?? init_node(triple.s);
+                    Node b = nodes.FirstOrDefault(o => o.data == triple.t) ?? init_node(triple.t);
 
-                    if (!a.children.Any(o => o.data == triple.T))
+                    if (!a.children.Any(o => o.data == triple.t))
                     {
                         nodes.First(o => o.data == a.data).children.Add(b);
                         nodes.First(o => o.data == a.data).parents.Add(b);
                     }
 
-                    if (!b.parents.Any(o => o.data == triple.S))
+                    if (!b.parents.Any(o => o.data == triple.s))
                     {
                         nodes.First(o => o.data == b.data).parents.Add(a);
                         nodes.First(o => o.data == b.data).children.Add(a);
@@ -45,10 +44,10 @@ namespace FactChecker.SimRank
 
             private void getTriplesFromPath()
             {
-                foreach (string triple_str in System.IO.File.ReadLines(Path.GetFullPath("TestData/relations.txt")))
+                foreach (string triple_str in File.ReadLines(Path.GetFullPath("TestData/relations.txt")))
                 {
                     String[] splitTriple = triple_str.Split("> <");
-                    Triple t = new(splitTriple[0].TrimStart('<'), splitTriple[1], splitTriple[2].TrimEnd('>'));
+                    KnowledgeGraphItem t = new(splitTriple[0].TrimStart('<'), splitTriple[1], splitTriple[2].TrimEnd('>'));
                     triples.Add(t);
                 }
             }
@@ -69,11 +68,5 @@ namespace FactChecker.SimRank
                 }
             }
 
-        }
-
-
     }
-
-
-
 }
