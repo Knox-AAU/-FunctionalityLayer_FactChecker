@@ -2,7 +2,9 @@
 using FactChecker.Controllers;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using static FactChecker.Controllers.AlgChooser;
 
 namespace FactChecker.Interfaces
@@ -17,12 +19,6 @@ namespace FactChecker.Interfaces
         public IEnumerable<Article> GetArticles(KnowledgeGraphItem item);
     }
 
-    public interface IEvidenceRetrieval
-    {
-        public IEnumerable<Passage> GetEvidence(List<Article> articles, List<KnowledgeGraphItem> items);
-        public IEnumerable<Passage> GetEvidence(List<Article> articles, KnowledgeGraphItem item);
-    }
-
     public class Passage
     {
         public string FullPassage { get; set; }
@@ -35,10 +31,13 @@ namespace FactChecker.Interfaces
         public double JaccardScore { get; set; } = 0;
         public int Artical_ID { get; set; }
         public Dictionary<PassageRankingEnum, double> KeyValuePairs { get; set; } = new();
+        [JsonIgnore]
         public List<string> ProcessedPassage { get; set; }
         public double LevenshteinScore { get; set; } = 0;
         public double CosineScore { get; set; } = 0;
         public double WordEmbeddingScore { get; set; } = 0;
+
+        [JsonIgnore]
         public string ProcessedPassageAsString { get {
                 if (ProcessedPassage != null)
                 {
@@ -49,6 +48,7 @@ namespace FactChecker.Interfaces
                 }
             } }
 
+        public float TMWIISScore { get; set; } = 0;
 
         public Passage()
         {
@@ -92,6 +92,16 @@ namespace FactChecker.Interfaces
                 passage.KeyValuePairs.Add(PassageRankingEnum.WordEmbedding, i + 1);
             }
         }
+        public static void RankTMWIIS(this List<Passage> passages)
+        {
+            passages = passages.OrderByDescending(p => p.TMWIISScore).ToList();
+            for (int i = 0; i < passages.Count; i++)
+            {
+                var passage = passages[i];
+                passage.KeyValuePairs.Remove(PassageRankingEnum.TMWIIS);
+                passage.KeyValuePairs.Add(PassageRankingEnum.TMWIIS, i + 1);
+            }
+        }
         public static void RankWordLevenshtein(this List<Passage> passages)
         {
             passages = passages.OrderBy(p => p.LevenshteinScore).ToList();
@@ -113,6 +123,13 @@ namespace FactChecker.Interfaces
             }
         }
 }
+    public static class StringExtensions
+    {
+        public static int GetUniqueWords(this string s)
+        {
+            return s.Split(" ").GroupBy(p => p).Select(p => p.First()).Distinct().Count();
+        }
+    }
     public class Article
     {
         public int Id { get; set; }
