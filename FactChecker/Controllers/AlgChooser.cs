@@ -31,6 +31,7 @@ namespace FactChecker.Controllers
         Levenshtein,
         Jaccard,
         Cosine,
-        WordEmbedding
+        WordEmbedding,
+        TMWIIS
     }
 }
