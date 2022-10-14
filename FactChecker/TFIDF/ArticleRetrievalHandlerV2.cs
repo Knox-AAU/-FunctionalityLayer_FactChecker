@@ -50,7 +50,7 @@ namespace FactChecker.TFIDF
             foreach (var item in items)
             {
                 item.TF = item.Occurrence / (double)fulltext_count;
-                item.IDF = Math.Log10(1 + wordCount.FetchArticlesCountContainingWord(item.Word) / __total_documents);
+                item.IDF = Math.Log10(__total_documents / (1 + wordCount.FetchArticlesCountContainingWord(item.Word)));
                 article.TFIDF += item.TF * item.IDF;
             }
             article.WordCountItems.AddRange(items);
