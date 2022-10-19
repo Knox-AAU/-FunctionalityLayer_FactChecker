@@ -13,6 +13,7 @@ using FactChecker.APIs.LemmatizerAPI;
 using FactChecker.TFIDF;
 using FactChecker.Levenshtein;
 using static FactChecker.Controllers.AlgChooser;
+using Microsoft.AspNetCore.Cors;
 
 namespace FactChecker.Controllers
 {
@@ -147,27 +148,28 @@ namespace FactChecker.Controllers
         /// /// <remarks>
         /// 
         ///     {
-            ///    "PassageExtraction": 1,
-            ///    "ArticleRetrieval": 0,
-            ///    "PassageRankings": [0, 1, 2, 3],
-            ///    "ConfidenceEnum": 1,
-            ///    "MultipleKnowledgeGraphItem": {
-            ///        "Items": [
-            ///            {
-            ///                "s": "Holland",
-            ///                "r": "instance of",
-            ///                "t": "Spider-Man"
-            ///            },
-            ///           {
-            ///              "s": "Tom Holland",
-            ///                "r": "instance of",
-            ///                "t": "Spider-Man"
-            ///            }
-            ///        ]
-            ///    }
-            ///}
+        ///    "PassageExtraction": 1,
+        ///    "ArticleRetrieval": 0,
+        ///    "PassageRankings": [0, 1, 2, 3],
+        ///    "ConfidenceEnum": 1,
+        ///    "MultipleKnowledgeGraphItem": {
+        ///        "Items": [
+        ///            {
+        ///                "s": "Holland",
+        ///                "r": "instance of",
+        ///                "t": "Spider-Man"
+        ///            },
+        ///           {
+        ///              "s": "Tom Holland",
+        ///                "r": "instance of",
+        ///                "t": "Spider-Man"
+        ///            }
+        ///        ]
+        ///    }
+        ///}
         /// 
         /// </remarks>
+        [EnableCors]
         [HttpPost("AlgChooser")]
         [ProducesResponseType(typeof(AlgChooserReturn), 200)]
         [Produces("application/json")]
