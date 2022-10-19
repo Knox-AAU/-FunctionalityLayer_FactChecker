@@ -173,7 +173,8 @@ namespace FactChecker.Controllers
         [HttpPost("AlgChooser")]
         [ProducesResponseType(typeof(AlgChooserReturn), 200)]
         [Produces("application/json")]
-        public async Task<ActionResult<List<Article>>> PostAlgChooser([FromBody] AlgChooser algs)
+        [Consumes("application/json")]
+        public async Task<AlgChooserReturn> PostAlgChooser([FromBody] AlgChooser algs)
         {
             List<Article> articles = ArticleRetrieval(algs);
             foreach (var art in articles)
@@ -183,15 +184,14 @@ namespace FactChecker.Controllers
                 foreach (var passage in art.Passages) passage.CalculateScoreFromKeyValuePairs();
                 art.Passages = art.Passages.OrderBy(p => p.Score).ToList();
                 art.FullText = art.FullText[0..100];
-                art.Passages = art.Passages.Take(50).ToList();
+                art.Passages = art.Passages.Take(1).ToList();
             }
-            return Ok(
+            return
                 new AlgChooserReturn()
                 {
-                    Articles = articles.Take(1).ToList(),
+                    Articles = articles.ToList(),
                     Confidence = CalculateConfidence(algs),
-                }
-            );
+                };
         }
 
         
