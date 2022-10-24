@@ -92,7 +92,6 @@ namespace FactChecker.Rake
                             _tmp += word.Split('.').First();
                             _tmp += '.';
                             string last = word.Split('.').Last();
-                            System.Console.WriteLine(word.Split('.').First() + " " + last);
                             sentences.Add(_tmp.TrimStart());
                             _tmp = last;
 
