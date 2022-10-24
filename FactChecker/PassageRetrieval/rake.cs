@@ -88,10 +88,19 @@ namespace FactChecker.Rake
                 if (!exceptions.Any(w => w.ToLower() == word.ToLower()) && punctuation.Any(p => word.Contains(p)) && _tmp.Count() >= Sentences_min_length)
                 {
                     if(word.Count() > 2){
+                        if(char.IsLetter(word.Last())){
+                            _tmp += word.Split('.').First();
+                            _tmp += '.';
+                            string last = word.Split('.').Last();
+                            System.Console.WriteLine(word.Split('.').First() + " " + last);
+                            sentences.Add(_tmp.TrimStart());
+                            _tmp = last;
 
-                    _tmp += (word);
-                    sentences.Add(_tmp.TrimStart());
-                    _tmp = "";
+                        }else{
+                            _tmp += (word);
+                            sentences.Add(_tmp.TrimStart());
+                            _tmp = "";
+                        }
                     }
                 }
                 else {
