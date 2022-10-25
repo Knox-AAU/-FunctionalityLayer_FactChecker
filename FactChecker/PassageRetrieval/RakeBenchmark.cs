@@ -31,6 +31,13 @@ namespace FactChecker.Rake
             Article article = new() { FullText = __benchmark_article_text };
             List<Passage> s = rake.GetPassages(article).ToList();
         }
+        [Benchmark]
+        public void Rake_Passage_Retrieval_Only_Get_FullPassages()
+        {
+            Rake rake = new Rake(sentences_min_length: __benchmark_passage_length, get_Only_Sentences: true);
+            Article article = new() { FullText = __benchmark_article_text };
+            List<Passage> s = rake.GetPassages(article).ToList();
+        }
 
         public static void RunBenchmarks()
         {
