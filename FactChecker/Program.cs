@@ -18,7 +18,8 @@ namespace FactChecker
         public static void Main(string[] args)
         {
             //Levenshtein.LevenshteinBenchmarks.RunBenchmarks();
-            CreateHostBuilder(args).Build().Run();
+            Rake.RakeBenchmark.RunBenchmarks();
+            //CreateHostBuilder(args).Build().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

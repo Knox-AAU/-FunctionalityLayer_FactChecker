@@ -10,6 +10,8 @@ using DotLiquid.Util;
 using FactChecker.WordcountDB;
 using Article = FactChecker.Interfaces.Article;
 using FactChecker.APIs.LemmatizerAPI;
+using Accord.Diagnostics;
+using System.Diagnostics;
 
 namespace FactChecker.Rake
 {
@@ -140,7 +142,7 @@ namespace FactChecker.Rake
         }
         public void _build_word_co_occurance_graph(List<Passage> phrase_list){
             Dictionary<string, Dictionary<string, int>> co_occurance_graph = new();
-            Console.WriteLine("Building occurance graph");
+            System.Diagnostics.Debug.WriteLine("Building occurance graph");
             foreach (var phrase in phrase_list){
                 foreach(var word in phrase.ProcessedPassage){
                     foreach(string coword in phrase.ProcessedPassage){
@@ -177,7 +179,7 @@ namespace FactChecker.Rake
             }
         }
         public void _build_ranklist(List<Passage> phrase_list){
-            Console.WriteLine("Building Ranklist");
+            System.Diagnostics.Debug.WriteLine("Building Ranklist");
             float rank;
             foreach (var phrase in phrase_list)
             {
@@ -194,7 +196,6 @@ namespace FactChecker.Rake
                     }
                     }
                 }
-                
                 phrase.rake_rank = rank;
                 this.rank_list.Add(phrase);
             }
