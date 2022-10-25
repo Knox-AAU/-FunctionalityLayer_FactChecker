@@ -12,6 +12,7 @@ using Article = FactChecker.Interfaces.Article;
 using FactChecker.APIs.LemmatizerAPI;
 using Accord.Diagnostics;
 using System.Diagnostics;
+using System.Runtime.ExceptionServices;
 
 namespace FactChecker.Rake
 {
@@ -39,21 +40,26 @@ namespace FactChecker.Rake
         public List<Passage> rank_list { get; set; } = new();
         public List<string> exceptions { get; set; } = new() { "jr.", "u.s.", "mrs.", "mr.", "ms.", "st."};
         public List<Passage> passages { get; set; } = new();
-
+        public bool Get_Only_Sentences { get; set; }
         public Rake(List<string> stopwords = default, List<string> punctuation = default, string language = "english", Metric ranking_metric = Metric.DEGREE_TO_FREQUENCY_RATIO, 
-                int max_length = 100000, int min_length = 1, bool include_repeat_phrase = true, int sentences_min_length = 100)
+                int max_length = 100000, int min_length = 1, bool include_repeat_phrase = true, int sentences_min_length = 100, bool get_Only_Sentences = false)
         {
-            if(stopwords == null) {
+            if (stopwords == null)
+            {
                 Stopwords.Stopwords s = new(Stopwords.Stopwords_Language.en);
                 this.stopwords = s.stopwords_hashset;
-            }else{
+            }
+            else
+            {
                 this.stopwords = stopwords.ToHashSet();
             }
-            if(punctuation == null){
-                this.punctuation = new() {"!","?",".",";"};
+            if (punctuation == null)
+            {
+                this.punctuation = new() { "!", "?", ".", ";" };
 
             }
-            else{
+            else
+            {
                 this.punctuation = punctuation.ToHashSet();
             }
             this.Sentences_min_length = sentences_min_length;
@@ -62,6 +68,7 @@ namespace FactChecker.Rake
             this.max_length = max_length;
             this.min_length = min_length;
             this.include_repeat_phrase = include_repeat_phrase;
+            Get_Only_Sentences = get_Only_Sentences;
         }
 
         public void extract_keywords_from_text(string text){
@@ -70,9 +77,11 @@ namespace FactChecker.Rake
         }
         public void extract_keywords_from_sentences(List<string> sentences){
             this._generate_phrases(sentences);
-            this._build_frequency_dist(passages);
-            this._build_word_co_occurance_graph(passages);
-            this._build_ranklist(passages);
+            if (!Get_Only_Sentences) { 
+                this._build_frequency_dist(passages);
+                this._build_word_co_occurance_graph(passages);
+                this._build_ranklist(passages);
+            }
         }
        
         public List<Passage> get_ranked_phrases(){
@@ -204,24 +213,32 @@ namespace FactChecker.Rake
         public void _generate_phrases(List<string> sentences){
             List<string> word_list = new();
             HashSet<List<string>> unique_phrase_tracker = new();
-            foreach (var sentence in sentences)
+            if (Get_Only_Sentences)
             {
-                word_list.Clear();
-                foreach (var word in this._tokenize_sentence_to_words(sentence)){
-                    word_list.Add(word.ToLower());
+                foreach (var sentence in sentences) {
+                    this.passages.Add(new Passage() { FullPassage = string.Join(' ', sentence) });
                 }
+            }
+            else { 
+                foreach (var sentence in sentences)
+                {
+                    word_list.Clear();
+                    foreach (var word in this._tokenize_sentence_to_words(sentence)){
+                        word_list.Add(word.ToLower());
+                    }
 
-                foreach (var phrase in this._get_phrase_list_from_words(word_list)){
-                    if (!this.include_repeat_phrase) { 
-                        if (!unique_phrase_tracker.Contains(phrase))
+                    foreach (var phrase in this._get_phrase_list_from_words(word_list)){
+                        if (!this.include_repeat_phrase) { 
+                            if (!unique_phrase_tracker.Contains(phrase))
+                            {
+                                unique_phrase_tracker.Add(phrase);
+                                this.passages.Add(new Passage(string.Join(' ', sentence), phrase));
+                            }
+                        }
+                        else if (this.include_repeat_phrase)
                         {
-                            unique_phrase_tracker.Add(phrase);
                             this.passages.Add(new Passage(string.Join(' ', sentence), phrase));
                         }
-                    }
-                    else if (this.include_repeat_phrase)
-                    {
-                        this.passages.Add(new Passage(string.Join(' ', sentence), phrase));
                     }
                 }
             }
@@ -264,7 +281,13 @@ namespace FactChecker.Rake
         public IEnumerable<Passage> GetPassages(Article _)
         {
             this.extract_keywords_from_text(_.FullText);
-            return get_ranked_phrases();
+            if (Get_Only_Sentences)
+            {
+                return passages;
+            }
+            else { 
+                return get_ranked_phrases();
+            }
         }
     }
 }
