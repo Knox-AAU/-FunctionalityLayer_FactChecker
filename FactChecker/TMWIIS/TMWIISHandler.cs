@@ -7,11 +7,19 @@ using FactChecker.PassageRetrieval;
 using FactChecker.APIs.KnowledgeGraphAPI;
 using FactChecker.Interfaces;
 using FactChecker.Controllers.Exceptions;
+using FactChecker.WordcountDB;
 
 namespace FactChecker.TMWIIS
 {
     public class TMWIISHandler
     {
+        private readonly WordcountDB.WordCount wordCount;
+
+        public TMWIISHandler(WordCount wordCount)
+        {
+            this.wordCount = wordCount;
+        }
+
         private Stopwords.Stopwords stopwords = new();
         readonly float lambda1 = 0.9f * 100000, lambda2 = 0.05f * 100000, lambda3 = 0.05f * 100000;
         public float CalculateScore(KnowledgeGraphItem knowledgeGraphItem, Passage passage, string FullText, int FulltText_Unique)
@@ -48,7 +56,6 @@ namespace FactChecker.TMWIIS
         private int GetNumberOfOccurencesInAllDocuments (string word)
         {
             List<string> splitted = word.Split(' ').ToList();           
-            WordcountDB.WordCount wordCount = new ();
             int sum = 0;
 
             foreach(string s in splitted)

@@ -1,7 +1,9 @@
 using FactChecker.Controllers.Exceptions;
+using FactChecker.EF;
 using FactChecker.PassageRetrieval;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -56,9 +58,15 @@ namespace FactChecker
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   policy =>
                                   {
-                                      policy.WithOrigins("http://localhost:3000").AllowAnyHeader();
+                                      policy.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod();
                                   });
             });
+            services.AddDbContext<KnoxFactCheckingTestDbContext>(options =>
+            options.UseNpgsql(Configuration.GetConnectionString("KnoxFactCheckingTestDbContext")));
+            services.AddScoped<WordcountDB.WordCount>();
+            services.AddScoped<WordcountDB.Article>();
+            services.AddScoped<TMWIIS.TMWIISHandler>();
+            services.AddScoped<TFIDF.TFIDFHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

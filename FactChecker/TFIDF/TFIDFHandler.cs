@@ -12,6 +12,15 @@ namespace FactChecker.TFIDF
     /// </summary>
     public class TFIDFHandler : IArticleRetrieval
     {
+        readonly WordcountDB.Article articleHandler;
+        readonly WordcountDB.WordCount wordCount;
+
+        public TFIDFHandler(WordcountDB.WordCount wordCount, WordcountDB.Article articleHandler)
+        {
+            this.wordCount = wordCount;
+            this.articleHandler = articleHandler;
+        }
+
         int numberOfArticles = 15;
         private int maxArticles = 5;
         /// <summary>
@@ -25,8 +34,7 @@ namespace FactChecker.TFIDF
         /// </returns>
         private List<Article> CalculateTFIDF (List<string> search)
         {
-            WordcountDB.Article articleHandler = new();
-            WordcountDB.WordCount wordCount = new ();
+            
             List<TFIDFItem> articles = new ();
             search.RemoveAll(p => string.IsNullOrEmpty(p) || string.IsNullOrWhiteSpace(p));
             foreach (string s in search) //In this iteration of the project, search is a list of words from the chosen triple 
@@ -34,15 +42,15 @@ namespace FactChecker.TFIDF
                 List<WordcountDB.WordCountItem> wordcountItems = wordCount.FetchDB(s);
                 foreach(WordcountDB.WordCountItem item in wordcountItems)
                 {
-                    float tf = CalculateTermFrequency(item.Occurrence);
+                    float tf = CalculateTermFrequency(item.occurrence);
                     float idf = CalculateInverseDocumentFrequency(numberOfArticles, wordcountItems.Count);
-                    var article_res = articles.Where(a => a.articleId == item.ArticleID).FirstOrDefault();
+                    var article_res = articles.Where(a => a.articleId == item.articleid).FirstOrDefault();
                     if ( article_res != null) //Add TF-IDF score to specific article which contain s
                     {
                         article_res.score += tf * idf;
                     } else  //If an article containing s is not found, a new TFIDFItem is added to a list
                     {
-                        TFIDFItem article = new(item.ArticleID, tf * idf);
+                        TFIDFItem article = new(item.articleid, tf * idf);
                         articles.Add(article);
                     }
                 }
@@ -51,7 +59,7 @@ namespace FactChecker.TFIDF
             return articles.Take(maxArticles).Select(p => new Article()
             {
                 Id = p.articleId,
-                FullText = articleHandler.FetchDB(p.articleId).Text,
+                FullText = articleHandler.FetchDB(p.articleId).text,
             }).ToList();
         }
         /// <summary>

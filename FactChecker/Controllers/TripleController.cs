@@ -25,12 +25,22 @@ namespace FactChecker.Controllers
     }
 
     [ApiController]
-    [Route("[controller]")]
+    [Route("Triple")]
     public class TripleController : ControllerBase
     {
+
+
+
         public static TestData.WikiDataTriples WikiDataTriples = new();
-        readonly TMWIIS.TMWIISHandler tmwiis = new TMWIIS.TMWIISHandler();
-        readonly IArticleRetrieval ar = new TFIDF.TFIDFHandler();
+        readonly TMWIIS.TMWIISHandler tmwiis;
+        readonly IArticleRetrieval ar;
+
+        public TripleController(TFIDF.TFIDFHandler ar, TMWIIS.TMWIISHandler tmwiis)
+        {
+            this.ar = ar;
+            this.tmwiis = tmwiis;
+        }
+
         readonly IPassageRetrieval pr = new PassageRetrieval.PassageRetrievalHandler();
         readonly IPassageRetrieval rake = new Rake.Rake(sentences_min_length: 100*4);
         readonly SimRank.SimRank simRank = new();
@@ -193,7 +203,22 @@ namespace FactChecker.Controllers
                     Confidence = CalculateConfidence(algs),
                 };
         }
-
-        
+        public class HealthCheck
+        {
+            public string message { get; set; }
+            public int status { get; set; }
+            public double averageResponseTime { get; set; }
+        }
+        [EnableCors]
+        [HttpGet("HealthCheck/v1")]
+        [ProducesResponseType(200)]
+        public async Task<HealthCheck> HealthCheckApi()
+        {
+            var watch = new System.Diagnostics.Stopwatch();
+            watch.Start();
+            await Task.Delay(1);
+            watch.Stop();
+            return new HealthCheck() { message="OK", status=200, averageResponseTime = watch.ElapsedMilliseconds };
+        }
     }
 }

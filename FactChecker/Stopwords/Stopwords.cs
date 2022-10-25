@@ -23,6 +23,9 @@ namespace FactChecker.Stopwords
         public async void GetStopWords()
         {
             List<string> words = new();
+            try
+            {
+
             IO.FileStreamHandler fileStreamHandler = new();
             if(stopwords_language == Stopwords_Language.en){
 
@@ -39,6 +42,10 @@ namespace FactChecker.Stopwords
                 {
                     stopwords.Add(s, s);
                 }
+            }
+            } catch (Exception)
+            {
+                stopwords = new() { };
             }
         }
 
