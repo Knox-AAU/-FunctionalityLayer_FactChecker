@@ -16,25 +16,25 @@ namespace FactChecker.Rake
 
 
         [Params(50, 75, 100)]
-        public int __benchmark_passage_length { get; set; }
+        public int __passage_length { get; set; }
         [Benchmark]
-        public void Rake_Passage_Retrieval_with_stopwords()
+        public void Rake_Retrieval_with_stopwords()
         {
-            Rake rake = new Rake(sentences_min_length: __benchmark_passage_length);
+            Rake rake = new Rake(sentences_min_length: __passage_length);
             Article article = new() { FullText = __benchmark_article_text };
             List<Passage> s = rake.GetPassages(article).ToList();
         }
         [Benchmark]
-        public void Rake_Passage_Retrieval_without_stopwords()
+        public void Rake_Retrieval_without_stopwords()
         {
-            Rake rake = new Rake(stopwords: new() { } ,sentences_min_length: __benchmark_passage_length);
+            Rake rake = new Rake(stopwords: new() { } ,sentences_min_length: __passage_length);
             Article article = new() { FullText = __benchmark_article_text };
             List<Passage> s = rake.GetPassages(article).ToList();
         }
         [Benchmark]
-        public void Rake_Passage_Retrieval_Only_Get_FullPassages()
+        public void Rake_Retrieval_Get_FullPassages()
         {
-            Rake rake = new Rake(sentences_min_length: __benchmark_passage_length, get_Only_Sentences: true);
+            Rake rake = new Rake(sentences_min_length: __passage_length, get_Only_Sentences: true);
             Article article = new() { FullText = __benchmark_article_text };
             List<Passage> s = rake.GetPassages(article).ToList();
         }
