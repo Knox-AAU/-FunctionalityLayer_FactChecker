@@ -11,7 +11,7 @@ namespace FactChecker.JaccardSim
         //Problems with Jaccard
         //It doesn’t consider term frequency(how many times a term occurs in a document). It simply counts the number of terms that are common between two sets.
         //Rare terms in a collection are more informative than frequent terms.Jaccard doesn’t consider this information.
-        //Different sized sets with same number of common members also will result in the same Jaccard similarity.
+        //Different sized sets with same number of common members (intersection) also will result in the same Jaccard similarity.
 
         public double similarity(string triple, string passage)
         {
@@ -32,8 +32,7 @@ namespace FactChecker.JaccardSim
             IEnumerable<string> passages = passage.Split(" ");
             IEnumerable<string> union = new string[passage.Length + triple.Length];
             IEnumerable<string> intersection = new string[passage.Length + triple.Length];
-            union = triples.Concat(passages);
-            union = union.GroupBy(p => p).Select(p => p.First()).Distinct();
+            union = triples.Union(passages);
             intersection = triples.Intersect(passages);
             return (double)MathF.Round(intersection.Count() / union.Count(), 2);
         }

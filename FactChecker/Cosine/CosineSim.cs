@@ -14,6 +14,8 @@ namespace FactChecker.Cosine
 {
     public class CosineSim
     {
+        Stopwords.Stopwords sw = new();
+
         public double similarity(string triple, string passage)
         {
             triple = Filter(triple);
@@ -34,8 +36,6 @@ namespace FactChecker.Cosine
 
         public double similarity_v2(string triple, string passage)
         {
-            triple = Filter_v2(triple);
-            passage = Filter_v2(passage);
             List<string> tripleSplit = triple.Split(" ").ToList();
             List<string> passageSplit = passage.Split(" ").ToList();
             List<string> union = new List<string>();
@@ -52,7 +52,6 @@ namespace FactChecker.Cosine
 
         public List<string> removeStopword(List<string> withStopword)
         {
-            Stopwords.Stopwords sw = new();
             int itera = withStopword.Count;
 
             foreach (string removeWord in sw.stopwords_hashset)
@@ -66,7 +65,6 @@ namespace FactChecker.Cosine
 
         public List<string> removeStopword_v2(List<string> withStopword)
         {
-            Stopwords.Stopwords sw = new();
             int itera = withStopword.Count;
 
             foreach (string removeWord in sw.stopwords_hashset)
