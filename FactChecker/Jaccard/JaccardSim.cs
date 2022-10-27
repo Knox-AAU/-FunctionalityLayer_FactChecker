@@ -15,8 +15,8 @@ namespace FactChecker.JaccardSim
 
         public double similarity(string triple, string passage)
         {
-            List<string> triples = triple.Split(" ").ToList();
-            List<string> passages = passage.Split(" ").ToList();
+            List<string> triples = Filter(triple).Split(" ").ToList();
+            List<string> passages = Filter(passage).Split(" ").ToList();
             List<string> union = new List<string>();
             List<string> intersection = new List<string>();
             union = triples.Concat(passages).ToList();
