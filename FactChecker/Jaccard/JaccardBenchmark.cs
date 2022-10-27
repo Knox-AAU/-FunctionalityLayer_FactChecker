@@ -44,6 +44,20 @@ namespace FactChecker.JaccardSim
             js.similarity_v2(__checkstring_target_short, __checkstring_source_short);
         }
 
+        [Benchmark]
+        public void BenchJaccard_v3_long()
+        {
+            JaccardSim js = new();
+            js.similarity_v3(__checkstring_target_long, __checkstring_source_long);
+        }
+
+        [Benchmark]
+        public void BenchJaccard_v3_short()
+        {
+            JaccardSim js = new();
+            js.similarity_v3(__checkstring_target_short, __checkstring_source_short);
+        }
+
 
         public static void RunBenchmarks()
         {
