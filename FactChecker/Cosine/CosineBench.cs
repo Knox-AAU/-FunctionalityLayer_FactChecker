@@ -15,7 +15,8 @@ namespace FactChecker.Cosine
 
         private string __checkstring_target_short = "This repo contains LLILC, an LLVM based compiler for .NET Core. It includes a set of cross-platform .NET code generation tools that enables compilation of MSIL byte code to LLVM supported platforms.";
         private string __checkstring_source_short = "build";
-
+        
+        List<string> myStopwords = new() { "a", "about", "above", "after", "again", "against", "all", "am", "and", "he", "the", "them", "these", "to", "too", "who", "your", "why", "which", "me", "if", "most" };
         //[Benchmark]
         //public void BenchCosine_long()
         //{

@@ -39,8 +39,8 @@ namespace FactChecker.Cosine
 
         public double similarity_v2(string triple, string passage)
         {
-            List<string> tripleSplit = triple.Split(" ").ToList();
-            List<string> passageSplit = passage.Split(" ").ToList();
+            List<string> tripleSplit = Filter(triple).Split(" ").ToList();
+            List<string> passageSplit = Filter(passage).Split(" ").ToList();
             List<string> union = new List<string>();
             passageSplit = removeStopword_v2(passageSplit);
             tripleSplit = removeStopword_v2(tripleSplit);
