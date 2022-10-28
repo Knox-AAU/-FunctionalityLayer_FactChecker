@@ -1,4 +1,5 @@
 ﻿using FactChecker.APIs.KnowledgeGraphAPI;
+using FactChecker.WordcountDB;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +9,14 @@ namespace FactChecker.SimRank
 {
         public class Graph
         {
-            public List<Node> nodes = new();
+            private WordcountDB.triples triplesDb;
+
+        public Graph(triples triplesDb)
+        {
+            this.triplesDb = triplesDb;
+        }
+
+        public List<Node> nodes = new();
             private List<KnowledgeGraphItem> triples = new();
             public List<List<float>> old_sim = new();
 
@@ -44,12 +52,7 @@ namespace FactChecker.SimRank
 
             private void getTriplesFromPath()
             {
-                foreach (string triple_str in File.ReadLines(Path.GetFullPath("TestData/relations.txt")))
-                {
-                    String[] splitTriple = triple_str.Split("> <");
-                    KnowledgeGraphItem t = new(splitTriple[0].TrimStart('<'), splitTriple[1], splitTriple[2].TrimEnd('>'));
-                    triples.Add(t);
-                }
+            triples.AddRange(triplesDb.GetAllAsKnowledgeGraphItem());
             }
 
             public void Print_Nodes()

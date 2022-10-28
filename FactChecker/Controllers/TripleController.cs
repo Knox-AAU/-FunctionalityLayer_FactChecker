@@ -13,6 +13,7 @@ using FactChecker.APIs.LemmatizerAPI;
 using FactChecker.TFIDF;
 using FactChecker.Levenshtein;
 using static FactChecker.Controllers.AlgChooser;
+using Microsoft.AspNetCore.Cors;
 
 namespace FactChecker.Controllers
 {
@@ -24,15 +25,31 @@ namespace FactChecker.Controllers
     }
 
     [ApiController]
-    [Route("[controller]")]
+    [Route("Triple")]
     public class TripleController : ControllerBase
     {
+
+
+        private readonly WordcountDB.stopwords stopwords;
+        private readonly WordcountDB.triples triples;
         public static TestData.WikiDataTriples WikiDataTriples = new();
-        readonly TMWIIS.TMWIISHandler tmwiis = new TMWIIS.TMWIISHandler();
-        readonly IArticleRetrieval ar = new TFIDF.TFIDFHandler();
+        readonly TMWIIS.TMWIISHandler tmwiis;
+        readonly IArticleRetrieval ar;
+
+        public TripleController(TFIDF.TFIDFHandler ar, TMWIIS.TMWIISHandler tmwiis, WordcountDB.stopwords stopwords, Cosine.CosineSim cosine, Rake.Rake rake, WordcountDB.triples triples)
+        {
+            this.ar = ar;
+            this.tmwiis = tmwiis;
+            this.stopwords = stopwords;
+            this.cosine = cosine;
+            this.rake = rake;
+            this.triples = triples;
+        }
+
         readonly IPassageRetrieval pr = new PassageRetrieval.PassageRetrievalHandler();
-        readonly IPassageRetrieval rake = new Rake.Rake(sentences_min_length: 100*4);
         readonly SimRank.SimRank simRank = new();
+        readonly Cosine.CosineSim cosine;
+        readonly Rake.Rake rake;
         readonly LemmatizerHandler lh = new();
         readonly WordEmbedding.WordEmbedding wordEmbedding = new();
         readonly Jaccard js = new();
@@ -73,7 +90,7 @@ namespace FactChecker.Controllers
             => (double)LevenshteinDistanceAlgorithm.LevenshteinDistance_V2(algs.MultipleKnowledgeGraphItem.ItemsAsString, passage.FullPassage);
         [NonAction]
         public double CalculateCosine(AlgChooser algs, Passage passage)
-            => (double)new Cosine.CosineSim().similarity_v2(algs.MultipleKnowledgeGraphItem.ItemsAsString, passage.FullPassage);
+            => (double)cosine.similarity_v2(algs.MultipleKnowledgeGraphItem.ItemsAsString, passage.FullPassage);
         [NonAction]
         public double CalculateWordEmbedding(AlgChooser algs, Passage passage)
             => wordEmbedding.GetEvidence(algs.MultipleKnowledgeGraphItem.ItemsAsString, passage.FullPassage);
@@ -85,7 +102,7 @@ namespace FactChecker.Controllers
         {
             return (algs.ConfidenceEnum) switch
             {
-                ConfidenceEnum.SimRank => MathF.Round(simRank.GetSimRank(algs.MultipleKnowledgeGraphItem), 2),
+                //ConfidenceEnum.SimRank => MathF.Round(simRank.GetSimRank(algs.MultipleKnowledgeGraphItem), 2),
                 _ => -1f
             };
         }
@@ -147,31 +164,33 @@ namespace FactChecker.Controllers
         /// /// <remarks>
         /// 
         ///     {
-            ///    "PassageExtraction": 1,
-            ///    "ArticleRetrieval": 0,
-            ///    "PassageRankings": [0, 1, 2, 3],
-            ///    "ConfidenceEnum": 1,
-            ///    "MultipleKnowledgeGraphItem": {
-            ///        "Items": [
-            ///            {
-            ///                "s": "Holland",
-            ///                "r": "instance of",
-            ///                "t": "Spider-Man"
-            ///            },
-            ///           {
-            ///              "s": "Tom Holland",
-            ///                "r": "instance of",
-            ///                "t": "Spider-Man"
-            ///            }
-            ///        ]
-            ///    }
-            ///}
+        ///    "PassageExtraction": 1,
+        ///    "ArticleRetrieval": 0,
+        ///    "PassageRankings": [0, 1, 2, 3],
+        ///    "ConfidenceEnum": 1,
+        ///    "MultipleKnowledgeGraphItem": {
+        ///        "Items": [
+        ///            {
+        ///                "s": "Holland",
+        ///                "r": "instance of",
+        ///                "t": "Spider-Man"
+        ///            },
+        ///           {
+        ///              "s": "Tom Holland",
+        ///                "r": "instance of",
+        ///                "t": "Spider-Man"
+        ///            }
+        ///        ]
+        ///    }
+        ///}
         /// 
         /// </remarks>
+        [EnableCors]
         [HttpPost("AlgChooser")]
         [ProducesResponseType(typeof(AlgChooserReturn), 200)]
         [Produces("application/json")]
-        public async Task<ActionResult<List<Article>>> PostAlgChooser([FromBody] AlgChooser algs)
+        [Consumes("application/json")]
+        public async Task<AlgChooserReturn> PostAlgChooser([FromBody] AlgChooser algs)
         {
             List<Article> articles = ArticleRetrieval(algs);
             foreach (var art in articles)
@@ -181,17 +200,47 @@ namespace FactChecker.Controllers
                 foreach (var passage in art.Passages) passage.CalculateScoreFromKeyValuePairs();
                 art.Passages = art.Passages.OrderBy(p => p.Score).ToList();
                 art.FullText = art.FullText[0..100];
-                art.Passages = art.Passages.Take(50).ToList();
+                art.Passages = art.Passages.Take(1).ToList();
             }
-            return Ok(
+            return
                 new AlgChooserReturn()
                 {
-                    Articles = articles.Take(1).ToList(),
+                    Articles = articles.ToList(),
                     Confidence = CalculateConfidence(algs),
-                }
-            );
+                };
+        }
+        public class HealthCheck
+        {
+            public string message { get; set; }
+            public int status { get; set; }
+            public double averageResponseTime { get; set; }
+        }
+        [EnableCors]
+        [HttpGet("HealthCheck/v1")]
+        [ProducesResponseType(200)]
+        public async Task<HealthCheck> HealthCheckApi()
+        {
+            var watch = new System.Diagnostics.Stopwatch();
+            watch.Start();
+            await Task.Delay(1);
+            watch.Stop();
+            return new HealthCheck() { message="OK", status=200, averageResponseTime = watch.ElapsedMilliseconds };
         }
 
-        
+        [EnableCors]
+        [HttpGet("UploadStopWords")]
+        [ProducesResponseType(200)]
+        public async Task UploadStopWords()
+        {
+            await stopwords.UploadAllStopWords();
+        }
+
+        [EnableCors]
+        [HttpGet("UploadTriples")]
+        [ProducesResponseType(200)]
+        public async Task UploadTriples()
+        {
+            triples.UploadAllRelations();
+        }
     }
 }

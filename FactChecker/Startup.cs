@@ -1,7 +1,9 @@
 using FactChecker.Controllers.Exceptions;
+using FactChecker.EF;
 using FactChecker.PassageRetrieval;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,6 +17,7 @@ namespace FactChecker
 {
     public class Startup
     {
+        string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -50,6 +53,24 @@ namespace FactChecker
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  policy =>
+                                  {
+                                      policy.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod();
+                                  });
+            });
+            services.AddDbContext<KnoxFactCheckingTestDbContext>(options =>
+            options.UseNpgsql(Configuration.GetConnectionString("KnoxFactCheckingTestDbContext")));
+            services.AddScoped<WordcountDB.WordCount>();
+            services.AddScoped<WordcountDB.stopwords>();
+            services.AddScoped<WordcountDB.triples>();
+            services.AddScoped<Cosine.CosineSim>();
+            services.AddScoped<WordcountDB.Article>();
+            services.AddScoped<Rake.Rake>();
+            services.AddScoped<TMWIIS.TMWIISHandler>();
+            services.AddScoped<TFIDF.TFIDFHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,7 +84,7 @@ namespace FactChecker
             }
 
             app.UseRouting();
-
+            app.UseCors(MyAllowSpecificOrigins);
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -34,7 +34,7 @@ namespace XUnitTestProject
             for (int i = 0; i < items.Count; i++)
             {
                 var item = items[i];
-                item.TF = (double)item.Occurrence / (double)fulltext_count;
+                item.TF = (double)item.occurrence / (double)fulltext_count;
                 item.IDF = Math.Log10(1 + (double)articleCountContainingWords[i] / TotalDocs);
                 article.TFIDF = item.TF * item.IDF;
                 switch (i)
