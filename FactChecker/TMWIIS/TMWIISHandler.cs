@@ -14,13 +14,17 @@ namespace FactChecker.TMWIIS
     public class TMWIISHandler
     {
         private readonly WordcountDB.WordCount wordCount;
+        private readonly stopwords sw;
+        private IEnumerable<string> stopwordslist;
 
-        public TMWIISHandler(WordCount wordCount)
+        public TMWIISHandler(WordCount wordCount, WordcountDB.stopwords sw)
         {
             this.wordCount = wordCount;
+            this.sw = sw;
+            stopwordslist = sw.GetStopwords().Select(p => p.word);
+
         }
 
-        private Stopwords.Stopwords stopwords = new();
         readonly float lambda1 = 0.9f * 100000, lambda2 = 0.05f * 100000, lambda3 = 0.05f * 100000;
         public float CalculateScore(KnowledgeGraphItem knowledgeGraphItem, Passage passage, string FullText, int FulltText_Unique)
         {
@@ -75,8 +79,11 @@ namespace FactChecker.TMWIIS
             int occurrences = 0;
             for(int j = 0; j < entityList.Count; j++)
                 for (int i = 0; i < length; i++)
-                    if (passageWords[i] == entityList[j] && !stopwords.stopwords.ContainsKey(passageWords[i]))
+                {
+                    if (passageWords[i] == entityList[j] && !stopwordslist.Contains(passageWords[i]))
                         occurrences++;
+                }
+
             return occurrences;
         }
     }

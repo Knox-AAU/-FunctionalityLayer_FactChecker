@@ -15,6 +15,8 @@ namespace FactChecker.EF
         }
         public DbSet<ArticleItem> article { get; set; }
         public DbSet<WordCountItem> wordcount { get; set; }
+        public DbSet<StopWordItem> stopwords { get; set; }
+        public DbSet<TripleItem> triples { get; set; }
     }
 
     

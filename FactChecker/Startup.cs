@@ -64,7 +64,11 @@ namespace FactChecker
             services.AddDbContext<KnoxFactCheckingTestDbContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("KnoxFactCheckingTestDbContext")));
             services.AddScoped<WordcountDB.WordCount>();
+            services.AddScoped<WordcountDB.stopwords>();
+            services.AddScoped<WordcountDB.triples>();
+            services.AddScoped<Cosine.CosineSim>();
             services.AddScoped<WordcountDB.Article>();
+            services.AddScoped<Rake.Rake>();
             services.AddScoped<TMWIIS.TMWIISHandler>();
             services.AddScoped<TFIDF.TFIDFHandler>();
         }

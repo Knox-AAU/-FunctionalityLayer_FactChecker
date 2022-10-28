@@ -30,20 +30,26 @@ namespace FactChecker.Controllers
     {
 
 
-
+        private readonly WordcountDB.stopwords stopwords;
+        private readonly WordcountDB.triples triples;
         public static TestData.WikiDataTriples WikiDataTriples = new();
         readonly TMWIIS.TMWIISHandler tmwiis;
         readonly IArticleRetrieval ar;
 
-        public TripleController(TFIDF.TFIDFHandler ar, TMWIIS.TMWIISHandler tmwiis)
+        public TripleController(TFIDF.TFIDFHandler ar, TMWIIS.TMWIISHandler tmwiis, WordcountDB.stopwords stopwords, Cosine.CosineSim cosine, Rake.Rake rake, WordcountDB.triples triples)
         {
             this.ar = ar;
             this.tmwiis = tmwiis;
+            this.stopwords = stopwords;
+            this.cosine = cosine;
+            this.rake = rake;
+            this.triples = triples;
         }
 
         readonly IPassageRetrieval pr = new PassageRetrieval.PassageRetrievalHandler();
-        readonly IPassageRetrieval rake = new Rake.Rake(sentences_min_length: 100*4);
         readonly SimRank.SimRank simRank = new();
+        readonly Cosine.CosineSim cosine;
+        readonly Rake.Rake rake;
         readonly LemmatizerHandler lh = new();
         readonly WordEmbedding.WordEmbedding wordEmbedding = new();
         readonly Jaccard js = new();
@@ -84,7 +90,7 @@ namespace FactChecker.Controllers
             => (double)LevenshteinDistanceAlgorithm.LevenshteinDistance_V2(algs.MultipleKnowledgeGraphItem.ItemsAsString, passage.FullPassage);
         [NonAction]
         public double CalculateCosine(AlgChooser algs, Passage passage)
-            => (double)new Cosine.CosineSim().similarity_v2(algs.MultipleKnowledgeGraphItem.ItemsAsString, passage.FullPassage);
+            => (double)cosine.similarity_v2(algs.MultipleKnowledgeGraphItem.ItemsAsString, passage.FullPassage);
         [NonAction]
         public double CalculateWordEmbedding(AlgChooser algs, Passage passage)
             => wordEmbedding.GetEvidence(algs.MultipleKnowledgeGraphItem.ItemsAsString, passage.FullPassage);
@@ -96,7 +102,7 @@ namespace FactChecker.Controllers
         {
             return (algs.ConfidenceEnum) switch
             {
-                ConfidenceEnum.SimRank => MathF.Round(simRank.GetSimRank(algs.MultipleKnowledgeGraphItem), 2),
+                //ConfidenceEnum.SimRank => MathF.Round(simRank.GetSimRank(algs.MultipleKnowledgeGraphItem), 2),
                 _ => -1f
             };
         }
@@ -219,6 +225,22 @@ namespace FactChecker.Controllers
             await Task.Delay(1);
             watch.Stop();
             return new HealthCheck() { message="OK", status=200, averageResponseTime = watch.ElapsedMilliseconds };
+        }
+
+        [EnableCors]
+        [HttpGet("UploadStopWords")]
+        [ProducesResponseType(200)]
+        public async Task UploadStopWords()
+        {
+            await stopwords.UploadAllStopWords();
+        }
+
+        [EnableCors]
+        [HttpGet("UploadTriples")]
+        [ProducesResponseType(200)]
+        public async Task UploadTriples()
+        {
+            triples.UploadAllRelations();
         }
     }
 }
