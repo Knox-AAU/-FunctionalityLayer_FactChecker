@@ -37,16 +37,13 @@ namespace FactChecker.Rake
         public List<Passage> rank_list { get; set; } = new();
         public List<string> exceptions { get; set; } = new() { "jr.", "u.s.", "mrs.", "mr.", "ms.", "st."};
         public List<Passage> passages { get; set; } = new();
+        private readonly WordcountDB.stopwords sw;
 
-        public Rake(List<string> stopwords = default, List<string> punctuation = default, string language = "english", Metric ranking_metric = Metric.DEGREE_TO_FREQUENCY_RATIO, 
-                int max_length = 100000, int min_length = 1, bool include_repeat_phrase = true, int sentences_min_length = 100)
+        public Rake(WordcountDB.stopwords sw, List<string> stopwords = default, List<string> punctuation = default, string language = "english", Metric ranking_metric = Metric.DEGREE_TO_FREQUENCY_RATIO, 
+                int max_length = 100000, int min_length = 1, bool include_repeat_phrase = true, int sentences_min_length = 100*4)
         {
-            if(stopwords == null) {
-                Stopwords.Stopwords s = new(Stopwords.Stopwords_Language.en);
-                this.stopwords = s.stopwords_hashset;
-            }else{
-                this.stopwords = stopwords.ToHashSet();
-            }
+            this.sw = sw;
+            this.stopwords = sw.GetStopwords().Select(p => p.word).ToHashSet();
             if(punctuation == null){
                 this.punctuation = new() {"!","?",".",";"};
 

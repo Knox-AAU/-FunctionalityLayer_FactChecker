@@ -7,12 +7,24 @@ using FactChecker.PassageRetrieval;
 using FactChecker.APIs.KnowledgeGraphAPI;
 using FactChecker.Interfaces;
 using FactChecker.Controllers.Exceptions;
+using FactChecker.WordcountDB;
 
 namespace FactChecker.TMWIIS
 {
     public class TMWIISHandler
     {
-        private Stopwords.Stopwords stopwords = new();
+        private readonly WordcountDB.WordCount wordCount;
+        private readonly stopwords sw;
+        private IEnumerable<string> stopwordslist;
+
+        public TMWIISHandler(WordCount wordCount, WordcountDB.stopwords sw)
+        {
+            this.wordCount = wordCount;
+            this.sw = sw;
+            stopwordslist = sw.GetStopwords().Select(p => p.word);
+
+        }
+
         readonly float lambda1 = 0.9f * 100000, lambda2 = 0.05f * 100000, lambda3 = 0.05f * 100000;
         public float CalculateScore(KnowledgeGraphItem knowledgeGraphItem, Passage passage, string FullText, int FulltText_Unique)
         {
@@ -48,7 +60,6 @@ namespace FactChecker.TMWIIS
         private int GetNumberOfOccurencesInAllDocuments (string word)
         {
             List<string> splitted = word.Split(' ').ToList();           
-            WordcountDB.WordCount wordCount = new ();
             int sum = 0;
 
             foreach(string s in splitted)
@@ -68,8 +79,11 @@ namespace FactChecker.TMWIIS
             int occurrences = 0;
             for(int j = 0; j < entityList.Count; j++)
                 for (int i = 0; i < length; i++)
-                    if (passageWords[i] == entityList[j] && !stopwords.stopwords.ContainsKey(passageWords[i]))
+                {
+                    if (passageWords[i] == entityList[j] && !stopwordslist.Contains(passageWords[i]))
                         occurrences++;
+                }
+
             return occurrences;
         }
     }

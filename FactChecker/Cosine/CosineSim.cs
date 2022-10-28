@@ -14,8 +14,11 @@ namespace FactChecker.Cosine
 {
     public class CosineSim
     {
-        Stopwords.Stopwords sw = new();
-
+        private readonly WordcountDB.stopwords sw;
+        public CosineSim(WordcountDB.stopwords stopwords)
+        {
+            this.sw = stopwords;
+        }
         public double similarity(string triple, string passage)
         {
             triple = Filter(triple);
@@ -54,10 +57,10 @@ namespace FactChecker.Cosine
         {
             int itera = withStopword.Count;
 
-            foreach (string removeWord in sw.stopwords_hashset)
+            foreach (var removeWord in sw.GetStopwords())
             {
                 for (int i = 0; i < itera; i++)
-                    withStopword.Remove(removeWord);
+                    withStopword.Remove(removeWord.word);
             }
 
             return withStopword;
@@ -67,10 +70,10 @@ namespace FactChecker.Cosine
         {
             int itera = withStopword.Count;
 
-            foreach (string removeWord in sw.stopwords_hashset)
+            foreach (var removeWord in sw.GetStopwords())
             {
                 for (int i = 0; i < itera; i++)
-                    withStopword.Remove(removeWord);
+                    withStopword.Remove(removeWord.word);
             }
 
             return withStopword;
