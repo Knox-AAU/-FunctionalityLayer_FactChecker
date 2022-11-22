@@ -2,23 +2,26 @@
 using FactChecker.WordcountDB;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
-namespace FactChecker.SimRank
+namespace FactChecker.Confidence_Algorithms
 {
         public class Graph
         {
             private WordcountDB.triples triplesDb;
 
+        public Graph()
+        {
+
+        }
         public Graph(triples triplesDb)
         {
             this.triplesDb = triplesDb;
         }
 
         public List<Node> nodes = new();
-            private List<KnowledgeGraphItem> triples = new();
-            public List<List<float>> old_sim = new();
+        private List<KnowledgeGraphItem> triples = new();
+        public List<List<float>> old_sim = new();
 
             public void init()
             {
