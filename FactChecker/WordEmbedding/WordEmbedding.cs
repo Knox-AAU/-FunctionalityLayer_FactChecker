@@ -19,9 +19,7 @@ namespace FactChecker.WordEmbedding
                 .Append(context.Transforms.Text.TokenizeIntoWords("Tokens", "Text"))
                 .Append(context.Transforms.Text.ApplyWordEmbedding("Features", "Tokens", WordEmbeddingEstimator.PretrainedModelKind.SentimentSpecificWordEmbedding));
 
-            var embeddingTransformer = embeddingsPipline.Fit(emptyData);
-
-            var predictionEngine = context.Model.CreatePredictionEngine<TextInput, TextFeatures>(embeddingTransformer);
+            var predictionEngine = context.Model.CreatePredictionEngine<TextInput, TextFeatures>(embeddingsPipline.Fit(emptyData));
 
             var dogData = new TextInput { Text = _1 };
             var catData = new TextInput { Text = _2};
