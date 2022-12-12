@@ -7,17 +7,23 @@ namespace FactChecker.Confidence_Algorithms
 {
     public class AdamicAdar
     {
+        public Graph Graph { get; }
+
+        public AdamicAdar(Graph graph)
+        {
+
+            Graph = graph;
+            graph.init();
+        }
         public float CalculateScore(MultipleKnowledgeGraphItem items)
         {
-            Graph graph = new();
-            graph.init();
 
             float res = 0;
 
             foreach (var item in items.Items)
             {
-                Node a = graph?.nodes?.Find(o => o.data == item.s);
-                Node b = graph?.nodes?.Find(o => o.data == item.t);
+                Node a = Graph?.nodes?.Find(o => o.data == item.s);
+                Node b = Graph?.nodes?.Find(o => o.data == item.t);
                 res += Calculate(a, b);
             }
 

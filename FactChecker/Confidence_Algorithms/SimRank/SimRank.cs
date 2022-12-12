@@ -5,15 +5,20 @@ namespace FactChecker.Confidence_Algorithms.SimRank
 {
     public class SimRank
     {
+        public Graph Graph { get; }
+
+        public SimRank(Graph graph)
+        {
+
+            Graph = graph;
+            graph.init();
+        }
         public float getSimRank(string name1, string name2, int iterations = 250, float decay_factor = 0.8f)
         {
-            Graph graph = new();
-            graph.init();
-
-            Similarity sim = new(graph, decay_factor: decay_factor);
+            Similarity sim = new(Graph, decay_factor: decay_factor);
 
             for (int i = 0; i < iterations; i++)
-                sim.SimRank_one_iter(graph, sim.old_sim);
+                sim.SimRank_one_iter(Graph, sim.old_sim);
 
             //sim.Print_Sim();
             //graph.Print_Nodes();

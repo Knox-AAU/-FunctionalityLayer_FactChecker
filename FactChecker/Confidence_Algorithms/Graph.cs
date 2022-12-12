@@ -10,10 +10,7 @@ namespace FactChecker.Confidence_Algorithms
         {
             private WordcountDB.triples triplesDb;
 
-        public Graph()
-        {
-
-        }
+        
         public Graph(triples triplesDb)
         {
             this.triplesDb = triplesDb;

@@ -14,6 +14,8 @@ using FactChecker.TFIDF;
 using FactChecker.Levenshtein;
 using static FactChecker.Controllers.AlgChooser;
 using Microsoft.AspNetCore.Cors;
+using FactChecker.Confidence_Algorithms;
+using FactChecker.Confidence_Algorithms.SimRank;
 
 namespace FactChecker.Controllers
 {
@@ -36,13 +38,18 @@ namespace FactChecker.Controllers
         readonly TMWIIS.TMWIISHandler tmwiis;
         readonly IArticleRetrieval ar;
 
-        public TripleController(TFIDF.TFIDFHandler ar, TMWIIS.TMWIISHandler tmwiis, WordcountDB.stopwords stopwords, Cosine.CosineSim cosine, Rake.Rake rake, WordcountDB.triples triples)
+        public TripleController(TFIDF.TFIDFHandler ar, TMWIIS.TMWIISHandler tmwiis, WordcountDB.stopwords stopwords, Cosine.CosineSim cosine, Rake.Rake rake, WordcountDB.triples triples, AdamicAdar adamic,
+            Katz kats, SimRank simrank
+            )
         {
             this.ar = ar;
             this.tmwiis = tmwiis;
             this.stopwords = stopwords;
             this.cosine = cosine;
             this.rake = rake;
+            this.adamicAdar = adamic;
+            this.katz = kats;
+            this.simRank = simrank;
             this.triples = triples;
         }
 
@@ -52,9 +59,9 @@ namespace FactChecker.Controllers
         readonly LemmatizerHandler lh = new();
         readonly WordEmbedding.WordEmbedding wordEmbedding = new();
         readonly Jaccard js = new();
-        readonly Confidence_Algorithms.SimRank.SimRank simRank = new();
-        readonly Confidence_Algorithms.AdamicAdar adamicAdar = new();
-        readonly Confidence_Algorithms.Katz katz = new();
+        readonly Confidence_Algorithms.SimRank.SimRank simRank;
+        readonly Confidence_Algorithms.AdamicAdar adamicAdar;
+        readonly Confidence_Algorithms.Katz katz;
 
         [HttpGet]
         public IEnumerable<KnowledgeGraphItem> Get()

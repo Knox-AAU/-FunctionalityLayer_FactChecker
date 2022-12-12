@@ -1,3 +1,5 @@
+using FactChecker.Confidence_Algorithms;
+using FactChecker.Confidence_Algorithms.SimRank;
 using FactChecker.Controllers.Exceptions;
 using FactChecker.EF;
 using FactChecker.PassageRetrieval;
@@ -66,6 +68,10 @@ namespace FactChecker
             services.AddScoped<WordcountDB.WordCount>();
             services.AddScoped<WordcountDB.stopwords>();
             services.AddScoped<WordcountDB.triples>();
+            services.AddScoped<AdamicAdar>();
+            services.AddScoped<Graph>();
+            services.AddScoped<SimRank>();
+            services.AddScoped<Katz>();
             services.AddScoped<Cosine.CosineSim>();
             services.AddScoped<WordcountDB.Article>();
             services.AddScoped<Rake.Rake>();

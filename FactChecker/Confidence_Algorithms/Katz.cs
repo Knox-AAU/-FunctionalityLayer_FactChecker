@@ -7,12 +7,17 @@ namespace FactChecker.Confidence_Algorithms
 {
     public class Katz
     {
+        public Graph Graph { get; }
+
+        public Katz(Graph graph)
+        {
+
+            Graph = graph;
+            graph.init();
+        }
         public float ComputeCentrality(MultipleKnowledgeGraphItem items)
         {
-            Graph graph = new();
-            graph.init();
-
-            Dictionary<string, float> centralityVector = Centrality(graph);
+            Dictionary<string, float> centralityVector = Centrality(Graph);
 
             float res = 0;
 
