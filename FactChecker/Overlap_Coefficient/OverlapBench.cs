@@ -1,14 +1,12 @@
 ﻿using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Running;
-using FactChecker.BenchMarks;
-using System;
+using FactChecker.Cosine;
 using System.Collections.Generic;
 
-namespace FactChecker.JaccardSim
+namespace FactChecker.Overlap_Coefficient
 {
     [InProcess]
     [MemoryDiagnoser]
-    public class JaccardBenchmark
+    public class OverlapBench
     {
         [ParamsSource(nameof(Targets))]
         public string Target { get; set; }
@@ -28,29 +26,10 @@ namespace FactChecker.JaccardSim
         };
 
         [Benchmark]
-        public void BenchJaccard()
+        public void BenchOverlap_long()
         {
-            JaccardSim js = new();
-            js.similarity(Target, Source);
-        }
-
-        [Benchmark]
-        public void BenchJaccard_v2()
-        {
-            JaccardSim js = new();
-            js.similarity_v2(Target, Source);
-        }
-
-        [Benchmark]
-        public void BenchJaccard_v3()
-        {
-            JaccardSim js = new();
-            js.similarity_v3(Target, Source);
-        }
-
-        public static void RunBenchmarks()
-        {
-            var summary = BenchmarkRunner.Run<JaccardSim>();
+            OverlapCM oc = new();
+            oc.Similarity(Target, Source);
         }
     }
 }

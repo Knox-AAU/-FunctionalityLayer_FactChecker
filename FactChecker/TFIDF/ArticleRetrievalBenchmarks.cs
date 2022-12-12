@@ -17,27 +17,27 @@ namespace FactChecker.TFIDF
         public static List<ArticleItem> Articles { get; set; }
         public List<KnowledgeGraphItem> Results { get; set; } = new () { new("Holland", "", "") };
 
-        [Benchmark]
-        public void Old_TfIDF()
-        {
-            TFIDFHandler tf = new();
-            tf.GetArticles(Results);
-        }
-        [Benchmark]
-        public void New_TfIDF()
-        {
-            ArticleRetrievalHandlerV2 ar = new();
-            ar.GetArticles(Results);
-        }
+        //[Benchmark]
+        //public void Old_TfIDF()
+        //{
+        //    TFIDFHandler tf = new();
+        //    tf.GetArticles(Results);
+        //}
+        //[Benchmark]
+        //public void New_TfIDF()
+        //{
+        //    ArticleRetrievalHandlerV2 ar = new();
+        //    ar.GetArticles(Results);
+        //}
 
 
         public static void RunBenchmarks()
         {
-            WordcountDB.Article a = new();
-            Articles = new();
-            for (int i = 0; i < 10; i++)
-                Articles.Add(a.FetchDB(i));
-            var summary = BenchmarkRunner.Run<ArticleRetrievalBenchmarks>();
+            //WordcountDB.Article a = new();
+            //Articles = new();
+            //for (int i = 0; i < 10; i++)
+            //    Articles.Add(a.FetchDB(i));
+            //var summary = BenchmarkRunner.Run<ArticleRetrievalBenchmarks>();
         }
     }
 }

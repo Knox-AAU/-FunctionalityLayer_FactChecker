@@ -7,11 +7,11 @@ namespace FactChecker.WordcountDB
 {
     public class ArticleItem
     {
-        public int ID { get; set; }
-        public string Link { get; set; }
-        public int Lenght { get; set; }
-        public int UniqueLenght { get; set; }
-        public string Text { get; set; }
+        public int id { get; set; }
+        public string link { get; set; }
+        public int length { get; set; }
+        public int unique_length { get; set; }
+        public string text { get; set; }
 
 
         /// <summary>
@@ -24,17 +24,13 @@ namespace FactChecker.WordcountDB
         /// <param name="lenght"></param>
         /// <param name="unique_lenght"></param>
         /// <param name="text"></param>
-        public ArticleItem(int id, string link, int lenght, int unique_lenght, string text)
+        public ArticleItem()
         {
-            ID = id;
-            Link = link;
-            Lenght = lenght;
-            UniqueLenght = unique_lenght;
-            Text = text;
+
         }
         public override string ToString() 
         {
-            return "ID:" + ID + " Link:" + Link + " Lenght:" + Lenght + " Unique Lenght:" + UniqueLenght + " Text:" + Text;
+            return "ID:" + id + " Link:" + link + " Lenght:" + length + " Unique Lenght:" + unique_length + " Text:" + text;
         }
     }
 }

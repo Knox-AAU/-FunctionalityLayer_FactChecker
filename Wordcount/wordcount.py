@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import json
 import re
-import sqlite3
+import psycopg2
 
 
 def articleStore(article):
@@ -33,8 +33,8 @@ def articleStore(article):
 
 
 if __name__ == '__main__':
-    db = sqlite3.connect("wordcount.db")
-
+    conn = psycopg2.connect("dbname=test user=postgres password=1234")
+    cur = conn.cursor()
 
     links = [
              "https://en.wikipedia.org/wiki/Wikipedia:Random",
@@ -59,26 +59,25 @@ if __name__ == '__main__':
              ]
 
     for i, url in enumerate(links):
-        cursor = db.cursor()
+        cur = conn.cursor()
         data_tuple = articleStore(url)
         article = data_tuple[-1]
         data_tuple = data_tuple[:-1]
         data_tuple = (i,) + data_tuple[:len(data_tuple)]
-        cursor.execute(
-            "INSERT or REPLACE INTO ARTICLE (ID,LINK,LENGTH,UNIQUE_LENGTH,TEXT) VALUES (?, ?, ?, ?, ?)", data_tuple)
-        db.commit()
-        cursor.close()
+        cur.execute(
+            "INSERT INTO ARTICLE (LINK,LENGTH,UNIQUE_LENGTH,TEXT) VALUES (%s, %s, %s, %s)", (data_tuple[1], data_tuple[2], data_tuple[3], data_tuple[4]))
+        conn.commit()
+        cur.close()
 
         for word in set(article):
             if word != "":
-                cursor = db.cursor()
-                data_tuple = (word, i, article.count(word))
+                cursor = conn.cursor()
+                data_tuple = (word, i+1, article.count(word))
                 cursor.execute(
-                    "INSERT INTO WORDCOUNT (WORD,ARTICLEID,OCCURRENCE) VALUES (?, ?, ?)", data_tuple)
-                db.commit()
+                    "INSERT INTO WORDCOUNT (WORD,ARTICLEID,OCCURRENCE) VALUES (%s, %s, %s)", data_tuple)
+                conn.commit()
                 cursor.close()
-        break
 
     print(f"{url}")
 
-    db.close()
+    conn.close()
