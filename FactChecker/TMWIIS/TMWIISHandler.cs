@@ -44,16 +44,24 @@ namespace FactChecker.TMWIIS
             float evidenceSource = EvidenceCalculator(passageLength, FulltText_Unique, sourcePassageOccurence, sourceDocumentOccurence, sourceTotalOccurence);
             float evidenceRelation = EvidenceCalculator(passageLength, FulltText_Unique, relationPassageOccurence, relationDocumentOccurence, relationTotalOccurence);
             float evidenceTarget = EvidenceCalculator(passageLength, FulltText_Unique, targetPassageOccurence, targetDocumentOccurence, targetTotalOccurence);
+
             float passageScore = lambda1 * evidenceSource + lambda2 * evidenceRelation + lambda3 * evidenceTarget;
             return Math.Abs(passageScore);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="passageLength"></param>
+        /// <param name="uniqueLength"></param>
+        /// <param name="passageOccurrence">Passage word Occurence</param>
+        /// <param name="documentOccurrence">Document word Occurence</param>
+        /// <param name="totalOccurrence">Total docuement Occurences</param>
+        /// <returns></returns>
         private float EvidenceCalculator(int passageLength, int uniqueLength, int passageOccurrence, int documentOccurrence, int totalOccurrence)
         {
-            float passageSource, documentSource, collectionSource; 
-
-            passageSource = (passageOccurrence + 1) / ((float)passageLength + (float)uniqueLength);
-            documentSource = (documentOccurrence + 1) / ((float)passageLength + (float)uniqueLength);
-            collectionSource = (totalOccurrence) /(float) uniqueLength;
+            float passageSource = (passageOccurrence + 1) / (float)(passageLength + uniqueLength);
+            float documentSource = (documentOccurrence + 1) / (float)(passageLength + uniqueLength);
+            float collectionSource = totalOccurrence / (float) uniqueLength;
             return  passageSource  * documentSource * collectionSource;
         }
 
