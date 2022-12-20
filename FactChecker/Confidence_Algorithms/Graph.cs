@@ -30,14 +30,10 @@ namespace FactChecker.Confidence_Algorithms
                     Node b = nodes.FirstOrDefault(o => o.data == triple.t) ?? init_node(triple.t);
 
                     if (!a.children.Any(o => o.data == triple.t))
-                    {
                         nodes.First(o => o.data == a.data).children.Add(b);
-                    }
 
                     if (!b.parents.Any(o => o.data == triple.s))
-                    {
                         nodes.First(o => o.data == b.data).parents.Add(a);
-                    }
                 }
 
                 Node init_node(string input)
