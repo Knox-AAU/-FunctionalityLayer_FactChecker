@@ -118,7 +118,9 @@ namespace FactChecker.Controllers
         [NonAction]
         public List<Passage> PassageRanking(AlgChooser algs, List<Passage> passages, string FullText, int FullText_Unique)
         {
+            Console.WriteLine($"      Ranking {passages.Count} passages");
             foreach (Passage passage in passages)
+            {
                 foreach (var passageRanking in algs.PassageRankings)
                     switch (passageRanking)
                     {
@@ -159,6 +161,7 @@ namespace FactChecker.Controllers
                         passages.RankTMWIIS();
                         break;
                 }
+            }
             return passages;
         }
 
@@ -199,16 +202,26 @@ namespace FactChecker.Controllers
         [Consumes("application/json")]
         public async Task<AlgChooserReturn> PostAlgChooser([FromBody] AlgChooser algs)
         {
+            Console.WriteLine("Started AlgChooser");
+            Console.WriteLine("Running Article Retrieval");
             List<Article> articles = ArticleRetrieval(algs);
+            int i = 0;
             foreach (var art in articles)
             {
+                Console.WriteLine($"   parsing article {i} of {articles.Count}");
                 art.Passages = PassageExtraction(algs, art);
                 art.Passages = PassageRanking(algs, art.Passages, art.FullText, art.FullText.GetUniqueWords());
+                Console.WriteLine("      Done ranking passages");
+                Console.WriteLine("      Generating top score for passages");
                 foreach (var passage in art.Passages) passage.CalculateScoreFromKeyValuePairs();
                 art.Passages = art.Passages.OrderBy(p => p.Score).ToList();
                 art.FullText = art.FullText[0..100];
-                art.Passages = art.Passages.Take(1).ToList();
+                Console.WriteLine("      Getting top 3 passages per article");
+                art.Passages = art.Passages.Take(3).ToList();
+                i++;
+                Console.WriteLine($"      Done with article {i}");
             }
+            Console.WriteLine("Ranked all articles and passages");
             return
                 new AlgChooserReturn()
                 {
@@ -232,6 +245,19 @@ namespace FactChecker.Controllers
             await Task.Delay(1);
             watch.Stop();
             return new HealthCheck() { message="OK", status=200, averageResponseTime = watch.ElapsedMilliseconds };
+        }
+
+        [EnableCors]
+        [HttpGet("Levenshtein")]
+        [Produces("application/json")]
+        [ProducesResponseType(200)]
+        public async Task<HealthCheck> LevenshteinTester(string v1, string v2)
+        {
+            var watch = new System.Diagnostics.Stopwatch();
+            watch.Start();
+            var x = (double)LevenshteinDistanceAlgorithm.LevenshteinDistance_V2(v1, v2);
+            watch.Stop();
+            return new HealthCheck() { message = $"OK - {x}", status = 200, averageResponseTime = watch.ElapsedMilliseconds };
         }
 
         [EnableCors]

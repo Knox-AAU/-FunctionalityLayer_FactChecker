@@ -18,6 +18,4 @@ namespace FactChecker.EF
         public DbSet<StopWordItem> stopwords { get; set; }
         public DbSet<TripleItem> triples { get; set; }
     }
-
-    
 }

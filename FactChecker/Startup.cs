@@ -64,7 +64,7 @@ namespace FactChecker
                                   });
             });
             services.AddDbContext<KnoxFactCheckingTestDbContext>(options =>
-            options.UseNpgsql(Configuration.GetConnectionString("Local"))); 
+            options.UseNpgsql(Configuration.GetConnectionString("KnoxFactCheckingTestDbContext"))); 
             services.AddScoped<WordcountDB.WordCount>();
             services.AddScoped<WordcountDB.stopwords>();
             services.AddScoped<WordcountDB.triples>();
