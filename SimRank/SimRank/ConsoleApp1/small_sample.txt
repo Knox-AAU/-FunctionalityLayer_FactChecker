@@ -1,8 +1,0 @@
-<Joe Biden> <country of citizenship> <United States of America>
-<Joe Biden> <instance of> <human>
-<Travis Scott> <country of citizenship> <United States of America>
-<Travis Scott> <instance of> <human>
-<Kanye West> <country of citizenship> <United States of America>
-<Kanye West> <instance of> <human>
-<Tom Holland> <country of citizenship> <England>
-<Tom Holland> <instance of> <human>
