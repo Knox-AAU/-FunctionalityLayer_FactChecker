@@ -207,7 +207,7 @@ namespace FactChecker.Controllers
                 foreach (var passage in art.Passages) passage.CalculateScoreFromKeyValuePairs();
                 art.Passages = art.Passages.OrderBy(p => p.Score).ToList();
                 art.FullText = art.FullText[0..100];
-                art.Passages = art.Passages.Take(1).ToList();
+                art.Passages = art.Passages.Take(5).ToList();
             }
             return
                 new AlgChooserReturn()
