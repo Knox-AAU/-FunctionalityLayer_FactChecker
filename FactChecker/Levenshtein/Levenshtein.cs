@@ -51,27 +51,45 @@ namespace FactChecker.Levenshtein
             return (int)result;
         }
 
-        public static int LevenshteinDistance_V2(string target, string source)
+        static void  print_matrix(int[][] m)
         {
-            int[][] matrix = new int[target.Length + 1][];
-            for (int i = 0; i < matrix.Length; i++)
-                matrix[i] = new int[source.Length + 1];
+            for (int row = 1; row < m.Length; row++)
+            {
+                for (int col = 1; col < m[0].Length; col++)
+                {
+                    Console.Write($"{m[row][col]} ");
+                }
+                Console.WriteLine($"");
+            }
+        }
 
-            for (int i = 0; i < target.Length + 1; i++)
-                matrix[i][0] = i;
+        public static int LevenshteinDistance_V2(string source, string target)
+        {
+            int[][] matrix = new int[source.Length + 1][];
+            for (int i = 0; i
+                < matrix.Length; i++)
+                matrix[i] = new int[target.Length + 1];
+
             for (int i = 0; i < source.Length + 1; i++)
+                matrix[i][0] = i;
+            for (int i = 0; i < target.Length + 1; i++)
                 matrix[0][i] = i;
-            for (int row = 1; row < target.Length + 1; row++)
-                for (int col = 1; col < source.Length + 1; col++)
+            for (int row = 1; row < source.Length + 1; row++)
+                for (int col = 1; col < target.Length + 1; col++)
+                {
+                    var s = source[row - 1];
+                    var t = target[col - 1];
                     //charaters are same
-                    if (source[col - 1] == target[row - 1])
+                    if (t == s)
                         matrix[row][ col] = matrix[row - 1][ col - 1];
                     //charaters are different
                     else
                         matrix[row][ col] = Math.Min(matrix[row][ col - 1], Math.Min(
                             matrix[row - 1][ col], matrix[row - 1][ col - 1])) + 1;
+                }
+            print_matrix(matrix);
 
-            return matrix[target.Length][source.Length];
+            return matrix[source.Length][target.Length];
         }
 
         

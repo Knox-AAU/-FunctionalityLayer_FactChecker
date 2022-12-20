@@ -58,7 +58,7 @@ namespace FactChecker
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   policy =>
                                   {
-                                      policy.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod();
+                                      policy.WithOrigins("http://localhost:5000").AllowAnyHeader().AllowAnyMethod();
                                   });
             });
             services.AddDbContext<KnoxFactCheckingTestDbContext>(options =>

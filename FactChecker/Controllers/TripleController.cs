@@ -228,6 +228,19 @@ namespace FactChecker.Controllers
         }
 
         [EnableCors]
+        [HttpGet("Levenshtein")]
+        [Produces("application/json")]
+        [ProducesResponseType(200)]
+        public async Task<HealthCheck> LevenshteinTester(string v1, string v2)
+        {
+            var watch = new System.Diagnostics.Stopwatch();
+            watch.Start();
+            var x = (double)LevenshteinDistanceAlgorithm.LevenshteinDistance_V2(v1, v2);
+            watch.Stop();
+            return new HealthCheck() { message = $"OK - {x}", status = 200, averageResponseTime = watch.ElapsedMilliseconds };
+        }
+
+        [EnableCors]
         [HttpGet("UploadStopWords")]
         [ProducesResponseType(200)]
         public async Task UploadStopWords()
