@@ -20,9 +20,6 @@ namespace FactChecker.Confidence_Algorithms.SimRank
             for (int i = 0; i < iterations; i++)
                 sim.SimRank_one_iter(Graph, sim.old_sim);
 
-            //sim.Print_Sim();
-            //graph.Print_Nodes();
-
             return sim.get_sim_value(name1, name2);
         }
 

@@ -32,13 +32,11 @@ namespace FactChecker.Confidence_Algorithms
                     if (!a.children.Any(o => o.data == triple.t))
                     {
                         nodes.First(o => o.data == a.data).children.Add(b);
-                        nodes.First(o => o.data == a.data).parents.Add(b);
                     }
 
                     if (!b.parents.Any(o => o.data == triple.s))
                     {
                         nodes.First(o => o.data == b.data).parents.Add(a);
-                        nodes.First(o => o.data == b.data).children.Add(a);
                     }
                 }
 

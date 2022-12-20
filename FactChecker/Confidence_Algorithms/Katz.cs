@@ -37,7 +37,7 @@ namespace FactChecker.Confidence_Algorithms
             if (g.nodes.Count() == 0) return null;
 
             AdjacencyMatrix A = new();
-            A.Create(g);
+            A.Create(g); 
 
             // initialize starting vector x
             Dictionary<string, float>? x = new();
