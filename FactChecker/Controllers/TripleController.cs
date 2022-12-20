@@ -118,7 +118,9 @@ namespace FactChecker.Controllers
         [NonAction]
         public List<Passage> PassageRanking(AlgChooser algs, List<Passage> passages, string FullText, int FullText_Unique)
         {
+            Console.WriteLine($"      Ranking {passages.Count} passages");
             foreach (Passage passage in passages)
+            {
                 foreach (var passageRanking in algs.PassageRankings)
                     switch (passageRanking)
                     {
@@ -159,6 +161,7 @@ namespace FactChecker.Controllers
                         passages.RankTMWIIS();
                         break;
                 }
+            }
             return passages;
         }
 
@@ -199,16 +202,26 @@ namespace FactChecker.Controllers
         [Consumes("application/json")]
         public async Task<AlgChooserReturn> PostAlgChooser([FromBody] AlgChooser algs)
         {
+            Console.WriteLine("Started AlgChooser");
+            Console.WriteLine("Running Article Retrieval");
             List<Article> articles = ArticleRetrieval(algs);
+            int i = 0;
             foreach (var art in articles)
             {
+                Console.WriteLine($"   parsing article {i} of {articles.Count}");
                 art.Passages = PassageExtraction(algs, art);
                 art.Passages = PassageRanking(algs, art.Passages, art.FullText, art.FullText.GetUniqueWords());
+                Console.WriteLine("      Done ranking passages");
+                Console.WriteLine("      Generating top score for passages");
                 foreach (var passage in art.Passages) passage.CalculateScoreFromKeyValuePairs();
                 art.Passages = art.Passages.OrderBy(p => p.Score).ToList();
                 art.FullText = art.FullText[0..100];
-                art.Passages = art.Passages.Take(5).ToList();
+                Console.WriteLine("      Getting top 3 passages per article");
+                art.Passages = art.Passages.Take(3).ToList();
+                i++;
+                Console.WriteLine($"      Done with article {i}");
             }
+            Console.WriteLine("Ranked all articles and passages");
             return
                 new AlgChooserReturn()
                 {

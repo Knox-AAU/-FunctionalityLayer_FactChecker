@@ -87,8 +87,6 @@ namespace FactChecker.Levenshtein
                         matrix[row][ col] = Math.Min(matrix[row][ col - 1], Math.Min(
                             matrix[row - 1][ col], matrix[row - 1][ col - 1])) + 1;
                 }
-            print_matrix(matrix);
-
             return matrix[source.Length][target.Length];
         }
 
