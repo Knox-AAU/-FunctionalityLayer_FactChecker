@@ -1,7 +1,8 @@
-﻿using System;
+﻿using FactChecker.Confidence_Algorithms;
+using System;
 using System.Collections.Generic;
 
-namespace FactChecker.SimRank
+namespace FactChecker.Confidence_Algorithms.SimRank
 {
     public class Similarity
     {
