@@ -14,6 +14,8 @@ using FactChecker.TFIDF;
 using FactChecker.Levenshtein;
 using static FactChecker.Controllers.AlgChooser;
 using Microsoft.AspNetCore.Cors;
+using FactChecker.Confidence_Algorithms;
+using FactChecker.Confidence_Algorithms.SimRank;
 
 namespace FactChecker.Controllers
 {
@@ -36,24 +38,30 @@ namespace FactChecker.Controllers
         readonly TMWIIS.TMWIISHandler tmwiis;
         readonly IArticleRetrieval ar;
 
-        public TripleController(TFIDF.TFIDFHandler ar, TMWIIS.TMWIISHandler tmwiis, WordcountDB.stopwords stopwords, Cosine.CosineSim cosine, Rake.Rake rake, WordcountDB.triples triples)
+        public TripleController(TFIDF.TFIDFHandler ar, TMWIIS.TMWIISHandler tmwiis, WordcountDB.stopwords stopwords, Cosine.CosineSim cosine, Rake.Rake rake, WordcountDB.triples triples, AdamicAdar adamic,
+            Katz kats, SimRank simrank
+            )
         {
             this.ar = ar;
             this.tmwiis = tmwiis;
             this.stopwords = stopwords;
             this.cosine = cosine;
             this.rake = rake;
+            this.adamicAdar = adamic;
+            this.katz = kats;
+            this.simRank = simrank;
             this.triples = triples;
         }
 
         readonly IPassageRetrieval pr = new PassageRetrieval.PassageRetrievalHandler();
-        readonly SimRank.SimRank simRank = new();
         readonly Cosine.CosineSim cosine;
         readonly Rake.Rake rake;
         readonly LemmatizerHandler lh = new();
         readonly WordEmbedding.WordEmbedding wordEmbedding = new();
         readonly Jaccard js = new();
-        SimRank.SimRank sr = new();
+        readonly Confidence_Algorithms.SimRank.SimRank simRank;
+        readonly Confidence_Algorithms.AdamicAdar adamicAdar;
+        readonly Confidence_Algorithms.Katz katz;
 
         [HttpGet]
         public IEnumerable<KnowledgeGraphItem> Get()
@@ -98,14 +106,13 @@ namespace FactChecker.Controllers
         public float CalculateTMWIIS(AlgChooser algs, Passage passage, string FullText, int FullText_Unique)
             => algs.MultipleKnowledgeGraphItem.Items.Sum(p => tmwiis.CalculateScore(p, passage, FullText, FullText_Unique));
         [NonAction]
-        public float CalculateConfidence(AlgChooser algs)
+        public float CalculateConfidence(AlgChooser algs) => (algs.ConfidenceEnum) switch
         {
-            return (algs.ConfidenceEnum) switch
-            {
-                //ConfidenceEnum.SimRank => MathF.Round(simRank.GetSimRank(algs.MultipleKnowledgeGraphItem), 2),
-                _ => -1f
-            };
-        }
+            ConfidenceEnum.SimRank => MathF.Round(simRank.GetSimRank(algs.MultipleKnowledgeGraphItem), 2),
+            ConfidenceEnum.AdamicAdar => adamicAdar.CalculateScore(algs.MultipleKnowledgeGraphItem),
+            ConfidenceEnum.Katz => katz.ComputeCentrality(algs.MultipleKnowledgeGraphItem),
+            _ => -1f,
+        };
         #endregion
 
         [NonAction]

@@ -15,7 +15,9 @@ namespace FactChecker.Controllers
     public enum ConfidenceEnum
     {
         Disabled,
-        SimRank
+        SimRank,
+        AdamicAdar,
+        Katz
     }
     public enum PassageExtractionEnum
     {
